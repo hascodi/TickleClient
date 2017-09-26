@@ -24,32 +24,43 @@ loaders.push(
   // global scss
   {
     test: /\.scss$/,
-    // exclude: /[\/\\]src[\/\\]/,
-    include: /[/\\](global)[/\\]/,
-    loaders: ['style-loader?sourceMap', 'css-loader', 'sass-loader']
-  },
-  // local scss modules
-  {
-    test: /\.scss$/,
-    // include: /[/\\](components)[/\\]/,
-    exclude: /[/\\](global)[/\\]/,
-    loaders: [
-      'style-loader?sourceMap',
-      'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-      'postcss-loader',
-      'sass-loader'
+    use: [
+      {
+        loader: 'style-loader'
+      },
+      {
+        loader: 'css-loader'
+      },
+      {
+        loader: 'sass-loader',
+        options: {
+          includePaths: [path.resolve(__dirname, 'node_modules')]
+        }
+      }
     ]
   },
   // local scss modules
-  {
-    test: /\.css$/,
-    include: /[/\\](components)[/\\]/,
-    loaders: [
-      'style-loader?sourceMap',
-      'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-      'postcss-loader'
-    ]
-  },
+  // {
+  //   test: /\.scss$/,
+  //   // include: /[/\\](components)[/\\]/,
+  //   exclude: /[/\\](global)[/\\]/,
+  //   loaders: [
+  //     'style-loader?sourceMap',
+  //     'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
+  //     'postcss-loader',
+  //     'sass-loader'
+  //   ]
+  // },
+  // local scss modules
+  // {
+  //   test: /\.css$/,
+  //   include: /[/\\](components)[/\\]/,
+  //   loaders: [
+  //     'style-loader?sourceMap',
+  //     'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
+  //     'postcss-loader'
+  //   ]
+  // },
   {
     test: /bootstrap\/dist\/js\/umd\//,
     loader: 'imports-loader?jQuery=jquery'
@@ -111,6 +122,15 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: './src/template.html'
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+      Popper: ['popper.js', 'default'],
+      // In case you imported plugins individually, you must also require them here:
+      Util: 'exports-loader?Util!bootstrap/js/dist/util',
+      Dropdown: 'exports-loader?Dropdown!bootstrap/js/dist/dropdown'
     })
     // new webpack.ProvidePlugin({
     // $: 'jquery',

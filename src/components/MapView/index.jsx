@@ -1,21 +1,23 @@
 import React from 'react';
 // import Immutable from 'immutable';
-import _ from 'lodash';
-import request from 'superagent';
-import jsonp from 'superagent-jsonp';
+// import _ from 'lodash';
+// import request from 'superagent';
+// import jsonp from 'superagent-jsonp';
 
 import MapGL from 'react-map-gl';
+import Resizable from 're-resizable';
 // import rasterTileStyle from 'raster-tile-style';
-import Pusher from 'pusher-js';
+// import Pusher from 'pusher-js';
 // import ngeohash from 'ngeohash';
 
-import { Card } from './components/cards/Card';
-import Modal from './components/utils/Modal';
+import { Card } from '../cards/Card';
+import Carousel from './Carousel';
+// import Modal from './components/utils/Modal';
 
-import ChallengesOverlay from './components/map-layers/ChallengesOverlay';
-import UserMarkerOverlay from './components/map-layers/UserMarkerOverlay';
+import CardOverlay from './map-layers/CardOverlay';
+import UserOverlay from './map-layers/UserOverlay';
 
-import dummyData from './dummyData';
+import dummyData from '../../dummyData';
 // const tileSource = '//tile.stamen.com/toner/{z}/{x}/{y}.png';
 
 // const mapStyle = rasterTileStyle([tileSource]);
@@ -23,10 +25,10 @@ import dummyData from './dummyData';
 const accessToken =
   'pk.eyJ1Ijoiam1hdXNoYWciLCJhIjoiY2l2ODkyaDl1MDAwdTJvbnlmbHdvODM0MiJ9.rLkNA-rO4xq0O4_xIeqXVg';
 
-const pusher = new Pusher('cc379270b195d3a20931', {
-  cluster: 'eu',
-  encrypted: true
-});
+// const pusher = new Pusher('cc379270b195d3a20931', {
+//   cluster: 'eu',
+//   encrypted: true
+// });
 
 // function isInMapBounds(coords, mapBounds) {
 //   const lng = parseFloat(coords.longitude);
@@ -44,17 +46,24 @@ const pusher = new Pusher('cc379270b195d3a20931', {
 //   return false;
 // }
 
-export default class App extends React.Component {
+class MapView extends React.Component {
   constructor(props) {
     super(props);
+    const { headerPad } = props;
+    const height = window.innerHeight - headerPad;
     this.state = {
-      viewport: {
+      mapDim: {
         width: window.innerWidth,
-        height: window.innerHeight,
+        height: height / 2
+      },
+      mapZoom: 20,
+      cardDim: {
+        width: window.innerWidth,
+        height: height / 2
+      },
+      userLocation: {
         latitude: 0,
-        longitude: 0,
-        // mapStyle: Immutable.fromJS(mapStyle),
-        zoom: 20
+        longitude: 0
       },
       cards: [],
       selectedCard: null,
@@ -66,22 +75,22 @@ export default class App extends React.Component {
     const self = this;
     window.addEventListener('resize', () => {
       this.setState({
-        viewport: Object.assign({}, self.state.viewport, {
+        mapDim: {
           width: window.innerWidth,
           height: window.innerHeight
-        })
+        }
       });
     });
 
     const watchPosId = navigator.geolocation.watchPosition(
       pos => {
         // map.setCenter([pos.coords.longitude, pos.coords.latitude]);
-        const newViewPort = Object.assign({}, self.state.viewport, {
+        const userLocation = {
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude
-        });
+        };
 
-        self.setState({ viewport: newViewPort });
+        self.setState({ userLocation });
       },
       d => console.log('error watch pos', d),
       { timeout: 1000000 }
@@ -90,12 +99,12 @@ export default class App extends React.Component {
     const curPosId = navigator.geolocation.getCurrentPosition(
       pos => {
         console.log('cur pos', pos.coords);
-        const newViewPort = Object.assign({}, self.state.viewport, {
+        const userLocation = {
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude
-        });
+        };
 
-        self.setState({ viewport: newViewPort });
+        self.setState(userLocation);
       },
       d => console.log('error cur pos', d),
       { maximumAge: 0, enableHighAccuracy: true }
@@ -146,56 +155,71 @@ export default class App extends React.Component {
   }
 
   _onChangeViewport(viewport) {
-    const vp = {
+    const mapDim = {
       width: window.innerWidth,
-      height: window.innerHeight,
-      zoom: viewport.zoom
+      height: window.innerHeight
     };
     console.log('viewport', viewport);
 
-    const newViewPort = Object.assign({}, this.state.viewport, vp);
-    this.setState({ viewport: newViewPort });
+    this.setState({ mapDim, mapZoom: viewport.zoom });
   }
 
   _userMove(pos, point) {
     console.log('Pos', pos);
-    const viewport = Object.assign({}, this.state.viewport, {
+    const userLocation = {
       latitude: pos.lat,
       longitude: pos.lng
-    });
+    };
 
-    this.setState({
-      viewport
-    });
+    this.setState({ userLocation });
   }
 
   render() {
+    const { mapDim, userLocation, mapZoom, cardDim } = this.state;
+    const mapViewport = { ...mapDim, ...userLocation, zoom: mapZoom };
     return (
       <div key={`${location.pathname}${location.search}`}>
-        <Modal content={this.state.selectedCard} />
-
-        <MapGL
-          {...this.state.viewport}
-          mapboxApiAccessToken={accessToken}
-          onChangeViewport={this._onChangeViewport.bind(this)}
-          onClick={this._userMove.bind(this)}
-          isDragging={false}
-          startDragLngLat={null}
+        <Resizable
+          style={{ border: '2px solid black' }}
+          enable={{
+            top: false,
+            right: false,
+            bottom: true,
+            left: false,
+            topRight: false,
+            bottomRight: false,
+            bottomLeft: false,
+            topLeft: false
+          }}
+          defaultSize={cardDim}
+          onResizeStop={(e, direction, ref, d) => {
+            this.setState(oldState => ({
+              mapDim: {
+                width: oldState.mapDim.width - d.width,
+                height: oldState.mapDim.height - d.height
+              }
+            }));
+          }}
         >
-          <ChallengesOverlay
-            {...this.state.viewport}
-            cardClickHandler={this.cardClickHandler.bind(this)}
-            cards={this.state.cards}
-          />
-          <UserMarkerOverlay
-            {...this.state.viewport}
-            location={{
-              latitude: this.state.viewport.latitude,
-              longitude: this.state.viewport.longitude
-            }}
-            id={'exampleUser'}
-          />
-        </MapGL>
+          <Carousel />
+        </Resizable>
+        <div style={{ position: 'relative' }}>
+          <MapGL
+            {...mapViewport}
+            mapboxApiAccessToken={accessToken}
+            onChangeViewport={this._onChangeViewport.bind(this)}
+            onClick={this._userMove.bind(this)}
+            isDragging={false}
+            startDragLngLat={null}
+          >
+            <CardOverlay
+              {...mapViewport}
+              cardClickHandler={this.cardClickHandler.bind(this)}
+              cards={this.state.cards}
+            />
+            <UserOverlay {...mapViewport} location={userLocation} />
+          </MapGL>
+        </div>
       </div>
     );
     // return r.div([
@@ -210,3 +234,7 @@ export default class App extends React.Component {
     // ]);
   }
 }
+MapView.defaultProps = {
+  headerPad: 60
+};
+export default MapView;

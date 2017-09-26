@@ -1,22 +1,43 @@
 import React from 'react';
-import { Router, Route, hashHistory, IndexRoute, Link, HashRouter, Switch} from 'react-router-dom';
+import {
+  Router,
+  Route,
+  hashHistory,
+  IndexRoute,
+  Link,
+  HashRouter,
+  Switch
+} from 'react-router-dom';
 // import debug from 'debug';
 
-import App from './App';
-import Challenge from './components/cards/Card';
+import MapView from './components/MapView';
 import JournalStore from './ChallengeCRUD';
+
+import DefaultLayout from './layouts/MainLayout';
 // import NotFound from './containers/NotFound/NotFound';
 
 // debug('lego:routes');
 
-const Routes = () => (
-  <HashRouter>
+const Routes = () =>
+  (<HashRouter>
     <Switch>
-      <Route exact path="/" component={App} />
-      <Route exact path="/journal" component={JournalStore} />
-      <Route exact path="/challenge" component={Challenge} />
+      <Route
+        exact
+        path="/"
+        render={() =>
+          (<DefaultLayout>
+            <MapView />
+          </DefaultLayout>)}
+      />
+      <Route
+        exact
+        path="/journal"
+        render={() =>
+          (<DefaultLayout>
+            <JournalStore />
+          </DefaultLayout>)}
+      />
     </Switch>
-  </HashRouter>
-);
+  </HashRouter>);
 
 export default Routes;

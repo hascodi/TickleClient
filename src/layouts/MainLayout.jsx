@@ -2,15 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import DocumentMeta from 'react-document-meta';
 
 // import { findRoute } from '../utils';
-import { routes, LinkHelper } from '../Routes';
 
-
-import userPic from './user.png';
-import './MainLayout.scss';
-
+// import userPic from './user.png';
+import cx from './MainLayout.scss';
 
 export default class MainLayout extends Component {
-
   static propTypes() {
     return {
       location: PropTypes.object,
@@ -34,54 +30,51 @@ export default class MainLayout extends Component {
   }
 
   render() {
-    // $('.navbar-nav').on('click', () => {
-    //   $('.navbar-collapse').collapse('hide');
-    // });
-    const { children, location, label} = this.props;
-    console.log('MainLayout props', this.props);
-    // const cfg = findRoute(location.pathname);
-    // const route = cfg || routes.homepage;
-    // const route = routes.App;
-    const navLinkProps = {
-      className: 'w3-bar-item w3-button',
-      activeClassName: 'layout__nav-link--selected'
-      // 'data-toggle': 'collapse'
-      // 'data-target': '.navbar-collapse.show'
-    };
-
-    let toggleStyle;
-    if (this.state.isToggleOn) {
-      toggleStyle = 'w3-show';
-    } else toggleStyle = 'w3-hide-large w3-hide-medium w3-hide';
-
-    console.log('toggleStyle', toggleStyle);
+    const { children } = this.props;
 
     return (
       <div>
         <div className="layout layout--main">
-          <DocumentMeta title={location} />
-          <div className="w3-bar w3-indigo w3-xlarge">
-            <a className="w3-bar-item w3-button w3-left" onClick={this.handleClick}>
-              <img
-                className="w3-hide-small" type="button"
-                style={{ height: '40px' }}
-                src={userPic}
-                alt={location.pathname}
-              />
+          <nav className="navbar navbar-expand-lg navbar-light">
+            <a className="navbar-brand" href="#">
+              Tickle
             </a>
-            <a
-              className="w3-cell w3-cell-middle w3-left"
-              style={{ paddingTop: '8px' }}
-              onClick={this.handleClick}
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
             >
-              {location.pathname}
-            </a>
-          </div>
-          <div className={`w3-bar-block w3-indigo ${toggleStyle}`}>
-            <LinkHelper to="Journal" {...navLinkProps} onClick={this.handleClick} />
-            <LinkHelper to="Map" {...navLinkProps} onClick={this.handleClick} />
-            <LinkHelper to="Challenge" {...navLinkProps} onClick={this.handleClick} />
-          </div>
+              <span className="navbar-toggler-icon" />
+            </button>
+            <div className="collapse navbar-collapse" id="navbarNav">
+              <ul className="navbar-nav">
+                <li className="nav-item active">
+                  <a className="nav-link" href="#">
+                    Home <span className="sr-only">(current)</span>
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#">
+                    Features
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#">
+                    Pricing
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link disabled" href="#">
+                    Disabled
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </nav>
           <div className="layout__content" style={{ overflow: 'hidden' }}>
             {children}
           </div>
