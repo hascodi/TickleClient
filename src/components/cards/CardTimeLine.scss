@@ -1,0 +1,40 @@
+.bboxLine {
+  stroke: black;
+  stroke-width: 5;
+}
+.cont {
+  margin-top: 10px;
+}
+
+.line {
+  stroke: #ff9800;
+  stroke-width: 10px;
+}
+
+
+.stack {
+  margin: 0 auto;
+  position: relative;
+  z-index: 1000;
+  height: 420px;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.item {
+  // overflow: hidden;
+  position: absolute;
+  // opacity: 0;
+  // -webkit-touch-callout: none;
+  // -webkit-user-select: none;
+  // -khtml-user-select: none;
+  // -moz-user-select: none;
+  // -ms-user-select: none;
+  // user-select: none;
+  pointer-events: auto;
+}
+
+.stack_item{
+    transition: 0.2s left, 0.2s background-position, 0.1s border-color;
+}

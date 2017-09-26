@@ -1,0 +1,51 @@
+$btn-font-weight:bold !default;
+// @import '~bootstrap/scss/bootstrap.scss';
+@import '~colors.css/css/colors.css';
+
+// $btn-line-height:                1.25 !default;
+
+// html,body{height:100%;}
+
+// .container {
+//   height:100%;
+// }
+//
+// .tickle-navbar-overlay {
+//   position: absolute;
+//   z-index: 10;
+//   // background-color: orange;
+//   width: 100%;
+// }
+//
+// .tickle-thumbnail {
+//   // @extend .img-thumbnail;
+//   // min-height: 20px;
+//   max-height: 50px;
+//   max-width: 50px;
+// }
+
+.w3-card-4 {
+  // min-height: 700px;
+}
+
+.w3-modal-content {
+  background-color: initial;
+}
+
+//
+// .w3-container {
+//   flex:1;
+// }
+
+
+// .tickle-navbar-overlay button{
+//   background-color: white;
+// }
+
+#me {
+  height: 32px;
+  width: 32px;
+  background-size: 100% 100%;
+  background-image: url(icon_me.png);
+}
+
