@@ -46,6 +46,7 @@
     "react-redux": "^5.0.2",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "react-slick": "^0.15.4",
     "redux": "^3.6.0",
     "sass-loader": "^6.0.1",
     "superagent": "^3.5.0",

@@ -14,16 +14,17 @@ loaders.push(
     // include: /[\/\\](globalStyles)[\/\\]/,
     loaders: ['style-loader?sourceMap', 'css-loader']
   },
-  // global scss
-  {
-    test: /\variables.scss$/,
-    // exclude: /[\/\\]src[\/\\]/,
-    // include: /[/\\](styles/variables.scss)[/\\]/,
-    loaders: ['sass-variable-loader']
-  },
+  // // global scss
+  // {
+  //   test: /\variables.scss$/,
+  //   exclude: /[/\\]components[/\\]/,
+  //   // include: /[/\\](styles/variables.scss)[/\\]/,
+  //   loaders: ['sass-variable-loader']
+  // },
   // global scss
   {
     test: /\.scss$/,
+    exclude: /[/\\]components[/\\]/,
     use: [
       {
         loader: 'style-loader'
@@ -40,17 +41,17 @@ loaders.push(
     ]
   },
   // local scss modules
-  // {
-  //   test: /\.scss$/,
-  //   // include: /[/\\](components)[/\\]/,
-  //   exclude: /[/\\](global)[/\\]/,
-  //   loaders: [
-  //     'style-loader?sourceMap',
-  //     'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-  //     'postcss-loader',
-  //     'sass-loader'
-  //   ]
-  // },
+  {
+    test: /\.scss$/,
+    include: /[/\\](components)[/\\]/,
+    exclude: /[/\\](global)[/\\]/,
+    loaders: [
+      'style-loader?sourceMap',
+      'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
+      'postcss-loader',
+      'sass-loader'
+    ]
+  },
   // local scss modules
   // {
   //   test: /\.css$/,

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-
+import ReactDOM from 'react-dom';
+import $ from 'jquery';
 // import 'materialize-css';
 // import './_carousel.scss';
 // import './carousel';
@@ -11,68 +12,59 @@ import PropTypes from 'prop-types';
 
 import styles from './Carousel.scss';
 
-console.log('Styles', styles);
-
 class Carousel extends Component {
   static propTypes = {
-    data: PropTypes.array,
-    children: PropTypes.node
+    children: PropTypes.node,
+    height: PropTypes.number
   };
 
-  constructor(props) {
-    super(props);
+  // constructor(props) {
+  //   super(props);
+  // }
+
+  componentDidMount() {
+    $(ReactDOM.findDOMNode(this)).carousel({ ride: 'pause', interval: false });
   }
 
-  componentDidMount() {}
+  componentDidUpdate() {
+    $(ReactDOM.findDOMNode(this)).carousel({ ride: 'pause', interval: false });
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const { height, children } = this.props;
+    if (
+      height !== nextProps.height ||
+      children.length !== nextProps.children.length
+    )
+      return true;
+    return false;
+  }
 
   render() {
+    const { children, id } = this.props;
     return (
-      <div
-        id="carouselExampleIndicators"
-        className="carousel slide"
-        data-ride="carousel"
-      >
+      <div id={id} className="carousel slide">
         <ol className="carousel-indicators">
-          <li
-            data-target="#carouselExampleIndicators"
-            data-slide-to="0"
-            className="active"
-          />
-          <li data-target="#carouselExampleIndicators" data-slide-to="1" />
-          <li data-target="#carouselExampleIndicators" data-slide-to="2" />
+          {React.Children.map(children, (_, i) =>
+            <li
+              data-target={`#${id}`}
+              data-slide-to={i}
+              className={`${i === 0 ? 'active' : ''}`}
+            />
+          )}
         </ol>
         <div className="carousel-inner">
-          <div className="carousel-item active">
-            <img
-              className="d-block w-100"
-              src="http://lorempixel.com/400/200/sports/1/Dummy-Text/"
-              alt="First slide"
-              width="700"
-              height="700"
-            />
-          </div>
-          <div className="carousel-item">
-            <img
-              className="d-block w-100"
-              src="http://lorempixel.com/400/200/sports/1/Dummy-Text/"
-              alt="Second slide"
-              width="700"
-              height="700"
-            />
-          </div>
-          <div className="carousel-item">
-            <img
-              className="d-block w-100"
-              src="http://lorempixel.com/400/200/sports/1/Dummy-Text/"
-              alt="Third slide"
-              width="700"
-              height="700"
-            />
-          </div>
+          {React.Children.map(children, (comp, i) =>
+            <div className={`carousel-item ${i === 0 ? 'active' : ''}`}>
+              <div className="row justify-content-center">
+                {comp}
+              </div>
+            </div>
+          )}
         </div>
         <a
           className="carousel-control-prev"
-          href="#carouselExampleIndicators"
+          href={`#${id}`}
           role="button"
           data-slide="prev"
         >
@@ -87,7 +79,7 @@ class Carousel extends Component {
         </a>
         <a
           className="carousel-control-next"
-          href="#carouselExampleIndicators"
+          href={`#${id}`}
           role="button"
           data-slide="next"
         >
@@ -107,10 +99,16 @@ class Carousel extends Component {
 
 Carousel.defaultProps = {
   data: [],
-  children: d =>
-    (<div>
-      {d}
-    </div>)
+  id: 'carouselExampleIndicators',
+  height: 100,
+  children: () =>
+    <img
+      className="d-block"
+      src="http://lorempixel.com/400/200/sports/1/Dummy-Text/"
+      alt="First slide"
+      width="700"
+      height="700"
+    />
 };
 
 export default Carousel;

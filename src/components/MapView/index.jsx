@@ -8,16 +8,18 @@ import MapGL from 'react-map-gl';
 import Resizable from 're-resizable';
 // import rasterTileStyle from 'raster-tile-style';
 // import Pusher from 'pusher-js';
-// import ngeohash from 'ngeohash';
-
+// import ngeohash from 'ngeohash';,
+import ResizableCx from './Resizable.scss';
 import { Card } from '../cards/Card';
 import Carousel from './Carousel';
+
 // import Modal from './components/utils/Modal';
 
 import CardOverlay from './map-layers/CardOverlay';
 import UserOverlay from './map-layers/UserOverlay';
 
 import dummyData from '../../dummyData';
+
 // const tileSource = '//tile.stamen.com/toner/{z}/{x}/{y}.png';
 
 // const mapStyle = rasterTileStyle([tileSource]);
@@ -58,6 +60,10 @@ class MapView extends React.Component {
       },
       mapZoom: 20,
       cardDim: {
+        width: window.innerWidth,
+        height: height / 2
+      },
+      cardDefDim: {
         width: window.innerWidth,
         height: height / 2
       },
@@ -156,31 +162,30 @@ class MapView extends React.Component {
 
   _onChangeViewport(viewport) {
     const mapDim = {
-      width: window.innerWidth,
-      height: window.innerHeight
+      width: viewport.width,
+      height: viewport.height
     };
-    console.log('viewport', viewport);
-
+    console.log('ON change viewport', viewport, 'viewport zoom', viewport.zoom);
     this.setState({ mapDim, mapZoom: viewport.zoom });
   }
 
-  _userMove(pos, point) {
-    console.log('Pos', pos);
+  _userMove(pos) {
     const userLocation = {
-      latitude: pos.lat,
-      longitude: pos.lng
+      longitude: pos.lngLat[0],
+      latitude: pos.lngLat[1]
     };
+    // console.log('Pos', pos, 'userLocation', userLocation);
 
     this.setState({ userLocation });
   }
 
   render() {
-    const { mapDim, userLocation, mapZoom, cardDim } = this.state;
+    const { cards } = this.state;
+    const { mapDim, userLocation, mapZoom, cardDim, cardDefDim } = this.state;
     const mapViewport = { ...mapDim, ...userLocation, zoom: mapZoom };
     return (
-      <div key={`${location.pathname}${location.search}`}>
+      <div>
         <Resizable
-          style={{ border: '2px solid black' }}
           enable={{
             top: false,
             right: false,
@@ -191,9 +196,14 @@ class MapView extends React.Component {
             bottomLeft: false,
             topLeft: false
           }}
-          defaultSize={cardDim}
+          defaultSize={cardDefDim}
+          handleClasses={{ bottom: `${ResizableCx.handle} bg-dark` }}
           onResizeStop={(e, direction, ref, d) => {
             this.setState(oldState => ({
+              cardDim: {
+                width: oldState.cardDim.width + d.width,
+                height: oldState.cardDim.height + d.height
+              },
               mapDim: {
                 width: oldState.mapDim.width - d.width,
                 height: oldState.mapDim.height - d.height
@@ -201,7 +211,9 @@ class MapView extends React.Component {
             }));
           }}
         >
-          <Carousel />
+          <Carousel height={cardDim.height}>
+            {cards.map(d => <Card {...d} height={cardDim.height} />)}
+          </Carousel>
         </Resizable>
         <div style={{ position: 'relative' }}>
           <MapGL
@@ -215,7 +227,7 @@ class MapView extends React.Component {
             <CardOverlay
               {...mapViewport}
               cardClickHandler={this.cardClickHandler.bind(this)}
-              cards={this.state.cards}
+              cards={cards}
             />
             <UserOverlay {...mapViewport} location={userLocation} />
           </MapGL>

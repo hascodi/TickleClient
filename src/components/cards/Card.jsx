@@ -1,12 +1,17 @@
 import React, { PropTypes } from 'react';
 import * as d3 from 'd3';
 
+import 'w3-css';
+
 import cx from './Card.scss';
 import colorClasses from '../colorClasses';
 import StarRating from './utils/StarRating';
+import exampleImg from './example_challenge.jpg';
 // import Modal from '../utils/Modal';
 
 const mediaTypes = ['game', 'hyperlink', 'photo', 'video'];
+
+console.log('colorClasses', colorClasses);
 
 const mediaScale = d3
   .scaleOrdinal()
@@ -22,10 +27,11 @@ const colorScale = d3
 
 const colorClass = () => colorScale(Math.random() * 30);
 
+// const maxHeight = (h) =>
+
 class CardFrontDetail extends React.Component {
   render() {
     const {
-      caption,
       location,
       description,
       media,
@@ -35,14 +41,13 @@ class CardFrontDetail extends React.Component {
     } = this.props;
     return (
       <div>
-        <div className={`w3-margin w3-center ${cx.caption}`}>
-          {caption}
-        </div>
-        <section className="w3-container">
-          <table className="w3-table w3-striped w3-bordered">
+        <section className="container">
+          <table className="table table-sm table-responsive">
             <tr className="">
               <td>Location:</td>
-              <td>{`${place} (${Object.values(location).join(',')})`}</td>
+              <td>
+                {place}
+              </td>
             </tr>
             <tr>
               <td>Description:</td>
@@ -55,19 +60,19 @@ class CardFrontDetail extends React.Component {
             <tr className="">
               <td>Media</td>
               <td>
-                <div className="w3-row">
+                <div className="row">
                   {media.map(m =>
                     <div key={m.src}>
-                      <span className="w3-col" style={{ width: '20px' }}>
+                      <span className="col-1" style={{ width: '20px' }}>
                         <i
-                          className={`fa ${mediaScale(
-                            m.type
-                          )} fa-3 w3-margin-right`}
+                          className={`fa ${mediaScale(m.type)} fa-3`}
                           aria-hidden="true"
                         />
                       </span>
-                      <span className="w3-rest">
-                        {' '}<a href={m.src}> {m.name} </a>
+                      <span>
+                        <a href={m.src}>
+                          {m.name}
+                        </a>
                       </span>
                     </div>
                   )}
@@ -77,11 +82,11 @@ class CardFrontDetail extends React.Component {
             <tr>
               <td>Card Sets</td>
               <td>
-                {' '}{cardSets.map(c =>
+                {cardSets.map(c =>
                   <span key={c} className={`w3-tag ${colorClass()}`}>
                     {c}
                   </span>
-                )}{' '}
+                )}
               </td>
             </tr>
             <tr>
@@ -104,7 +109,6 @@ class CardFrontDetail extends React.Component {
 CardFrontDetail.propTypes = {
   place: React.PropTypes.string.isRequired,
   location: React.PropTypes.object,
-  caption: React.PropTypes.string.isRequired,
   description: React.PropTypes.string.isRequired,
   media: React.PropTypes.array.isRequired,
   cardSets: React.PropTypes.array.isRequired,
@@ -128,48 +132,61 @@ CardFrontDetail.defaultProps = {
   cardSets: ['Brussels VIP', 'Music challenge (Cards can be specific sets)']
 };
 
+const MediaGrid = ({ media }) =>
+  <div className="row col-12 justify-content-center">
+    {media.map((m, i) =>
+      <div className="col-2">
+        <i className={`fa ${mediaScale(m.type)} fa-2x`} aria-hidden="true" />
+      </div>
+    )}
+  </div>;
+
 const CardFrontPreview = ({
   key,
   title,
-  Controls,
   tags,
   xpPoints,
   img,
+  media,
+  height,
   children
 }) =>
-  <div key={key} className={`w3-card-4 ${colorClass()}`}>
-    {Controls}
-    <section className="w3-margin w3-container">
+  <div key={key}>
+    <section className="m-1 container">
       <h3>
         {title}
       </h3>
-      <div className="w3-row">
-        <div className="w3-col s4">
+      <div className="row">
+        <div className="col-4">
           <span className="w3-badge w3-round w3-large w3-green">
             Exp {xpPoints}
           </span>
         </div>
-        <div className="w3-col s8 w3-right-align">
+        <div className="col-8">
           {tags.map(t =>
-            (<span
+            <span
               key={t}
               className={`w3-tag w3-large ${colorClass()}`}
               style={{ float: 'right' }}
             >
               {t}
-            </span>)
+            </span>
           )}
         </div>
       </div>
+      <div className="mt-3 mb-1">
+        <div className="col-12">
+          <img
+            className="mx-auto d-block img-fluid rounded mb-2"
+            style={{ width: '100%' }}
+            src={img}
+            alt="Card cap"
+          />
+        </div>
+      </div>
+      <MediaGrid media={media} />
+      {children || null}
     </section>
-    <div className="w3-container">
-      <img
-        className="w3-row-padding w3-col s12 w3-center"
-        src={img}
-        alt="Card cap"
-      />
-    </div>
-    {children || null}
   </div>;
 
 CardFrontPreview.propTypes = {
@@ -179,7 +196,6 @@ CardFrontPreview.propTypes = {
   tags: React.PropTypes.array.isRequired,
   img: React.PropTypes.string.isRequired,
   xpPoints: React.PropTypes.number.isRequired,
-  Controls: React.PropTypes.element,
   children: React.PropTypes.array
 };
 
@@ -187,19 +203,12 @@ CardFrontPreview.defaultProps = {
   key: 'asa',
   title: 'TEST CARD TITLE',
   tags: ['cat1', 'tag2', 'tag3'],
-  Controls: (
-    <div className="w3-container">
-      <span onClick={a => a} className="w3-closebtn">
-        &times;
-      </span>
-      <span onClick={a => a} className="w3-closebtn">
-        <i className="fa fa-retweet" aria-hidden="true" />
-      </span>
-    </div>
-  ),
-  img:
-    'http://glintdemoz.com/timelylife/assets/attached_files/190_2016_06_11_12_24_44_testtest.jpg',
-  children: []
+  img: exampleImg,
+  children: [],
+  style: {
+    width: 300,
+    height: 300
+  }
 };
 
 // <span onClick={props.click2} className={`${cx.closeBtn} w3-btn`}>
@@ -209,17 +218,16 @@ const CardMini = props =>
   <div
     key={props.key}
     style={{ width: `${props.width}px`, height: `${props.height}px` }}
-    className={`w3-card-4 ${props.color}`}
   >
     <span onClick={() => props.click1} className={`${cx.flipBtn} w3-btn`}>
       <i className="fa fa-search fa-lg" aria-hidden="true" />
     </span>
-    <section className="w3-container">
+    <section className="container">
       <h5>
         {props.title}
       </h5>
     </section>
-    <div className="w3-container">
+    <div className="container">
       <img
         style={{ maxHeight: '100px' }}
         className=" w3-col s12 w3-center"
@@ -266,13 +274,13 @@ const CardMini2 = ({ title, tags, img, width, height }) =>
     </h4>
     <small>
       {tags.map((t, i) =>
-        (<span
+        <span
           key={t + i}
           className={`w3-tag ${colorClass()}`}
           style={{ float: 'right' }}
         >
           {t}
-        </span>)
+        </span>
       )}
     </small>
   </li>;
@@ -280,38 +288,35 @@ const CardMini2 = ({ title, tags, img, width, height }) =>
 CardMini2.PropTypes = CardMini.propTypes;
 CardMini2.defaultProps = CardMini.defaultProps;
 
-const CardBack = ({ key, Controls, friends, creator }) =>
-  <div key={key} className={'w3-card-4 w3-sand'}>
-    <div className="w3-card">
-      {Controls}
-      <div className="w3-container w3-section">
-        <h2>Comments </h2>
-        {friends.map(fr =>
-          (<div key={fr.user} className="w3-row">
-            <div className="w3-col s3">
-              <h2 className={cx.stamp}>
-                {fr.user}
-              </h2>
+const CardBack = ({ key, friends, creator }) =>
+  <div>
+    <div className="container w3-section">
+      <h2>Comments </h2>
+      {friends.map(fr =>
+        <div key={fr.user} className="row">
+          <div className="col-3">
+            <h2 className={cx.stamp}>
+              {fr.user}
+            </h2>
+          </div>
+          <div className="col-9">
+            <div>
+              <StarRating />
             </div>
-            <div className="w3-rest">
-              <div>
-                {' '}<StarRating />{' '}
-              </div>
-              <span style={{ fontStyle: 'italic' }} className={cx.textClamp}>
-                {fr.comment}{' '}
-              </span>
-            </div>
-          </div>)
-        )}
-      </div>
-      <div className={'w3-container w3-section'}>
-        <h2>Creator </h2>
-        <div className={`w3-col ${cx.colSmallAvatar}`}>
-          <div className="w3-col s4 w3-circle">
-            <span className={cx.stamp}>
-              {creator}
+            <span style={{ fontStyle: 'italic' }} className={cx.textClamp}>
+              {fr.comment}
             </span>
           </div>
+        </div>
+      )}
+    </div>
+    <div className={'container w3-section'}>
+      <h2>Creator </h2>
+      <div className={`col ${cx.colSmallAvatar}`}>
+        <div className="col-4 ">
+          <span className={cx.stamp}>
+            {creator}
+          </span>
         </div>
       </div>
     </div>
@@ -320,22 +325,11 @@ const CardBack = ({ key, Controls, friends, creator }) =>
 CardBack.propTypes = {
   key: React.PropTypes.string.isRequired,
   creator: React.PropTypes.string.isRequired,
-  Controls: React.PropTypes.shape,
   friends: React.PropTypes.array.isRequired
 };
 
 CardBack.defaultProps = {
   key: 'asa',
-  Controls: (
-    <div className="w3-container">
-      <span onClick={a => a} className="w3-closebtn">
-        &times;
-      </span>
-      <span onClick={a => a} className="w3-closebtn">
-        <i className="fa fa-retweet" aria-hidden="true" />
-      </span>
-    </div>
-  ),
   friends: [
     {
       user: 'Nils',
@@ -350,21 +344,11 @@ CardBack.defaultProps = {
   ]
 };
 
-const Controls = ({ flipHandler, closeHandler }) =>
-  <div>
-    <span onClick={flipHandler} className={`${cx.flipBtn} w3-btn`}>
-      <i className="fa fa-retweet fa-lg" aria-hidden="true" />
-    </span>
-    <span onClick={closeHandler} className={`${cx.closeBtn} w3-btn`}>
-      <i className="fa fa-times fa-lg" aria-hidden="true" />
-    </span>
-  </div>;
-
 const CollectButton = ({ collected }) =>
-  <div className="w3-padding">
+  <div className="p-1">
     <button
       onClick={() => alert('MiniGame')}
-      className={`w3-padding w3-btn w3-block w3-xxlarge w3-round ${colorClass()}`}
+      className={`btn btn-secondary btn-lg btn-block}`}
     >
       <span style={{ marginLeft: '10px' }}>
         {' '}{`${collected ? 'RePlay' : 'Collect'}!`}
@@ -385,33 +369,54 @@ class Card extends React.Component {
     this.state = {
       frontView: true
     };
+    this.scaleWidth = this.scaleWidth.bind(this);
   }
+
+  scaleWidth() {
+    const { height, width } = this.props;
+    switch (true) {
+    case height < 350:
+      return 'col-8';
+    case height < 580:
+      return 'col-10';
+    case height < 930:
+      return 'col-12';
+    default:
+      return 'col-5';
+    }
+  }
+
   render() {
-    const sideToggler = !this.state.frontView ? cx.flipAnim : null;
+    const { frontView } = this.state;
+    const sideToggler = frontView ? cx.flipAnim : null;
+    const { width, height } = this.props;
     // const style = { position: !this.state.frontView ? 'absolute' : null };
-    const flipHandler = () =>
-      this.setState({ frontView: !this.state.frontView });
+
     let ToggleCard;
     if (this.state.frontView) {
-      ToggleCard = (
-        <CardFront
-          {...this.props}
-          Controls={<Controls flipHandler={flipHandler} {...this.props} />}
-        />
-      );
+      ToggleCard = <CardFront {...this.props} />;
     } else {
-      ToggleCard = (
-        <CardBack
-          {...this.props}
-          Controls={<Controls flipHandler={flipHandler} {...this.props} />}
-        />
-      );
+      ToggleCard = <CardBack {...this.props} />;
     }
 
     return (
-      <div className={`${cx.flipContainer} ${sideToggler}`}>
+      <div
+        className={`${this.scaleWidth()} ${cx.flipContainer} ${sideToggler}`}
+      >
         <div className={`${cx.flipper} ${sideToggler}`}>
-          <div>
+          <div
+            style={{ height: `${height}px` }}
+            className={` w3-card w3-blue ${cx.card}`}
+          >
+            <div>
+              <span
+                onClick={() =>
+                  this.setState({ frontView: !this.state.frontView })}
+                className="btn "
+              >
+                <i className="fa fa-retweet fa-lg" aria-hidden="true" />
+              </span>
+            </div>
             {ToggleCard}
           </div>
         </div>
@@ -429,12 +434,9 @@ CardFrontPreview.defaultProps = {
   key: 3,
   date: '28/04/2012 10:00',
   tags: ['Uni', 'education'],
-  img:
-    'https://drive.google.com/uc?export=view&id=1N9Ed6a_CDa8SEMZeLaxULF4FtkHBQf4Feg',
-  caption: 'Main Entrance VUB',
+  img: exampleImg,
   xpPoints: 50,
   // TODO: remove in future to component
-  closeHandler: () => null,
   description: 'description',
   location: { latitude: 50.821705, longitude: 4.395165 },
   place: 'Pleinlaan 2 - 1050 BRUSSEL',

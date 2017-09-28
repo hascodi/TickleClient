@@ -3,6 +3,13 @@ import styles from './CardOverlay.scss';
 // const window = require('global/window');
 import DIVOverlay from './div.react';
 
+import cardIconSrc from './styles/cardIcon.svg';
+
+function round(x, n) {
+  const tenN = Math.pow(10, n);
+  return Math.round(x * tenN) / tenN;
+}
+
 class ChalllengesOverlay extends React.Component {
   static propTypes() {
     return {
@@ -13,28 +20,33 @@ class ChalllengesOverlay extends React.Component {
   }
 
   redraw(opt) {
-    const width = 20;
-    const height = 30;
-    console.log('width', width);
+    const width = 30;
+    const height = 40;
+    // console.log('width', width);
     // console.log('self', self);
     // const scale = 0.5; // self.zoom;
-    console.log('PROPS', this.props);
+    // console.log('PROPS', this.props);
     const { cards } = this.props;
     return cards.map(c => {
       const pixel = opt.project([c.location.longitude, c.location.latitude]);
-      console.log('pixel', pixel);
+      const pixelRounded = [round(pixel[0], 1), round(pixel[1], 1)];
+      // console.log('pixel', pixel);
       return (
         <div
           key={c.key}
-          className={`${styles.card} w3-button`}
           style={{
-            transform: `translate(${pixel[0] - width / 2}px, ${pixel[1] -
-              height / 2}px)`
+            position: 'absolute',
+            left: `${pixelRounded[0] - width / 2}px`,
+            top: `${pixelRounded[1] - height / 2}px`,
+            width: `${width}px`,
+            height: `${height}px`
+            // border: '2px black solid'
+            // background: `url(${cardIconSrc})`
           }}
           onTouchStart={() => this.cardClickHandler(c)}
           onClick={() => this.cardClickHandler(c)}
         >
-          <i className="fa fa-fw fa-question fa-2x" />
+          <img src={cardIconSrc} width={width} height={height} />
         </div>
       );
     });
