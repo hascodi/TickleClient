@@ -11,7 +11,11 @@ import {
 // import debug from 'debug';
 
 import MapView from './components/MapView';
+// TODO: learn redux
 import JournalStore from './ChallengeCRUD';
+
+// TODO: rename please
+import Hassan from './components/Hassan';
 
 import DefaultLayout from './layouts/MainLayout';
 // import NotFound from './containers/NotFound/NotFound';
@@ -19,25 +23,33 @@ import DefaultLayout from './layouts/MainLayout';
 // debug('lego:routes');
 
 const Routes = () =>
-  (<HashRouter>
+  <HashRouter>
     <Switch>
       <Route
         exact
         path="/"
         render={() =>
-          (<DefaultLayout>
+          <DefaultLayout>
             <MapView />
-          </DefaultLayout>)}
+          </DefaultLayout>}
       />
       <Route
         exact
         path="/journal"
         render={() =>
-          (<DefaultLayout>
+          <DefaultLayout>
             <JournalStore />
-          </DefaultLayout>)}
+          </DefaultLayout>}
+      />
+      <Route
+        exact
+        path="/hassan"
+        render={() =>
+          <DefaultLayout>
+            <Hassan />
+          </DefaultLayout>}
       />
     </Switch>
-  </HashRouter>);
+  </HashRouter>;
 
 export default Routes;

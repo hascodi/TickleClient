@@ -400,14 +400,9 @@ class Card extends React.Component {
     }
 
     return (
-      <div
-        className={`${this.scaleWidth()} ${cx.flipContainer} ${sideToggler}`}
-      >
+      <div className={`${cx.flipContainer} ${sideToggler}`}>
         <div className={`${cx.flipper} ${sideToggler}`}>
-          <div
-            style={{ height: `${height}px` }}
-            className={` w3-card w3-blue ${cx.card}`}
-          >
+          <div className={`w3-card w3-blue ${cx.card}`}>
             <div>
               <span
                 onClick={() =>

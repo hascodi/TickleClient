@@ -49,6 +49,7 @@
     "react-slick": "^0.15.4",
     "redux": "^3.6.0",
     "sass-loader": "^6.0.1",
+    "slick-carousel": "^1.7.1",
     "superagent": "^3.5.0",
     "superagent-jsonp": "^0.1.1",
     "viewport-mercator-project": "^4.1.1",

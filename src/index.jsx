@@ -1,7 +1,12 @@
 import 'font-awesome/css/font-awesome.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import './bootstrap.scss';
-import 'bootstrap';
+// import 'bootstrap';
+
+import 'slick-carousel';
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import './bootstrap.scss';
 // import 'materialize-css/dist/css/materialize.min.css';
 
 import React from 'react';

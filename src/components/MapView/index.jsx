@@ -19,6 +19,7 @@ import CardOverlay from './map-layers/CardOverlay';
 import UserOverlay from './map-layers/UserOverlay';
 
 import dummyData from '../../dummyData';
+import Slider from 'react-slick';
 
 // const tileSource = '//tile.stamen.com/toner/{z}/{x}/{y}.png';
 
@@ -183,6 +184,12 @@ class MapView extends React.Component {
     const { cards } = this.state;
     const { mapDim, userLocation, mapZoom, cardDim, cardDefDim } = this.state;
     const mapViewport = { ...mapDim, ...userLocation, zoom: mapZoom };
+    const settings = {
+      infinite: true,
+      speed: 500,
+      slidesToShow: cardDim.height < 250 ? 6 : 1,
+      centerMode: cardDim.height < 630
+    };
     return (
       <div>
         <Resizable
@@ -211,9 +218,15 @@ class MapView extends React.Component {
             }));
           }}
         >
-          <Carousel height={cardDim.height}>
-            {cards.map(d => <Card {...d} height={cardDim.height} />)}
-          </Carousel>
+          <div>
+            <Slider {...settings}>
+              {cards.map(d =>
+                <div style={{ padding: '10px' }}>
+                  <Card {...d} />
+                </div>
+              )}
+            </Slider>
+          </div>
         </Resizable>
         <div style={{ position: 'relative' }}>
           <MapGL
