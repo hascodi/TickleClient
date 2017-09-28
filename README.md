@@ -32,8 +32,8 @@ npm run build
 ```
 
 
-### Eslint
-the development files for your project you find in src/components/Hassan
+### Development
+The development files for your project you find in src/components/Hassan
 
 ### Eslint
 There is a .eslint.json config for eslint ready with React plugin.
