@@ -10,7 +10,7 @@ import Resizable from 're-resizable';
 // import Pusher from 'pusher-js';
 // import ngeohash from 'ngeohash';,
 import ResizableCx from './Resizable.scss';
-import { Card } from '../cards/Card';
+import { CardMini2 } from '../cards/Card.jsx';
 import Carousel from './Carousel';
 
 // import Modal from './components/utils/Modal';
@@ -19,7 +19,8 @@ import CardOverlay from './map-layers/CardOverlay';
 import UserOverlay from './map-layers/UserOverlay';
 
 import dummyData from '../../dummyData';
-import Slider from 'react-slick';
+// import Slider from 'react-slick';
+import cx from './index.scss';
 
 // const tileSource = '//tile.stamen.com/toner/{z}/{x}/{y}.png';
 
@@ -61,11 +62,11 @@ class MapView extends React.Component {
       },
       mapZoom: 20,
       cardDim: {
-        width: window.innerWidth,
+        width: window.innerwidth * 2,
         height: height / 2
       },
       cardDefDim: {
-        width: window.innerWidth,
+        width: window.innerwidth,
         height: height / 2
       },
       userLocation: {
@@ -153,7 +154,7 @@ class MapView extends React.Component {
 
   cardClickHandler(cardProps) {
     const selectedCard = (
-      <Card
+      <CardMini2
         {...cardProps}
         closeHandler={() => this.setState({ selectedCard: null })}
       />
@@ -184,12 +185,6 @@ class MapView extends React.Component {
     const { cards } = this.state;
     const { mapDim, userLocation, mapZoom, cardDim, cardDefDim } = this.state;
     const mapViewport = { ...mapDim, ...userLocation, zoom: mapZoom };
-    const settings = {
-      infinite: true,
-      speed: 500,
-      slidesToShow: cardDim.height < 250 ? 6 : 1,
-      centerMode: cardDim.height < 630
-    };
     return (
       <div>
         <Resizable
@@ -204,7 +199,7 @@ class MapView extends React.Component {
             topLeft: false
           }}
           defaultSize={cardDefDim}
-          handleClasses={{ bottom: `${ResizableCx.handle} bg-dark` }}
+          handleClasses={{ bottom: `${ResizableCx.handle}` }}
           onResizeStop={(e, direction, ref, d) => {
             this.setState(oldState => ({
               cardDim: {
@@ -218,14 +213,10 @@ class MapView extends React.Component {
             }));
           }}
         >
-          <div>
-            <Slider {...settings}>
-              {cards.map(d =>
-                <div style={{ padding: '10px' }}>
-                  <Card {...d} />
-                </div>
-              )}
-            </Slider>
+          <div className={cx.cardGridCont}>
+            <Carousel>
+              {cards.map(d => <CardMini2 {...d} />)}
+            </Carousel>
           </div>
         </Resizable>
         <div style={{ position: 'relative' }}>

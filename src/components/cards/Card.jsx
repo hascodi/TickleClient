@@ -3,6 +3,8 @@ import * as d3 from 'd3';
 
 import 'w3-css';
 
+import * as chromatic from 'd3-scale-chromatic';
+
 import cx from './Card.scss';
 import colorClasses from '../colorClasses';
 import StarRating from './utils/StarRating';
@@ -19,13 +21,19 @@ const mediaScale = d3
   .range(['fa-gamepad', 'fa-link', 'fa-camera', 'fa-video-camera']);
 
 console.log('mediaScale', mediaScale('hyperlink'));
+const challengeTypes = ['quiz'];
 const colorScale = d3
+  .scaleOrdinal()
+  .domain(challengeTypes)
+  .range(chromatic.schemePastel1);
+
+const colorScaleRandom = d3
   .scaleLinear()
   .domain(d3.range(colorClasses.length))
   .range(colorClasses)
   .clamp(true);
 
-const colorClass = () => colorScale(Math.random() * 30);
+const colorClass = () => colorScaleRandom(Math.random() * 30);
 
 // const maxHeight = (h) =>
 
@@ -132,10 +140,10 @@ CardFrontDetail.defaultProps = {
   cardSets: ['Brussels VIP', 'Music challenge (Cards can be specific sets)']
 };
 
-const MediaGrid = ({ media }) =>
-  <div className="row col-12 justify-content-center">
-    {media.map((m, i) =>
-      <div className="col-2">
+const MediaGrid = ({ data }) =>
+  <div className="row">
+    {data.map((m, i) =>
+      <div className="col-3">
         <i className={`fa ${mediaScale(m.type)} fa-2x`} aria-hidden="true" />
       </div>
     )}
@@ -184,31 +192,53 @@ const CardFrontPreview = ({
           />
         </div>
       </div>
-      <MediaGrid media={media} />
+      <MediaGrid data={media} />
       {children || null}
     </section>
   </div>;
 
-CardFrontPreview.propTypes = {
-  // id: React.PropTypes.number,
-  key: React.PropTypes.string.isRequired,
-  title: React.PropTypes.string.isRequired,
-  tags: React.PropTypes.array.isRequired,
-  img: React.PropTypes.string.isRequired,
-  xpPoints: React.PropTypes.number.isRequired,
-  children: React.PropTypes.array
-};
-
 CardFrontPreview.defaultProps = {
-  key: 'asa',
-  title: 'TEST CARD TITLE',
-  tags: ['cat1', 'tag2', 'tag3'],
+  title: 'Vrije Universiteit Brussel',
+  key: 3,
+  date: '28/04/2012 10:00',
+  tags: ['Uni', 'education'],
   img: exampleImg,
-  children: [],
-  style: {
-    width: 300,
-    height: 300
-  }
+  xpPoints: 50,
+  // TODO: remove in future to component
+  description: 'description',
+  location: { latitude: 50.821705, longitude: 4.395165 },
+  place: 'Pleinlaan 2 - 1050 BRUSSEL',
+  creator: 'Jan',
+  media: [
+    {
+      type: 'hyperlink',
+      name: 'Website',
+      src: 'http://we.vub.ac.be'
+    },
+    {
+      type: 'video',
+      name: "Some of the VUB's international students",
+      src: 'https://www.youtube.com/watch?v=YFCzlOqQW7M'
+    }
+  ],
+  friends: [
+    {
+      user: 'Chauncey',
+      comment: 'here I succeeded my Master studies.'
+    },
+    {
+      user: 'Jan',
+      comment: 'Now, I finally earn money as PhD student at the VUB!'
+    }
+  ],
+  rating: [
+    {
+      user: 'Nils',
+      value: 4
+    }
+  ],
+  cardSets: ['scavenger_hunt_vub', 'Brussels_city_tour'],
+  challenge: { type: 'quiz' }
 };
 
 // <span onClick={props.click2} className={`${cx.closeBtn} w3-btn`}>
@@ -237,56 +267,38 @@ const CardMini = props =>
     </div>
   </div>;
 
-CardMini.propTypes = {
-  // id: React.PropTypes.number,
-  key: React.PropTypes.string.isRequired,
-  title: React.PropTypes.string.isRequired,
-  img: React.PropTypes.string.isRequired,
-  width: React.PropTypes.number.isRequired,
-  height: React.PropTypes.number.isRequired,
-  color: React.PropTypes.string.isRequired,
-  click1: React.PropTypes.func,
-  click2: React.PropTypes.func
-};
+CardMini.propTypes = CardFrontPreview.propTypes;
 
-CardMini.defaultProps = {
-  key: 'asa',
-  width: 180,
-  height: 220,
-  title: 'TEST CARD TITLE',
-  img:
-    'http://glintdemoz.com/timelylife/assets/attached_files/190_2016_06_11_12_24_44_testtest.jpg',
-  color: colorClass()
-};
+CardMini.defaultProps = CardFrontPreview.defaultProps;
 
-const CardMini2 = ({ title, tags, img, width, height }) =>
-  <li
-    className={cx.cardMini2}
+console.log('color', colorScale('quiz'));
+
+const CardMini2 = ({ title, tags, img, width, height, media, challenge }) =>
+  <div
+    className={`${cx.cardMini2} `}
     style={{
       zIndex: 2,
-      width: `${width}px`,
-      height: `${height}px`
+      background: colorScale(challenge.type)
     }}
   >
-    <img src={img} alt="image1" width={'100%'} height={`${height * 4 / 8}px`} />
     <h4>
       {title}
     </h4>
-    <small>
-      {tags.map((t, i) =>
-        <span
-          key={t + i}
-          className={`w3-tag ${colorClass()}`}
-          style={{ float: 'right' }}
-        >
-          {t}
-        </span>
-      )}
-    </small>
-  </li>;
+    <div>
+      <small>
+        {tags.map((t, i) =>
+          <span key={t + i} className={`w3-tag ${colorClass()}`}>
+            {t}
+          </span>
+        )}
+      </small>
+      <div className="mt-1" />
+      {media ? <MediaGrid data={media} /> : null}
+    </div>
+  </div>;
 
-CardMini2.PropTypes = CardMini.propTypes;
-CardMini2.defaultProps = CardMini.defaultProps;
+CardMini2.PropTypes = CardFrontPreview.propTypes;
+CardMini2.defaultProps = CardFrontPreview.defaultProps;
 
 const CardBack = ({ key, friends, creator }) =>
   <div>
@@ -422,50 +434,6 @@ class Card extends React.Component {
 
 Card.propTypes = {
   closeHandler: React.PropTypes.func
-};
-
-CardFrontPreview.defaultProps = {
-  title: 'Vrije Universiteit Brussel',
-  key: 3,
-  date: '28/04/2012 10:00',
-  tags: ['Uni', 'education'],
-  img: exampleImg,
-  xpPoints: 50,
-  // TODO: remove in future to component
-  description: 'description',
-  location: { latitude: 50.821705, longitude: 4.395165 },
-  place: 'Pleinlaan 2 - 1050 BRUSSEL',
-  creator: 'Jan',
-  media: [
-    {
-      type: 'hyperlink',
-      name: 'Website',
-      src: 'http://we.vub.ac.be'
-    },
-    {
-      type: 'video',
-      name: "Some of the VUB's international students",
-      src: 'https://www.youtube.com/watch?v=YFCzlOqQW7M'
-    }
-  ],
-  friends: [
-    {
-      user: 'Chauncey',
-      comment: 'here I succeeded my Master studies.'
-    },
-    {
-      user: 'Jan',
-      comment: 'Now, I finally earn money as PhD student at the VUB!'
-    }
-  ],
-  rating: [
-    {
-      user: 'Nils',
-      value: 4
-    }
-  ],
-  cardSets: ['scavenger_hunt_vub', 'Brussels_city_tour'],
-  linkedCards: ['Sport_centre_vub', 'ULB_brussels']
 };
 
 export { Card, CardFrontPreview, CardMini, CardMini2 };

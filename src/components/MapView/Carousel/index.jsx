@@ -11,7 +11,7 @@ import 'slick-carousel';
 
 import PropTypes from 'prop-types';
 
-import styles from './Carousel.scss';
+import cx from './Carousel.scss';
 
 class Carousel extends Component {
   static propTypes = {
@@ -27,17 +27,7 @@ class Carousel extends Component {
     // $(ReactDOM.findDOMNode(this)).carousel({ ride: 'pause', interval: false });
   }
 
-  componentDidUpdate() {
-    $('.slider').slick({
-      // dots: true,
-      infinite: true,
-      centerMode: true,
-      centerPadding: '12%',
-      slidesToShow: 3,
-      speed: 500,
-      responsive: [{ breakpoint: 992, settings: { slidesToShow: 1 } }]
-    });
-  }
+  componentDidUpdate() {}
 
   shouldComponentUpdate(nextProps) {
     const { height, children } = this.props;
@@ -52,13 +42,17 @@ class Carousel extends Component {
   render() {
     const { children, id } = this.props;
     return (
-      <div className="slider">
+      <div className={cx.wrapper}>
         {React.Children.map(children, (comp, i) =>
-          <div>
-            <div className="row justify-content-center">
-              {comp}
-            </div>
-          </div>
+          <span
+            style={{
+              height: '100%',
+              gridColumnEnd: i === 3 ? 'span 2' : null,
+              gridRow: i === 3 ? '1' : null
+            }}
+          >
+            {comp}
+          </span>
         )}
       </div>
     );

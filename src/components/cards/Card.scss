@@ -150,14 +150,16 @@
 }
 
 .cardMini2 {
-  width: 200px;
-  height: 310px;
+  // width: 200px;
+  // height: 310px;
 
   // position: absolute;
   cursor: pointer;
-  background: brown;
-  border: solid black;
-  border-radius: 10px;
+
+  // background: brown;
+  // border: solid black;
+
+  // border-radius: 10px;
   padding: 5px;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
   pointer-events: auto;
