@@ -6,15 +6,23 @@
   display: grid;
   grid-gap: 10px;
   height: 100%;
-  grid-auto-flow: column;
+  grid-auto-flow: column dense;
 
   // grid-template-areas: "a a";
   grid-template-columns: repeat(6, 150px);
   grid-template-rows: 50% 50%;
 }
 
+// todo
 .wrapper::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   background-color: #F5F5F5;
+  background-color: tomato;
 }
+
+// .wrapper::-webkit-scrollbar {
+//   width: 5px;
+//   height: 8px;
+//   background-color: tomato;
+// }

@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
 import * as d3 from 'd3';
 
 import 'w3-css';
@@ -241,64 +241,46 @@ CardFrontPreview.defaultProps = {
   challenge: { type: 'quiz' }
 };
 
-// <span onClick={props.click2} className={`${cx.closeBtn} w3-btn`}>
-//   <i className="fa fa-retweet fa-lg" aria-hidden="true" />
-// </span>
-const CardMini = props =>
-  <div
-    key={props.key}
-    style={{ width: `${props.width}px`, height: `${props.height}px` }}
-  >
-    <span onClick={() => props.click1} className={`${cx.flipBtn} w3-btn`}>
-      <i className="fa fa-search fa-lg" aria-hidden="true" />
-    </span>
-    <section className="container">
-      <h5>
-        {props.title}
-      </h5>
-    </section>
-    <div className="container">
-      <img
-        style={{ maxHeight: '100px' }}
-        className=" w3-col s12 w3-center"
-        src={props.img}
-        alt="Card cap"
-      />
-    </div>
-  </div>;
-
-CardMini.propTypes = CardFrontPreview.propTypes;
-
-CardMini.defaultProps = CardFrontPreview.defaultProps;
-
-console.log('color', colorScale('quiz'));
-
-const CardMini2 = ({ title, tags, img, width, height, media, challenge }) =>
+const CardMini = ({ title, tags, img, clickHandler, challenge }) =>
   <div
     className={`${cx.cardMini2} `}
     style={{
       zIndex: 2,
       background: colorScale(challenge.type)
     }}
+    onClick={() => clickHandler({ preview: false })}
   >
-    <h4>
+    <h4 className="text-truncate">
       {title}
     </h4>
     <div>
-      <small>
-        {tags.map((t, i) =>
-          <span key={t + i} className={`w3-tag ${colorClass()}`}>
+      <small className={`text-truncate ${cx.tags}`}>
+        {tags.map(t =>
+          <span key={t} className={`${cx.tag} ${colorClass()}`}>
             {t}
           </span>
         )}
       </small>
-      <div className="mt-1" />
-      {media ? <MediaGrid data={media} /> : null}
+      {/* TODO */}
+      <div className="mt-1 mb-1" style={{ overflow: 'hidden' }}>
+        <img
+          style={{ width: '100%', height: 'auto' }}
+          src={img}
+          alt="Card cap"
+        />
+      </div>
     </div>
   </div>;
 
-CardMini2.PropTypes = CardFrontPreview.propTypes;
-CardMini2.defaultProps = CardFrontPreview.defaultProps;
+CardMini.propTypes = {
+  title: PropTypes.string,
+  tags: PropTypes.array,
+  img: PropTypes.string,
+  clickHandler: PropTypes.function,
+  challenge: PropTypes.object
+};
+
+CardMini.defaultProps = CardFrontPreview.defaultProps;
 
 const CardBack = ({ key, friends, creator }) =>
   <div>
@@ -376,32 +358,19 @@ const CardFront = props =>
   </CardFrontPreview>;
 
 class Card extends React.Component {
+  static propTypes = {
+    onMinify: PropTypes.function
+  };
   constructor(props) {
     super(props);
     this.state = {
       frontView: true
     };
-    this.scaleWidth = this.scaleWidth.bind(this);
-  }
-
-  scaleWidth() {
-    const { height, width } = this.props;
-    switch (true) {
-    case height < 350:
-      return 'col-8';
-    case height < 580:
-      return 'col-10';
-    case height < 930:
-      return 'col-12';
-    default:
-      return 'col-5';
-    }
   }
 
   render() {
     const { frontView } = this.state;
     const sideToggler = frontView ? cx.flipAnim : null;
-    const { width, height } = this.props;
     // const style = { position: !this.state.frontView ? 'absolute' : null };
 
     let ToggleCard;
@@ -436,4 +405,30 @@ Card.propTypes = {
   closeHandler: React.PropTypes.func
 };
 
-export { Card, CardFrontPreview, CardMini, CardMini2 };
+class CardCont extends Component {
+  static propTypes = {
+    preview: PropTypes.bool
+  };
+
+  constructor(props) {
+    super(props);
+    this.detailHandler = this.detailHandler.bind(this);
+    this.state = { ...this.props };
+  }
+
+  detailHandler(preview) {
+    this.setState({ preview: false });
+  }
+
+  render() {
+    return this.state.preview
+      ? <CardMini {...this.props} clickHandler={this.detailHandler} />
+      : <Card {...this.props} detailHandler={this.detailHandler} />;
+  }
+}
+
+CardCont.defaultProps = {
+  preview: true
+};
+
+export { Card, CardCont, CardFrontPreview, CardMini };

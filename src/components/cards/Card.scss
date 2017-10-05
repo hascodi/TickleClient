@@ -155,6 +155,7 @@
 
   // position: absolute;
   cursor: pointer;
+  height: 100%;
 
   // background: brown;
   // border: solid black;
@@ -163,19 +164,15 @@
   padding: 5px;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
   pointer-events: auto;
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -ms-backface-visibility: hidden;
-  -o-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 
-.cardMini2 img {
-  display: block;
-  margin: 0 auto;
-  width: 100%;
-  border-radius: 10px 10px 0 0;
-}
+// .cardMini2 img {
+//   display: block;
+//   margin: 0 auto;
+//   width: 100%;
+//   border-radius: 10px 10px 0 0;
+// }
 
 .cardMini2 h4 {
   font-size: 14px;
@@ -208,4 +205,15 @@
   background-image: url("./example_challenge.jpg");
   height: 300px;
   width: 300px;
+}
+
+.tags {
+  display: block;
+}
+
+.tag {
+  display: inline-block;
+  padding-left: 8px;
+  padding-right: 8px;
+  text-align: center;
 }

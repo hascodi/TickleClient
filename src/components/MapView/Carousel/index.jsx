@@ -41,18 +41,17 @@ class Carousel extends Component {
 
   render() {
     const { children, id } = this.props;
+    // return (
+    //   <div className={cx.wrapper}>
+    //     {React.Children.map(children, (comp, i) => comp)}
+    //   </div>
+    // );
     return (
       <div className={cx.wrapper}>
-        {React.Children.map(children, (comp, i) =>
-          <span
-            style={{
-              height: '100%',
-              gridColumnEnd: i === 3 ? 'span 2' : null,
-              gridRow: i === 3 ? '1' : null
-            }}
-          >
+        {React.Children.map(children, comp =>
+          <Cont>
             {comp}
-          </span>
+          </Cont>
         )}
       </div>
     );
@@ -71,6 +70,37 @@ Carousel.defaultProps = {
       width="700"
       height="700"
     />
+};
+class Cont extends Component {
+  static propTypes = {
+    children: PropTypes.node,
+    clicked: PropTypes.bool
+  };
+
+  constructor(props) {
+    super(props);
+    const { clicked } = props;
+    this.state = { clicked };
+  }
+
+  render() {
+    const { clicked } = this.props;
+    return (
+      <span
+        style={{
+          height: '100%',
+          gridColumnEnd: clicked ? 'span 2' : null,
+          gridRowEnd: clicked ? 'span 2' : null
+        }}
+        onClick={() => this.setState(oldSt => ({ clicked: oldSt.clicked }))}
+      >
+        {this.children}
+      </span>
+    );
+  }
+}
+Cont.defaultProps = {
+  clicked: false
 };
 
 export default Carousel;

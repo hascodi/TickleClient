@@ -507,15 +507,14 @@ const VUBSports = {
   linkedCards: ['VUB', 'ULB_brussels']
 };
 
+// TODO Hassan template to create more cards based on the brik cards
 const VUBSports2 = {
   title: 'Sport center VUB',
-  type: 'card',
-  key: 4,
   date: '04/04/2012 10:00',
+  // TODO; rename topics
   tags: ['Uni', 'sports'],
   img:
     'http://uabsport.be/wp-content/uploads/2015/10/817SOap_binnenzicht_01.jpg',
-  caption: 'The future swimming pool',
   xpPoints: 100,
   // TODO: remove in future to component
   description:
@@ -530,23 +529,23 @@ const VUBSports2 = {
       src: 'http://www.vub.ac.be/en/sport'
     }
   ],
-  friends: [
-    {
-      user: 'Lars',
-      comment: 'they have two squash courts and they are not expensive'
-    },
-    {
-      user: 'Jan',
-      comment:
-        'In the basic fit you can work out with many different equipment!'
-    }
-  ],
-  rating: [
-    {
-      user: 'Nils',
-      value: 4
-    }
-  ],
+  // friends: [
+  //   {
+  //     user: 'Lars',
+  //     comment: 'they have two squash courts and they are not expensive'
+  //   },
+  //   {
+  //     user: 'Jan',
+  //     comment:
+  //       'In the basic fit you can work out with many different equipment!'
+  //   }
+  // ],
+  // rating: [
+  //   {
+  //     user: 'Nils',
+  //     value: 4
+  //   }
+  // ],
   cardSets: ['Fitness_Brussels', 'Squash_brussels'],
   linkedCards: ['VUB', 'ULB_brussels']
 };

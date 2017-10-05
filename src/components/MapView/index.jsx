@@ -10,7 +10,7 @@ import Resizable from 're-resizable';
 // import Pusher from 'pusher-js';
 // import ngeohash from 'ngeohash';,
 import ResizableCx from './Resizable.scss';
-import { CardMini2 } from '../cards/Card.jsx';
+import { CardCont } from '../cards/Card';
 import Carousel from './Carousel';
 
 // import Modal from './components/utils/Modal';
@@ -154,7 +154,7 @@ class MapView extends React.Component {
 
   cardClickHandler(cardProps) {
     const selectedCard = (
-      <CardMini2
+      <CardCont
         {...cardProps}
         closeHandler={() => this.setState({ selectedCard: null })}
       />
@@ -215,7 +215,7 @@ class MapView extends React.Component {
         >
           <div className={cx.cardGridCont}>
             <Carousel>
-              {cards.map(d => <CardMini2 {...d} />)}
+              {cards.map(d => <CardCont {...d} />)}
             </Carousel>
           </div>
         </Resizable>
