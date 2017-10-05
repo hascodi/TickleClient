@@ -9,8 +9,12 @@
   grid-auto-flow: column dense;
 
   // grid-template-areas: "a a";
-  grid-template-columns: repeat(6, 150px);
+  grid-template-columns: repeat(16, 75px);
   grid-template-rows: 50% 50%;
+}
+
+.cont {
+  grid-column-end: span 2;
 }
 
 // todo

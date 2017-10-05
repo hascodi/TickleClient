@@ -417,7 +417,7 @@ class CardCont extends Component {
   }
 
   detailHandler(preview) {
-    this.setState({ preview: false });
+    // this.setState({ preview: false });
   }
 
   render() {

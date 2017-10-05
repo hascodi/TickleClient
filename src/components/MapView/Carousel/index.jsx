@@ -1,14 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import 'slick-carousel';
-// import $ from 'jquery';
-// import 'materialize-css';
-// import './_carousel.scss';
-// import './carousel';
 
-// import 'materialize-css/js/carousel';
-// import 'materialize-css/dist/css/materialize.css';
-
+import VisibilitySensor from 'react-visibility-sensor';
 import PropTypes from 'prop-types';
 
 import cx from './Carousel.scss';
@@ -48,10 +41,23 @@ class Carousel extends Component {
     // );
     return (
       <div className={cx.wrapper}>
-        {React.Children.map(children, comp =>
-          <Cont>
-            {comp}
-          </Cont>
+        {React.Children.map(children, (comp, i) =>
+          <VisibilitySensor
+            offset={{
+              // left: i === 0 ? 0 : 20,
+              right:
+                i === children.length - 1 || i === children.length - 2
+                  ? -1
+                  : 90,
+              bottom: 0,
+              top: 0
+            }}
+          >
+            {({ isVisible }) =>
+              <Cont col={i % 2 === 0 ? i + 1 : i} visible={isVisible}>
+                {comp}
+              </Cont>}
+          </VisibilitySensor>
         )}
       </div>
     );
@@ -74,7 +80,9 @@ Carousel.defaultProps = {
 class Cont extends Component {
   static propTypes = {
     children: PropTypes.node,
-    clicked: PropTypes.bool
+    clicked: PropTypes.bool,
+    col: PropTypes.number,
+    visible: PropTypes.bool
   };
 
   constructor(props) {
@@ -84,18 +92,26 @@ class Cont extends Component {
   }
 
   render() {
-    const { clicked } = this.props;
+    const { children, col, visible } = this.props;
+    const { clicked } = this.state;
+
     return (
-      <span
+      <div
+        className={cx.cont}
         style={{
           height: '100%',
-          gridColumnEnd: clicked ? 'span 2' : null,
-          gridRowEnd: clicked ? 'span 2' : null
+          gridColumn: clicked ? `${col} / span ${3}` : null,
+          gridRowEnd: clicked ? 'span 2' : 'span 1',
+          opacity: visible || clicked ? 1 : 0.56
         }}
-        onClick={() => this.setState(oldSt => ({ clicked: oldSt.clicked }))}
+        onClick={() => {
+          this.setState(oldSt => ({
+            clicked: visible ? !oldSt.clicked : null
+          }));
+        }}
       >
-        {this.children}
-      </span>
+        {children}
+      </div>
     );
   }
 }

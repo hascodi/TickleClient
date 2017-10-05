@@ -19,6 +19,10 @@ import CardOverlay from './map-layers/CardOverlay';
 import UserOverlay from './map-layers/UserOverlay';
 
 import dummyData from '../../dummyData';
+
+dummyData.forEach((d, i) => {
+  d.id = i;
+});
 // import Slider from 'react-slick';
 import cx from './index.scss';
 
@@ -213,7 +217,7 @@ class MapView extends React.Component {
             }));
           }}
         >
-          <div className={cx.cardGridCont}>
+          <div className={`${cx.cardGridCont} `}>
             <Carousel>
               {cards.map(d => <CardCont {...d} />)}
             </Carousel>
