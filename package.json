@@ -95,7 +95,7 @@
     "style-loader": "0.18.2",
     "transform-loader": "^0.2.4",
     "url-loader": "0.5.8",
-    "webpack": "2.6.1",
+    "webpack": "^3.6.0",
     "webpack-cleanup-plugin": "^0.5.1",
     "webpack-dev-server": "2.4.5",
     "webworkify": "^1.4.0",

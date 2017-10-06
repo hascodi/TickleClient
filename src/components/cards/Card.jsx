@@ -262,9 +262,13 @@ const CardMini = ({ title, tags, img, clickHandler, challenge }) =>
         )}
       </small>
       {/* TODO */}
-      <div className="mt-1 mb-1" style={{ overflow: 'hidden' }}>
+      <div className="mt-1 mb-1">
         <img
-          style={{ width: '100%', height: 'auto' }}
+          style={{
+            display: 'block',
+            maxWidth: '100%',
+            height: 'auto'
+          }}
           src={img}
           alt="Card cap"
         />

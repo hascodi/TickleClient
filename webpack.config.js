@@ -132,7 +132,12 @@ module.exports = {
       // In case you imported plugins individually, you must also require them here:
       Util: 'exports-loader?Util!bootstrap/js/dist/util',
       Dropdown: 'exports-loader?Dropdown!bootstrap/js/dist/dropdown'
-    })
+    }),
+    new webpack.EnvironmentPlugin({
+      MapboxAccessToken:
+        'pk.eyJ1Ijoiam1hdXNoYWciLCJhIjoiY2l2ODkyaDl1MDAwdTJvbnlmbHdvODM0MiJ9.rLkNA-rO4xq0O4_xIeqXVg'
+    }),
+    new webpack.optimize.ModuleConcatenationPlugin()
     // new webpack.ProvidePlugin({
     // $: 'jquery',
     // jQuery: 'jquery',

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Motion, spring } from 'react-motion';
 import styles from './CardOverlay.scss';
 // const window = require('global/window');
 import DIVOverlay from './div.react';
@@ -32,22 +33,30 @@ class ChalllengesOverlay extends React.Component {
       const pixelRounded = [round(pixel[0], 1), round(pixel[1], 1)];
       // console.log('pixel', pixel);
       return (
-        <div
-          key={c.key}
+        <Motion
           style={{
-            position: 'absolute',
-            left: `${pixelRounded[0] - width / 2}px`,
-            top: `${pixelRounded[1] - height / 2}px`,
-            width: `${width}px`,
-            height: `${height}px`
-            // border: '2px black solid'
-            // background: `url(${cardIconSrc})`
+            x: spring(pixelRounded[0]),
+            y: spring(pixelRounded[1])
           }}
-          onTouchStart={() => this.cardClickHandler(c)}
-          onClick={() => this.cardClickHandler(c)}
         >
-          <img src={cardIconSrc} width={width} height={height} />
-        </div>
+          {({ x, y }) =>
+            <div
+              key={c.key}
+              style={{
+                position: 'absolute',
+                left: `${x - width / 2}px`,
+                top: `${y - height / 2}px`,
+                width: `${width}px`,
+                height: `${height}px`
+                // border: '2px black solid'
+                // background: `url(${cardIconSrc})`
+              }}
+              onTouchStart={() => this.cardClickHandler(c)}
+              onClick={() => this.cardClickHandler(c)}
+            >
+              <img src={cardIconSrc} width={width} height={height} />
+            </div>}
+        </Motion>
       );
     });
   }

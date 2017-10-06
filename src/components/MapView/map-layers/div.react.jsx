@@ -19,7 +19,7 @@ export default class DivOverlay extends Component {
 
   render() {
     const { width, height, isDragging } = this.props;
-    console.log('ViewportMercator', ViewportMercator);
+    // console.log('ViewportMercator', ViewportMercator);
     const style = {
       pointerEvents: 'none',
       position: 'absolute',

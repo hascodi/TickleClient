@@ -1,3 +1,5 @@
+$handle-size: 30px;
+
 .cardGridCont {
   height: 100%;
   width: 100%;
@@ -22,4 +24,24 @@
   background-color: rgba(0, 0, 45, 0.5);
 
   /* -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5); */
+}
+
+.handle {
+  height: $handle-size !important;
+  bottom: (-$handle-size) !important;
+
+  // bottom: 20px !important;
+  z-index: 100;
+}
+
+.handleBar {
+  height: $handle-size;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  z-index: 10;
+}
+
+.handleBar span {
+  line-height: $handle-size;
 }
