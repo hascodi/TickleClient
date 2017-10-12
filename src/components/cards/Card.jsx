@@ -13,14 +13,14 @@ import exampleImg from './example_challenge.jpg';
 
 const mediaTypes = ['game', 'hyperlink', 'photo', 'video'];
 
-console.log('colorClasses', colorClasses);
+// console.log('colorClasses', colorClasses);
 
 const mediaScale = d3
   .scaleOrdinal()
   .domain(mediaTypes)
   .range(['fa-gamepad', 'fa-link', 'fa-camera', 'fa-video-camera']);
 
-console.log('mediaScale', mediaScale('hyperlink'));
+// console.log('mediaScale', mediaScale('hyperlink'));
 const challengeTypes = ['quiz'];
 const colorScale = d3
   .scaleOrdinal()
@@ -45,70 +45,54 @@ class CardFrontDetail extends React.Component {
       media,
       cardSets,
       linkedCards,
-      place
+      children
     } = this.props;
     return (
-      <div>
-        <section className="container">
-          <table className="table table-sm table-responsive">
-            <tr className="">
-              <td>Location:</td>
-              <td>
-                {place}
-              </td>
-            </tr>
-            <tr>
-              <td>Description:</td>
-              <td>
-                <div className={cx.textClamp}>
-                  {description}
-                </div>
-              </td>
-            </tr>
-            <tr className="">
-              <td>Media</td>
-              <td>
-                <div className="row">
-                  {media.map(m =>
-                    <div key={m.src}>
-                      <span className="col-1" style={{ width: '20px' }}>
-                        <i
-                          className={`fa ${mediaScale(m.type)} fa-3`}
-                          aria-hidden="true"
-                        />
-                      </span>
-                      <span>
-                        <a href={m.src}>
-                          {m.name}
-                        </a>
-                      </span>
+      <div className={cx.cardDetail}>
+        <div className={cx.textClamp}>
+          <fieldset className={cx.field}>
+            <legend>description</legend>
+            <span>
+              {description}
+            </span>
+          </fieldset>
+        </div>
+        <div>
+          <div>
+            <fieldset className={cx.field}>
+              <legend>media:</legend>
+
+              <div className="row">
+                {media.map(m =>
+                  <span className="row no-gutters" key={m.src}>
+                    <div className="col mr-1">
+                      <i
+                        className={`fa ${mediaScale(m.type)} fa-3`}
+                        aria-hidden="true"
+                      />
                     </div>
-                  )}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Card Sets</td>
-              <td>
-                {cardSets.map(c =>
-                  <span key={c} className={`w3-tag ${colorClass()}`}>
-                    {c}
+                    <div className="col mr-1">
+                      <a href={m.src}>name</a>
+                    </div>
                   </span>
                 )}
-              </td>
-            </tr>
-            <tr>
-              <td>linked Cards</td>
-              <td>
-                {' '}{linkedCards.map(c =>
-                  <span key={c} className={`w3-tag ${colorClass()}`}>
-                    {c}
-                  </span>
-                )}{' '}
-              </td>
-            </tr>
-          </table>
-        </section>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div>
+          <fieldset className={cx.field}>
+            <legend>Cardsets:</legend>
+            <Tags data={cardSets} />
+          </fieldset>
+        </div>
+        <div>
+          <fieldset className={cx.field}>
+            <legend>Cardsets:</legend>
+            <Tags data={linkedCards} />
+          </fieldset>
+        </div>
+        {children}
       </div>
     );
   }
@@ -241,7 +225,24 @@ CardFrontPreview.defaultProps = {
   challenge: { type: 'quiz' }
 };
 
-const CardMini = ({ title, tags, img, clickHandler, challenge }) =>
+const Tags = ({ data }) =>
+  <small className={`text-truncate ${cx.tags}`}>
+    {data.map(t =>
+      <span key={t} className={`${cx.tag} ${colorClass()}`}>
+        {t}
+      </span>
+    )}
+  </small>;
+
+const CardMini = ({
+  title,
+  tags,
+  img,
+  clickHandler,
+  detailHandler,
+  challenge,
+  children
+}) =>
   <div
     className={`${cx.cardMini2} `}
     style={{
@@ -250,18 +251,18 @@ const CardMini = ({ title, tags, img, clickHandler, challenge }) =>
     }}
     onClick={() => clickHandler({ preview: false })}
   >
-    <h4 className="text-truncate">
-      {title}
-    </h4>
+    <div className="row">
+      <div className="col-10">
+        <h4 className="text-truncate">
+          {title}
+        </h4>
+      </div>
+      <div className="col-1">
+        <i className="fa fa-retweet fa-lg" aria-hidden="true" />
+      </div>
+    </div>
     <div>
-      <small className={`text-truncate ${cx.tags}`}>
-        {tags.map(t =>
-          <span key={t} className={`${cx.tag} ${colorClass()}`}>
-            {t}
-          </span>
-        )}
-      </small>
-      {/* TODO */}
+      <Tags data={tags} />
       <div className="mt-1 mb-1">
         <img
           style={{
@@ -273,6 +274,7 @@ const CardMini = ({ title, tags, img, clickHandler, challenge }) =>
           alt="Card cap"
         />
       </div>
+      {children}
     </div>
   </div>;
 
@@ -281,7 +283,8 @@ CardMini.propTypes = {
   tags: PropTypes.array,
   img: PropTypes.string,
   clickHandler: PropTypes.function,
-  challenge: PropTypes.object
+  challenge: PropTypes.object,
+  children: PropTypes.node
 };
 
 CardMini.defaultProps = CardFrontPreview.defaultProps;
@@ -343,13 +346,13 @@ CardBack.defaultProps = {
 };
 
 const CollectButton = ({ collected }) =>
-  <div className="p-1">
+  <div className="p-2">
     <button
       onClick={() => alert('MiniGame')}
       className={`btn btn-secondary btn-lg btn-block}`}
     >
-      <span style={{ marginLeft: '10px' }}>
-        {' '}{`${collected ? 'RePlay' : 'Collect'}!`}
+      <span>
+        {`${collected ? 'RePlay' : 'Collect'}!`}
       </span>
       {collected || <i className="fa fa-lock" aria-hidden="true" />}
     </button>
@@ -377,28 +380,30 @@ class Card extends React.Component {
     const sideToggler = frontView ? cx.flipAnim : null;
     // const style = { position: !this.state.frontView ? 'absolute' : null };
 
-    let ToggleCard;
-    if (this.state.frontView) {
-      ToggleCard = <CardFront {...this.props} />;
-    } else {
-      ToggleCard = <CardBack {...this.props} />;
-    }
+    const ToggleCard = do {
+      if (this.state.frontView) {
+        <CardMini
+          {...this.props}
+          detailHandler={() =>
+            this.setState({ frontView: !this.state.frontView })}
+        >
+          <CardFrontDetail {...this.props}>
+            <CollectButton {...this.props} />
+          </CardFrontDetail>
+        </CardMini>;
+      } else {
+        <CardBack
+          {...this.props}
+          detailHandler={() =>
+            this.setState({ frontView: !this.state.frontView })}
+        />;
+      }
+    };
 
     return (
       <div className={`${cx.flipContainer} ${sideToggler}`}>
         <div className={`${cx.flipper} ${sideToggler}`}>
-          <div className={`w3-card w3-blue ${cx.card}`}>
-            <div>
-              <span
-                onClick={() =>
-                  this.setState({ frontView: !this.state.frontView })}
-                className="btn "
-              >
-                <i className="fa fa-retweet fa-lg" aria-hidden="true" />
-              </span>
-            </div>
-            {ToggleCard}
-          </div>
+          {ToggleCard}
         </div>
       </div>
     );
@@ -411,7 +416,7 @@ Card.propTypes = {
 
 class CardCont extends Component {
   static propTypes = {
-    preview: PropTypes.bool
+    detail: PropTypes.bool
   };
 
   constructor(props) {
@@ -420,19 +425,23 @@ class CardCont extends Component {
     this.state = { ...this.props };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ ...nextProps });
+  }
+
   detailHandler(preview) {
     // this.setState({ preview: false });
   }
 
   render() {
-    return this.state.preview
-      ? <CardMini {...this.props} clickHandler={this.detailHandler} />
-      : <Card {...this.props} detailHandler={this.detailHandler} />;
+    return this.state.detail
+      ? <Card {...this.props} detailHandler={this.detailHandler} />
+      : <CardMini {...this.props} clickHandler={this.detailHandler} />;
   }
 }
 
 CardCont.defaultProps = {
-  preview: true
+  detail: true
 };
 
 export { Card, CardCont, CardFrontPreview, CardMini };

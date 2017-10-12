@@ -75,10 +75,7 @@ export default class MainLayout extends Component {
               </ul>
             </div>
           </nav>
-          <div
-            className="layout__content pt-1 pl-1 pr-1"
-            style={{ overflow: 'hidden' }}
-          >
+          <div className="layout__content pt-1 pl-1 pr-1">
             {children}
           </div>
         </div>

@@ -5,7 +5,7 @@
   "main": "''",
   "scripts": {
     "build": "webpack --config webpack.production.config.js --progress --profile --colors",
-    "start": "webpack-dev-server --progress --profile --colors --https",
+    "start": "webpack-dev-server --progress --profile --colors --https --inline ",
     "lint": "eslint --ext js --ext jsx src || exit 0",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
@@ -47,10 +47,12 @@
     "react-redux": "^5.0.2",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "react-scroll-to-component": "^1.0.1",
     "react-slick": "^0.15.4",
     "react-visibility-sensor": "^3.11.0",
     "redux": "^3.6.0",
     "sass-loader": "^6.0.1",
+    "scroll-into-view": "^1.9.1",
     "slick-carousel": "^1.7.1",
     "superagent": "^3.5.0",
     "superagent-jsonp": "^0.1.1",

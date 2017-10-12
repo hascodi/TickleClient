@@ -9,21 +9,20 @@
   grid-auto-flow: column dense;
 
   // grid-template-areas: "a a";
-  grid-template-columns: repeat(50, 38px);
-  grid-template-rows: 50% 50% 50%;
+  grid-template-columns: repeat(30, 78px);
+  grid-template-rows: 50% 50%;
   min-height: 0;
   min-width: 0;
 }
 
 .item {
   // grid-column-end: span 2;
-  transition: opacity 0.1s;
+  // transition: opacity 0.1s;
   overflow: hidden;
 
-  /* NEW */
-  min-width: 0;
+  // min-width: 0;
 
-  /* NEW; needed for Firefox */
+  // NEW; needed for Firefox
 }
 
 // todo

@@ -29,6 +29,7 @@
     "no-param-reassign": 0,
     "space-before-function-paren": 0,
     "no-underscore-dangle": 0,
+    "no-unused-expressions": 0,
     "default-case": ["error", {
       "commentPattern": "^skip\\sdefault"
     }],

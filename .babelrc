@@ -1,4 +1,8 @@
 {
-  "presets": ["env", "react"],
+  "presets": [
+    ["env", {
+      "modules": false
+    }], "react"
+  ],
   "plugins": ["transform-runtime", "transform-object-rest-spread", "transform-decorators-legacy", "transform-class-properties", "react-hot-loader/babel", "transform-do-expressions", "transform-function-bind"]
 }

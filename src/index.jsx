@@ -20,9 +20,12 @@ const render = Component => {
   );
 };
 
-render(Routes);
+console.log('module', module === true);
+
 if (module.hot) {
   module.hot.accept('./Routes', () => {
+    console.log('hot');
     render(Routes);
   });
 }
+render(Routes);

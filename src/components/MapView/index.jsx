@@ -22,36 +22,10 @@ import UserOverlay from './map-layers/UserOverlay';
 
 import dummyData from '../../dummyData';
 
+// TODO:  change
 dummyData.forEach((d, i) => {
   d.id = i;
 });
-// import Slider from 'react-slick';
-
-// const tileSource = '//tile.stamen.com/toner/{z}/{x}/{y}.png';
-
-// const mapStyle = rasterTileStyle([tileSource]);
-
-// const pusher = new Pusher('cc379270b195d3a20931', {
-//   cluster: 'eu',
-//   encrypted: true
-// });
-
-// function isInMapBounds(coords, mapBounds) {
-//   const lng = parseFloat(coords.longitude);
-//   const lat = parseFloat(coords.latitude);
-//   // const mapBounds = map.getBounds();
-//   const boundsCheck =
-//     lng > mapBounds.getWest() &&
-//     lng < mapBounds.getEast() &&
-//     lat < mapBounds.getNorth() &&
-//     lat > mapBounds.getSouth();
-//
-//   if (boundsCheck) {
-//     return true;
-//   }
-//   return false;
-// }
-
 const AnimatedMap = ({
   width,
   height,
@@ -99,21 +73,21 @@ class MapView extends React.Component {
     this.gridSpan = this.gridSpan.bind(this);
 
     const height = window.innerHeight - headerPad;
+    const width = window.innerWidth - 8; // TODO:factor out in container comp
+    const defaultHeight = height / 2;
+    const gridWidth = width * 2;
+    const maxHeight = 3 / 4 * height;
+    const minHeight = 1 / 4 * height;
     this.state = {
       height,
-      mapDim: {
-        width: window.innerWidth,
-        height: height / 2
-      },
+      width,
+      defaultHeight,
+      gridWidth,
+      maxHeight,
+      minHeight,
+      mapHeight: height / 2,
       mapZoom: 20,
-      gridDim: {
-        width: window.innerwidth * 2,
-        height: height / 2
-      },
-      gridDefDim: {
-        width: window.innerwidth,
-        height: height / 2
-      },
+      gridHeight: height / 2,
       centerLocation: {
         latitude: 0,
         longitude: 0
@@ -130,14 +104,14 @@ class MapView extends React.Component {
 
   componentDidMount() {
     const self = this;
-    window.addEventListener('resize', () => {
-      this.setState({
-        mapDim: {
-          width: window.innerWidth,
-          height: window.innerHeight
-        }
-      });
-    });
+    // window.addEventListener('resize', () => {
+    //   this.setState({
+    //     mapHeight: {
+    //       width: window.innerWidth,
+    //       height: window.innerHeight
+    //     }
+    //   });
+    // });
 
     const watchPosId = navigator.geolocation.watchPosition(
       pos => {
@@ -151,24 +125,25 @@ class MapView extends React.Component {
 
         self.setState({ centerLocation, userLocation });
       },
+      // 50.846749, 4.352349
       d => console.log('error watch pos', d),
       { timeout: 1000000 }
     );
 
-    const curPosId = navigator.geolocation.getCurrentPosition(
-      pos => {
-        console.log('cur pos', pos.coords);
-        const userLocation = {
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude
-        };
-        const centerLocation = { ...userLocation };
-
-        self.setState({ centerLocation, userLocation });
-      },
-      d => console.log('error cur pos', d),
-      { maximumAge: 0, enableHighAccuracy: true }
-    );
+    // const curPosId = navigator.geolocation.getCurrentPosition(
+    //   pos => {
+    //     console.log('cur pos', pos.coords);
+    //     const userLocation = {
+    //       latitude: pos.coords.latitude,
+    //       longitude: pos.coords.longitude
+    //     };
+    //     const centerLocation = { ...userLocation };
+    //
+    //     self.setState({ centerLocation, userLocation });
+    //   },
+    //   d => console.log('error cur pos', d),
+    //   { maximumAge: 0, enableHighAccuracy: true }
+    // );
 
     this.setState({ cards: dummyData });
     // request
@@ -215,12 +190,11 @@ class MapView extends React.Component {
   }
 
   _onChangeViewport(viewport) {
-    const mapDim = {
-      width: viewport.width,
-      height: viewport.height
-    };
+    const mapHeight = viewport.height;
+    const width = viewport.width;
+
     console.log('ON change viewport', viewport, 'viewport zoom', viewport.zoom);
-    this.setState({ mapDim, mapZoom: viewport.zoom });
+    this.setState({ mapHeight, width, mapZoom: viewport.zoom });
   }
 
   _userMove(pos) {
@@ -235,26 +209,40 @@ class MapView extends React.Component {
   }
 
   gridSpan() {
-    const { height, gridDim } = this.state;
-    if (gridDim.height < height * 1 / 3) {
-      return { span: 2, spanActive: 3 };
+    const { height, gridHeight } = this.state;
+    // console.log('gridSpan  height', height);
+    if (gridHeight < height * 2 / 6) {
+      return { columnWidth: 27, span: 2, activeSpan: 3, detail: false };
     }
-    if (gridDim.height < height * 2 / 3) return { span: 4, spanActive: 5 };
-    return { span: 6, spanActive: 7 };
+    if (gridHeight < height * 3 / 6)
+      return { columnWidth: 27, span: 3, activeSpan: 4, detail: false };
+    if (gridHeight < height * 4 / 6)
+      return { columnWidth: 27, span: 4, activeSpan: 5, detail: false };
+    // if (gridHeight.height < height * 4 / 6)
+    //   return { columnWidth: 27, span: 5, activeSpan: 7 };
+    return { columnWidth: 27, span: 6, activeSpan: 8, detail: true };
   }
   render() {
     const { cards } = this.state;
     const {
-      mapDim,
       centerLocation,
       mapZoom,
-      gridDefDim,
+      mapHeight,
+      maxHeight,
+      defaultHeight,
+      gridHeight,
+      minHeight,
+      width,
       userLocation,
       selectedCard
     } = this.state;
 
-    console.log('userLocation', userLocation, 'centerLocation', centerLocation);
+    // console.log('width', mapDim);
+    const mapDim = { width, height: mapHeight };
+    // console.log('userLocation', userLocation, 'centerLocation', centerLocation);
     const mapViewport = { ...mapDim, ...centerLocation, zoom: mapZoom };
+    const gridConfig = this.gridSpan();
+    console.log('gridConfig', gridConfig);
     return (
       <div>
         <Resizable
@@ -268,44 +256,35 @@ class MapView extends React.Component {
             bottomLeft: false,
             topLeft: false
           }}
-          defaultSize={gridDefDim}
+          defaultSize={{ width, height: defaultHeight }}
+          maxHeight={maxHeight}
+          size={{ width, height: gridHeight }}
           handleClasses={{ bottom: `${cx.handle}` }}
           handleSize={[30, 40]}
           onResizeStop={(e, direction, ref, d) => {
             this.setState(oldState => ({
-              gridDim: {
-                width: oldState.gridDim.width + d.width,
-                height: oldState.gridDim.height + d.height
-              },
-              mapDim: {
-                width: oldState.mapDim.width - d.width,
-                height: oldState.mapDim.height - d.height
-              }
+              gridHeight: oldState.gridHeight + d.height,
+              mapHeight: oldState.mapHeight - d.height
             }));
           }}
         >
           <div className={`${cx.cardGridCont} `}>
-            <Grid {...this.gridSpan()}>
-              {cards.map(d =>
-                <CardCont
-                  {...d}
-                  clickHandler={clicked => {
-                    console.log(
-                      'loc',
-                      d.location,
-                      'userLocation',
-                      this.state.userLocation
-                    );
-                    this.setState(oldState => ({
-                      centerLocation: !clicked
-                        ? d.location
-                        : { ...this.state.userLocation },
-                      mapZoom: !clicked ? 20 : oldState.mapZoom,
-                      selectedCard: d
-                    }));
-                  }}
-                />
-              )}
+            <Grid
+              {...gridConfig}
+              clickHandler={(c, selected) => {
+                console.log('card', c);
+                this.setState(oldState => ({
+                  centerLocation: selected
+                    ? c.location
+                    : { ...this.state.userLocation },
+                  mapZoom: selected ? 20 : oldState.mapZoom,
+                  selectedCard: c,
+                  gridHeight: selected ? maxHeight : defaultHeight,
+                  mapHeight: selected ? minHeight : defaultHeight
+                }));
+              }}
+            >
+              {cards.map(d => <CardCont {...d} detail={false} />)}
             </Grid>
           </div>
         </Resizable>

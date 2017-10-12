@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const loaders = require('./webpack.loaders');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const HOST = process.env.HOST || '127.0.0.1';
 const PORT = process.env.PORT || '8888';
@@ -52,6 +53,18 @@ loaders.push(
       'sass-loader'
     ]
   },
+  // TODO: production
+  // {
+  //   test: /\.scss$/,
+  //   include: /[/\\](components)[/\\]/,
+  //   exclude: /[/\\](global)[/\\]/,
+  //   loaders: [
+  //     'style-loader?sourceMap',
+  //     'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
+  //     'postcss-loader',
+  //     'sass-loader'
+  //   ]
+  // },
   // local scss modules
   // {
   //   test: /\.css$/,
@@ -85,6 +98,14 @@ loaders.push(
 module.exports = {
   entry: [
     'react-hot-loader/patch',
+
+    `webpack-dev-server/client?https://${HOST}:${PORT}`,
+    // bundle the client for webpack-dev-server
+    // and connect to the provided endpoint
+
+    'webpack/hot/only-dev-server',
+    // bundle the client for hot reloading
+    // only- means to only hot reload for successful updates
     './src/index.jsx' // your app's entry point
   ],
   devtool: process.env.WEBPACK_DEVTOOL || 'source-map',
@@ -119,6 +140,7 @@ module.exports = {
     // }
   },
   plugins: [
+    new webpack.NamedModulesPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
@@ -137,7 +159,8 @@ module.exports = {
       MapboxAccessToken:
         'pk.eyJ1Ijoiam1hdXNoYWciLCJhIjoiY2l2ODkyaDl1MDAwdTJvbnlmbHdvODM0MiJ9.rLkNA-rO4xq0O4_xIeqXVg'
     }),
-    new webpack.optimize.ModuleConcatenationPlugin()
+    // new webpack.optimize.ModuleConcatenationPlugin(),
+    new ExtractTextPlugin('style.css')
     // new webpack.ProvidePlugin({
     // $: 'jquery',
     // jQuery: 'jquery',
