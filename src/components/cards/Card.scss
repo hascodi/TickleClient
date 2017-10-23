@@ -223,6 +223,7 @@
   margin-top: 4px;
   padding: 0;
   padding-left: 4px;
+  min-height: 40px;
 
   // padding-bottom: 4px;
 
@@ -235,4 +236,14 @@
 
 .cardDetail {
   height: 100%;
+}
+
+.avatar {
+  border-radius: 50%;
+  border: black 2px solid;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
 }

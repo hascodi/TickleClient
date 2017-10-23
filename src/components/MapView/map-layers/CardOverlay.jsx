@@ -29,7 +29,9 @@ class ChalllengesOverlay extends React.Component {
     // console.log('PROPS', this.props);
     const { cards } = this.props;
     return cards.map(c => {
+      console.log('card', c);
       const pixel = opt.project([c.location.longitude, c.location.latitude]);
+      console.log('opt', opt);
       const pixelRounded = [round(pixel[0], 1), round(pixel[1], 1)];
       // console.log('pixel', pixel);
       return (
@@ -51,8 +53,6 @@ class ChalllengesOverlay extends React.Component {
                 // border: '2px black solid'
                 // background: `url(${cardIconSrc})`
               }}
-              onTouchStart={() => this.cardClickHandler(c)}
-              onClick={() => this.cardClickHandler(c)}
             >
               <img src={cardIconSrc} width={width} height={height} />
             </div>}

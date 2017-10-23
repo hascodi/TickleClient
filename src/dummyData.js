@@ -1,13 +1,12 @@
 const ArthurDeGreefCard = {
   title: 'The peculiar story of Arthur De Greef',
-  type: 'card',
+  challenge: { type: 'gap text' },
   date: '28/04/2012 10:00',
   tags: ['Art', 'Culture', 'Music'],
   img:
     'https://drive.google.com/uc?export=view&id=1N9Ed6a_CDa8SEMZeLaxULF4FtkHBQf4Feg',
   xpPoints: 100,
   // TODO: remove in future to component
-  closeHandler: () => null,
   caption: 'A statue of Arthur de Greef',
   description:
     'Pianist Arthur De Greef born in Louvain. He was a pupil of Frank Liszt. I do not why there is statue is placed here. There is music school with the same name not far.',
@@ -53,15 +52,13 @@ const ArthurDeGreefCard = {
 
 const ArthurDeGreefCard2 = {
   title: 'The peculiar story of Arthur De Greef',
-  type: 'card',
+  challenge: { type: 'gap text' },
   date: '28/04/2012 10:00',
   tags: ['Art', 'Culture', 'Music'],
   img:
     'https://drive.google.com/uc?export=view&id=1N9Ed6a_CDa8SEMZeLaxULF4FtkHBQf4Feg',
   xpPoints: 100,
   // TODO: remove in future to component
-  closeHandler: () => null,
-  caption: 'A statue of Arthur de Greef',
   description:
     'Pianist Arthur De Greef born in Louvain. He was a pupil of Frank Liszt. I do not why there is statue is placed here. There is music school with the same name not far.',
   location: { latitude: 50.828797, longitude: 4.352191 },
@@ -106,15 +103,13 @@ const ArthurDeGreefCard2 = {
 
 const ArthurDeGreefCard3 = {
   title: 'The peculiar story of Arthur De Greef',
-  type: 'card',
+  challenge: { type: 'gap text' },
   date: '28/04/2012 10:00',
   tags: ['Art', 'Culture', 'Music'],
   img:
     'https://drive.google.com/uc?export=view&id=1N9Ed6a_CDa8SEMZeLaxULF4FtkHBQf4Feg',
   xpPoints: 100,
   // TODO: remove in future to component
-  closeHandler: () => null,
-  caption: 'A statue of Arthur de Greef',
   description:
     'Pianist Arthur De Greef born in Louvain. He was a pupil of Frank Liszt. I do not why there is statue is placed here. There is music school with the same name not far.',
   location: { latitude: 50.828797, longitude: 4.352191 },
@@ -140,11 +135,13 @@ const ArthurDeGreefCard3 = {
   friends: [
     {
       user: 'Nils',
-      comment: 'I did not know that he was such a famous composer'
+      comment: 'I did not know that he was such a famous composer',
+      date: '22/04/2016'
     },
     {
       user: 'Babba',
-      comment: 'What a nice park, strange, that they put a mask on his face!'
+      comment: 'What a nice park, strange, that they put a mask on his face!',
+      date: '22/04/2016'
     }
   ],
   rating: [
@@ -159,14 +156,12 @@ const ArthurDeGreefCard3 = {
 
 const MapEvent = {
   title: 'an event on a location on a map',
-  type: 'card',
+  challenge: { type: 'gap text' },
   date: '27/04/2012 10:00',
   // tags: ['Art', 'Culture', 'Music'],
   // img: 'https://drive.google.com/uc?export=view&id=1N9Ed6a_CDa8SEMZeLaxULF4FtkHBQf4Feg',
   xpPoints: 100,
   // TODO: remove in future to component
-  // closeHandler: () => (null),
-  // caption: 'A statue of Arthur de Greef',
   location: { latitude: 50.828797, longitude: 4.352191 },
   place: 'Park next to my Home',
   tags: ['Art', 'Culture', 'classic', 'something', 'composer', 'classic'],
@@ -177,15 +172,14 @@ const MapEvent = {
 
 const FranzLisztCard = {
   title: 'The life of Frank Liszt',
+  challenge: { type: 'gap text' },
   date: '24/04/2012 10:00',
   type: 'card',
   tags: ['Art', 'Culture', 'classic', 'music'],
   img:
     'http://www.wagner-heavymetal.com/uploads/4/4/7/3/44734409/5792753_orig.gif',
-  caption: 'Frank Liszt meets Heavy Metal',
   xpPoints: 100,
   // TODO: remove in future to component
-  closeHandler: () => null,
   description:
     'The first pop star of classical music. He made girls cry with his virtuosic piano play. Much like Jimi hendrix he redefined the way to play his instrument',
   location: { latitude: 50.843018, longitude: 4.35908 },
@@ -202,13 +196,15 @@ const FranzLisztCard = {
   friends: [
     {
       user: 'Nils',
-      comment: 'the band Phoenix dedicated an album to Liszt'
+      comment: 'the band Phoenix dedicated an album to Liszt',
+      date: '01/04/2012 10:00'
     }
   ],
   rating: [
     {
       user: 'Nils',
-      value: 4
+      value: 4,
+      date: '01/04/2012 10:00'
     }
   ],
   cardSets: ['european_composers', 'Music challenge'],
@@ -221,15 +217,15 @@ const FranzLisztCard = {
 
 const jimiHendrixCard = {
   title: 'Jimi Hendrix in Belgium',
-  type: 'card',
+  challenge: {
+    type: 'hangman'
+  },
   date: '01/04/2012 10:00',
   tags: ["Rock 'n ' Roll", 'Culture', 'music'],
   img:
     'http://www.memoire60-70.be/Images/Chronique_1966_1972/Jimi_Hendrix_Belgium_67.jpg',
-  caption: 'Jimi Hendrix au Twenty Club - 5 mars 1967',
   xpPoints: 50,
   // TODO: remove in future to component
-  closeHandler: () => null,
   description:
     'The first pop star of classical music. He made girls cry with his virtuosic piano play. Much like Jimi hendrix he redefined the way to play his instrument',
   location: { latitude: 50.893793, longitude: 4.352083 },
@@ -277,15 +273,15 @@ const jimiHendrixCard = {
 };
 const jimiHendrixCard2 = {
   title: 'Jimi Hendrix in Belgium',
-  type: 'card',
+  challenge: {
+    type: 'hangman'
+  },
   date: '01/04/2012 10:00',
   tags: ["Rock 'n ' Roll", 'Culture', 'music'],
   img:
     'http://www.memoire60-70.be/Images/Chronique_1966_1972/Jimi_Hendrix_Belgium_67.jpg',
-  caption: 'Jimi Hendrix au Twenty Club - 5 mars 1967',
   xpPoints: 50,
   // TODO: remove in future to component
-  closeHandler: () => null,
   description:
     'The first pop star of classical music. He made girls cry with his virtuosic piano play. Much like Jimi hendrix he redefined the way to play his instrument',
   location: { latitude: 50.893793, longitude: 4.352083 },
@@ -307,19 +303,23 @@ const jimiHendrixCard2 = {
   friends: [
     {
       user: 'Nils',
-      comment: 'jimi yeah'
+      comment: 'jimi yeah',
+      date: '22/04/2017'
     },
     {
       user: 'Kiran',
-      comment: 'My hero, I want to have his haircut'
+      comment: 'My hero, I want to have his haircut',
+      date: '22/04/2017'
     },
     {
       user: 'babba',
-      comment: 'all along the watch tower!'
+      comment: 'all along the watch tower!',
+      date: '22/03/2017'
     },
     {
       user: 'gab',
-      comment: 'BEER'
+      comment: 'BEER',
+      date: '22/02/2017'
     }
   ],
   rating: [
@@ -334,14 +334,13 @@ const jimiHendrixCard2 = {
 
 const notification = {
   title: 'TestCard',
-  type: 'notification',
+  challenge: {
+    type: 'hangman'
+  },
   date: '02/04/2012 10:00',
   tags: ["Rock 'n ' Roll", 'Culture', 'music'],
   // img: "https://www.w3schools.com/images/w3schools_green.jpg",
-  caption: 'blalblalal',
   xpPoints: 50,
-  // TODO: remove in future to component
-  closeHandler: () => null,
   description: 'more descriptive text',
   location: { latitude: 50.893793, longitude: 4.352083 },
   place: 'Amerikaans Theater',
@@ -352,14 +351,13 @@ const notification = {
 
 const notification2 = {
   title: 'TestCard',
-  type: 'notification',
+  challenge: {
+    type: 'quiz'
+  },
   date: '02/04/2012 10:00',
   tags: ["Rock 'n ' Roll", 'Culture', 'music'],
   // img: "https://www.w3schools.com/images/w3schools_green.jpg",
-  caption: 'blalblalal',
   xpPoints: 50,
-  // TODO: remove in future to component
-  closeHandler: () => null,
   description: 'more descriptive text',
   location: { latitude: 50.893793, longitude: 4.352083 },
   place: 'Amerikaans Theater',
@@ -370,15 +368,14 @@ const notification2 = {
 
 const VUBcard = {
   title: 'Vrije Universiteit Brussel',
-  type: 'card',
+  challenge: {
+    type: 'quiz'
+  },
   date: '28/04/2012 10:00',
   tags: ['Uni', 'education'],
   img:
     'https://drive.google.com/uc?export=view&id=1N9Ed6a_CDa8SEMZeLaxULF4FtkHBQf4Feg',
-  caption: 'Main Entrance VUB',
   xpPoints: 50,
-  // TODO: remove in future to component
-  closeHandler: () => null,
   description:
     "The Vrije Universiteit Brussel is the only Flemish university that has incorporated the principle of 'free inquiry' in its statutes. This principle is based on a text by the French mathematician and natural philosopher Henri Poincaré (1854-1912)",
   location: { latitude: 50.821705, longitude: 4.395165 },
@@ -399,11 +396,13 @@ const VUBcard = {
   friends: [
     {
       user: 'Chauncey',
-      comment: 'here I succeeded my Master studies.'
+      comment: 'here I succeeded my Master studies.',
+      date: '22/03/2017'
     },
     {
       user: 'Jan',
-      comment: 'Now, I finally earn money as PhD student at the VUB!'
+      comment: 'Now, I finally earn money as PhD student at the VUB!',
+      date: '22/03/2017'
     }
   ],
   rating: [
@@ -426,7 +425,6 @@ const VubCard2 = {
   caption: 'Main Entrance VUB',
   xpPoints: 50,
   // TODO: remove in future to component
-  closeHandler: () => null,
   description:
     "The Vrije Universiteit Brussel is the only Flemish university that has incorporated the principle of 'free inquiry' in its statutes. This principle is based on a text by the French mathematician and natural philosopher Henri Poincaré (1854-1912)",
   location: { latitude: 50.821705, longitude: 4.395165 },
@@ -447,11 +445,13 @@ const VubCard2 = {
   friends: [
     {
       user: 'Chauncey',
-      comment: 'here I succeeded my Master studies.'
+      comment: 'here I succeeded my Master studies.',
+      date: '22/03/2017'
     },
     {
       user: 'Jan',
-      comment: 'Now, I finally earn money as PhD student at the VUB!'
+      comment: 'Now, I finally earn money as PhD student at the VUB!',
+      date: '22/03/2017'
     }
   ],
   rating: [
@@ -489,12 +489,14 @@ const VUBSports = {
   friends: [
     {
       user: 'Lars',
-      comment: 'they have two squash courts and they are not expensive'
+      comment: 'they have two squash courts and they are not expensive',
+      date: '22/03/2017'
     },
     {
       user: 'Jan',
       comment:
-        'In the basic fit you can work out with many different equipment!'
+        'In the basic fit you can work out with many different equipment!',
+      date: '22/03/2017'
     }
   ],
   rating: [
@@ -550,7 +552,8 @@ const VUBSports2 = {
   linkedCards: ['VUB', 'ULB_brussels']
 };
 
-const arr = [
+const challengeTypes = ['quiz', 'gap text', 'hangman'];
+const dummyCards = [
   notification,
   notification2,
   MapEvent,
@@ -565,6 +568,6 @@ const arr = [
   VubCard2
 ];
 
-// arr.forEach((d, i) => d.key = i);
+const mediaTypes = ['game', 'hyperlink', 'photo', 'video'];
 
-module.exports = arr;
+export { dummyCards, challengeTypes, mediaTypes };

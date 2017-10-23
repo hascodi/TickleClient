@@ -98,7 +98,6 @@ class Grid extends Component {
                   <ScrollElement name={i}>
                     <Item
                       {...this.props}
-                      {...comp.props}
                       defaultCol={col}
                       visible={isVisible}
                       index={i}
@@ -136,12 +135,14 @@ class Item extends Component {
     activeSpan: PropTypes.number,
     opacity: PropTypes.number,
     visible: PropTypes.bool,
-    clickHandler: PropTypes.function
+    clickHandler: PropTypes.func,
+    scrollTo: PropTypes.func
   };
 
   constructor(props) {
     super(props);
     const { selected } = props;
+    this.clickHandler = this.clickHandler.bind(this);
     this.state = { selected };
   }
 
@@ -151,12 +152,19 @@ class Item extends Component {
   // }
 
   componentDidUpdate(prevProps, prevState) {
-    const { clickHandler } = this.props;
+    const { children, scrollTo, clickHandler } = this.props;
     if (prevState.selected !== this.state.selected) {
-      clickHandler({ ...this.props }, this.state.selected);
+      clickHandler(children.props, this.state.selected);
+      scrollTo();
+    }
+  }
 
-      // const elmnt = ReactDOM.findDOMNode(this);
-      // elmnt.scrollIntoView();
+  clickHandler() {
+    const { visible } = this.props;
+    if (visible) {
+      this.setState(oldState => ({
+        selected: !oldState.selected
+      }));
     }
   }
 
@@ -167,11 +175,12 @@ class Item extends Component {
       visible,
       opacity,
       span,
-      activeSpan,
-      scrollTo,
-      id
+      activeSpan
+      // scrollTo
     } = this.props;
     const { selected } = this.state;
+
+    const clickHandler = this.clickHandler;
 
     // if (clicked) console.log(`${defaultCol} / span ${activeSpan}`);
 
@@ -186,19 +195,9 @@ class Item extends Component {
           gridRowEnd: selected ? 'span 2' : 'span 1',
           opacity: visible || selected ? 1 : opacity
         }}
-        onClick={() => {
-          console.log('clickHandler', id);
-          // const elmnt = ReactDOM.findDOMNode(this);
-          // elmnt.scrollIntoView();
-          if (visible) {
-            this.setState(oldSt => ({
-              selected: visible ? !oldSt.selected : null
-            }));
-            scrollTo();
-          }
-        }}
+        onClick={() => !selected && clickHandler()}
       >
-        {children}
+        {React.cloneElement(children, { clickHandler, selected })}
       </div>
     );
   }
@@ -209,7 +208,8 @@ Item.defaultProps = {
   opacity: 0.56,
   span: 1,
   activeSpan: 2,
-  clickHandler: d => d
+  clickHandler: d => d,
+  selected: false
 };
 
 class ScrollView extends Component {

@@ -44,7 +44,7 @@ class CardStackWrapper extends React.Component {
   componentDidMount() {
     // const el = ReactDOM.findDOMNode(this);
     //
-    const width = window.innerWidth/2; // el.getBoundingClientRect().width;
+    const width = window.innerWidth / 2; // el.getBoundingClientRect().width;
     const height = window.innerHeight; // el.getBoundingClientRect().height;
     this.setState({ width, height });
     // .stop();

@@ -1,18 +1,20 @@
 import React from 'react';
+
 import {
-  Router,
+  // Router,
   Route,
-  hashHistory,
-  IndexRoute,
-  Link,
+  // hashHistory,
+  // IndexRoute,
+  // Link,
   HashRouter,
   Switch
 } from 'react-router-dom';
 // import debug from 'debug';
 
+import MapViewStore from './containers/MapViewStore';
 import MapView from './components/MapView';
 // TODO: learn redux
-import JournalStore from './ChallengeCRUD';
+// import JournalStore from './ChallengeCRUD';
 
 // TODO: rename please
 import Hassan from './components/Hassan';
@@ -33,14 +35,7 @@ const Routes = () =>
             <MapView />
           </DefaultLayout>}
       />
-      <Route
-        exact
-        path="/journal"
-        render={() =>
-          <DefaultLayout>
-            <JournalStore />
-          </DefaultLayout>}
-      />
+      <Route exact path="/journal" render={() => <DefaultLayout />} />
       <Route
         exact
         path="/hassan"

@@ -1,18 +1,24 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
+import Modal from '../utils/Modal';
+import { challengeTypes, mediaTypes } from '../../dummyData';
 import 'w3-css';
 
 import * as chromatic from 'd3-scale-chromatic';
 
 import cx from './Card.scss';
 import colorClasses from '../colorClasses';
-import StarRating from './utils/StarRating';
+// import StarRating from './utils/StarRating';
 import exampleImg from './example_challenge.jpg';
 // import Modal from '../utils/Modal';
 
-const mediaTypes = ['game', 'hyperlink', 'photo', 'video'];
-
+const profileSrc = () => {
+  const gender = Math.random() < 0.5 ? 'men' : 'women';
+  const i = Math.round(Math.random() * 100);
+  return `https://randomuser.me/api/portraits/thumb/${gender}/${i}.jpg`;
+};
 // console.log('colorClasses', colorClasses);
 
 const mediaScale = d3
@@ -21,7 +27,6 @@ const mediaScale = d3
   .range(['fa-gamepad', 'fa-link', 'fa-camera', 'fa-video-camera']);
 
 // console.log('mediaScale', mediaScale('hyperlink'));
-const challengeTypes = ['quiz'];
 const colorScale = d3
   .scaleOrdinal()
   .domain(challengeTypes)
@@ -35,94 +40,120 @@ const colorScaleRandom = d3
 
 const colorClass = () => colorScaleRandom(Math.random() * 30);
 
-// const maxHeight = (h) =>
-
-class CardFrontDetail extends React.Component {
-  render() {
-    const {
-      location,
-      description,
-      media,
-      cardSets,
-      linkedCards,
-      children
-    } = this.props;
-    return (
-      <div className={cx.cardDetail}>
-        <div className={cx.textClamp}>
-          <fieldset className={cx.field}>
-            <legend>description</legend>
-            <span>
-              {description}
-            </span>
-          </fieldset>
-        </div>
-        <div>
-          <div>
-            <fieldset className={cx.field}>
-              <legend>media:</legend>
-
-              <div className="row">
-                {media.map(m =>
-                  <span className="row no-gutters" key={m.src}>
-                    <div className="col mr-1">
-                      <i
-                        className={`fa ${mediaScale(m.type)} fa-3`}
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <div className="col mr-1">
-                      <a href={m.src}>name</a>
-                    </div>
-                  </span>
-                )}
-              </div>
-            </fieldset>
-          </div>
-        </div>
-        <div>
-          <fieldset className={cx.field}>
-            <legend>Cardsets:</legend>
-            <Tags data={cardSets} />
-          </fieldset>
-        </div>
-        <div>
-          <fieldset className={cx.field}>
-            <legend>Cardsets:</legend>
-            <Tags data={linkedCards} />
-          </fieldset>
-        </div>
-        {children}
-      </div>
-    );
-  }
-}
-
-CardFrontDetail.propTypes = {
-  place: React.PropTypes.string.isRequired,
-  location: React.PropTypes.object,
-  description: React.PropTypes.string.isRequired,
-  media: React.PropTypes.array.isRequired,
-  cardSets: React.PropTypes.array.isRequired,
-  linkedCards: React.PropTypes.array.isRequired
-};
-
-CardFrontDetail.defaultProps = {
-  key: 'asa',
-  description: 'What so special about the location, describe it',
-  location: { latitude: 50.828797, longitude: 4.352191 },
-  place: 'Park next to my Home',
-  creator: 'Jan',
+const defaultProps = {
+  title: 'Vrije Universiteit Brussel',
+  key: 3,
+  date: '28/04/2012 10:00',
+  tags: ['Uni', 'education'],
+  img: exampleImg,
+  xpPoints: 50,
+  // TODO: remove in future to component
+  description: 'description',
+  location: { latitude: 50.821705, longitude: 4.395165 },
+  place: 'Pleinlaan 2 - 1050 BRUSSEL',
+  author: {
+    name: 'Jan',
+    comment: 'Yes, I wanna beat you all with super hard challenge!'
+  },
   media: [
-    { type: 'photo', src: 'todo' },
     {
       type: 'hyperlink',
-      src: 'https://en.wikipedia.org/wiki/Arthur_De_Greef_(composer)'
+      name: 'Website',
+      src: 'http://we.vub.ac.be'
     },
-    { type: 'game', src: 'todo' }
+    {
+      type: 'video',
+      name: "Some of the VUB's international students",
+      src: 'https://www.youtube.com/watch?v=YFCzlOqQW7M'
+    }
   ],
-  cardSets: ['Brussels VIP', 'Music challenge (Cards can be specific sets)']
+  friends: [
+    {
+      user: 'Chauncey',
+      comment: 'here I succeeded my Master studies.',
+      date: '22/04/2016'
+    },
+    {
+      user: 'Jan',
+      comment: 'Now, I finally earn money as PhD student at the VUB!',
+      date: '22/04/2016'
+    }
+  ],
+  rating: [
+    {
+      user: 'Nils',
+      value: 4,
+      date: '22/04/2016'
+    }
+  ],
+  cardSets: ['scavenger_hunt_vub', 'Brussels_city_tour'],
+  challenge: { type: 'quiz' }
 };
+
+const CardFrontDetail = ({
+  description,
+  media,
+  cardSets,
+  linkedCards,
+  children
+}) =>
+  <div className={cx.cardDetail}>
+    <div className={cx.textClamp}>
+      <fieldset className={cx.field}>
+        <legend>description</legend>
+        <span onClick={() => alert(description)}>
+          {description}
+        </span>
+      </fieldset>
+    </div>
+    <div>
+      <div>
+        <fieldset className={cx.field}>
+          <legend>media:</legend>
+          <div className="row no-gutters">
+            {media.map(m =>
+              <span className="row no-gutters" key={m.src}>
+                <div className="col mr-1">
+                  <i
+                    className={`fa ${mediaScale(m.type)} fa-3`}
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="col mr-1">
+                  <a href={m.src}>name</a>
+                </div>
+              </span>
+            )}
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <div>
+      <fieldset className={cx.field}>
+        <legend>Cardsets:</legend>
+        <Tags data={cardSets} />
+      </fieldset>
+    </div>
+    <div>
+      <fieldset className={cx.field}>
+        <legend>Linked Cards</legend>
+        <Tags data={linkedCards} />
+      </fieldset>
+    </div>
+    {children}
+  </div>;
+
+CardFrontDetail.propTypes = {
+  place: PropTypes.string.isRequired,
+  location: PropTypes.object,
+  description: PropTypes.string.isRequired,
+  media: PropTypes.array.isRequired,
+  cardSets: PropTypes.array.isRequired,
+  linkedCards: PropTypes.array.isRequired,
+  children: PropTypes.node
+};
+
+CardFrontDetail.defaultProps = defaultProps;
 
 const MediaGrid = ({ data }) =>
   <div className="row">
@@ -181,49 +212,7 @@ const CardFrontPreview = ({
     </section>
   </div>;
 
-CardFrontPreview.defaultProps = {
-  title: 'Vrije Universiteit Brussel',
-  key: 3,
-  date: '28/04/2012 10:00',
-  tags: ['Uni', 'education'],
-  img: exampleImg,
-  xpPoints: 50,
-  // TODO: remove in future to component
-  description: 'description',
-  location: { latitude: 50.821705, longitude: 4.395165 },
-  place: 'Pleinlaan 2 - 1050 BRUSSEL',
-  creator: 'Jan',
-  media: [
-    {
-      type: 'hyperlink',
-      name: 'Website',
-      src: 'http://we.vub.ac.be'
-    },
-    {
-      type: 'video',
-      name: "Some of the VUB's international students",
-      src: 'https://www.youtube.com/watch?v=YFCzlOqQW7M'
-    }
-  ],
-  friends: [
-    {
-      user: 'Chauncey',
-      comment: 'here I succeeded my Master studies.'
-    },
-    {
-      user: 'Jan',
-      comment: 'Now, I finally earn money as PhD student at the VUB!'
-    }
-  ],
-  rating: [
-    {
-      user: 'Nils',
-      value: 4
-    }
-  ],
-  cardSets: ['scavenger_hunt_vub', 'Brussels_city_tour'],
-  challenge: { type: 'quiz' }
-};
+CardFrontPreview.defaultProps = defaultProps;
 
 const Tags = ({ data }) =>
   <small className={`text-truncate ${cx.tags}`}>
@@ -239,9 +228,11 @@ const CardMini = ({
   tags,
   img,
   clickHandler,
-  detailHandler,
   challenge,
-  children
+  children,
+  detailHandler,
+  selected
+  // id
 }) =>
   <div
     className={`${cx.cardMini2} `}
@@ -249,17 +240,43 @@ const CardMini = ({
       zIndex: 2,
       background: colorScale(challenge.type)
     }}
-    onClick={() => clickHandler({ preview: false })}
   >
-    <div className="row">
-      <div className="col-10">
-        <h4 className="text-truncate">
-          {title}
-        </h4>
-      </div>
-      <div className="col-1">
-        <i className="fa fa-retweet fa-lg" aria-hidden="true" />
-      </div>
+    <div className={cx.cardHeader}>
+      {
+        do {
+          if (selected) {
+            <h5 className="text-truncate">
+              {title}
+            </h5>;
+          } else {
+            <h4 className="text-truncate">
+              {title}
+            </h4>;
+          }
+        }
+      }
+      {
+        do {
+          if (selected) {
+            <div className="btn-group">
+              <button className="close mr-2">
+                <i
+                  className="fa fa-window-close fa-lg"
+                  aria-hidden="true"
+                  onClick={clickHandler}
+                />
+              </button>
+              <button className="close">
+                <i
+                  className="fa fa-retweet fa-lg"
+                  aria-hidden="true"
+                  onClick={detailHandler}
+                />
+              </button>
+            </div>;
+          }
+        }
+      }
     </div>
     <div>
       <Tags data={tags} />
@@ -289,35 +306,68 @@ CardMini.propTypes = {
 
 CardMini.defaultProps = CardFrontPreview.defaultProps;
 
-const CardBack = ({ key, friends, creator }) =>
-  <div>
-    <div className="container w3-section">
-      <h2>Comments </h2>
-      {friends.map(fr =>
-        <div key={fr.user} className="row">
-          <div className="col-3">
-            <h2 className={cx.stamp}>
-              {fr.user}
-            </h2>
-          </div>
-          <div className="col-9">
-            <div>
-              <StarRating />
+const CardBack = ({ key, friends, challenge, author, detailHandler }) =>
+  <div
+    className={`container ${cx.cardMini2} `}
+    style={{
+      zIndex: 2,
+      background: colorScale(challenge.type)
+    }}
+  >
+    <div>
+      <div className={cx.cardHeader}>
+        <h5>Comments</h5>
+        <button className="close">
+          <i
+            className="col-1 fa fa-retweet fa-lg"
+            aria-hidden="true"
+            onClick={detailHandler}
+          />
+        </button>
+      </div>
+      <div>
+        {friends.map(({ comment, user, date }) =>
+          <div className="media mt-3">
+            <img
+              className={`d-flex mr-3 ${cx.avatar}`}
+              width={64}
+              height={64}
+              src={profileSrc()}
+              alt="alt"
+            />
+            <div className="media-body">
+              <div className={cx.textClamp}>
+                {comment}
+              </div>
+              <div>
+                <small className="font-italic">
+                  - {user}, {date}
+                </small>
+              </div>
             </div>
-            <span style={{ fontStyle: 'italic' }} className={cx.textClamp}>
-              {fr.comment}
-            </span>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
-    <div className={'container w3-section'}>
-      <h2>Creator </h2>
-      <div className={`col ${cx.colSmallAvatar}`}>
-        <div className="col-4 ">
-          <span className={cx.stamp}>
-            {creator}
-          </span>
+    <div>
+      <h3>Author</h3>
+      <div className="media mt-3">
+        <img
+          className={`d-flex mr-3 ${cx.avatar}`}
+          width={64}
+          height={64}
+          src={profileSrc()}
+          alt="alt"
+        />
+        <div className="media-body">
+          <div className={cx.textClamp}>
+            {author.comment}
+          </div>
+          <div>
+            <small className="font-italic">
+              - {author.name}
+            </small>
+          </div>
         </div>
       </div>
     </div>
@@ -325,7 +375,7 @@ const CardBack = ({ key, friends, creator }) =>
 
 CardBack.propTypes = {
   key: React.PropTypes.string.isRequired,
-  creator: React.PropTypes.string.isRequired,
+  author: React.PropTypes.string.isRequired,
   friends: React.PropTypes.array.isRequired
 };
 
@@ -336,20 +386,24 @@ CardBack.defaultProps = {
       user: 'Nils',
       img:
         'https://placeholdit.imgix.net/~text?txtsize=6&txt=50%C3%9750&w=50&h=50',
-      text: 'I did not know that he was such a famous composer'
+      comment: 'I did not know that he was such a famous composer',
+      date: '22/04/2016'
     },
     {
       user: 'Babba',
-      text: 'What a nice park, strange, that they put a mask on his face!'
+      comment: 'What a nice park, strange, that they put a mask on his face!',
+      date: '22/04/2016'
     }
-  ]
+  ],
+  author: { name: 'jan', comment: 'welcome to my super hard challenge!' }
 };
 
 const CollectButton = ({ collected }) =>
-  <div className="p-2">
+  <div className="p-1 pt-3">
     <button
       onClick={() => alert('MiniGame')}
       className={`btn btn-secondary btn-lg btn-block}`}
+      style={{ width: '100%' }}
     >
       <span>
         {`${collected ? 'RePlay' : 'Collect'}!`}
@@ -414,34 +468,13 @@ Card.propTypes = {
   closeHandler: React.PropTypes.func
 };
 
-class CardCont extends Component {
-  static propTypes = {
-    detail: PropTypes.bool
-  };
-
-  constructor(props) {
-    super(props);
-    this.detailHandler = this.detailHandler.bind(this);
-    this.state = { ...this.props };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({ ...nextProps });
-  }
-
-  detailHandler(preview) {
-    // this.setState({ preview: false });
-  }
-
-  render() {
-    return this.state.detail
-      ? <Card {...this.props} detailHandler={this.detailHandler} />
-      : <CardMini {...this.props} clickHandler={this.detailHandler} />;
-  }
-}
+const CardCont = ({ ...props }) =>
+  props.selected ? <Card {...props} /> : <CardMini {...props} />;
 
 CardCont.defaultProps = {
-  detail: true
+  selected: true
 };
+
+CardCont.propTypes = { selected: PropTypes.bool };
 
 export { Card, CardCont, CardFrontPreview, CardMini };
