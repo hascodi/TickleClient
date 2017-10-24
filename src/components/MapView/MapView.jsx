@@ -27,6 +27,60 @@ import UserOverlay from './map-layers/UserOverlay';
 //   d.id = i;
 // });
 
+const Modal = ({ visible, card, closeHandler }) =>
+  <div
+    className="modal"
+    tabIndex="-1"
+    style={{ display: visible ? 'block' : 'none' }}
+  >
+    <div className="modal-dialog" role="document">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title" id="exampleModalLabel">
+            Modal title
+          </h5>
+          <button
+            type="button"
+            className="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            onClick={closeHandler}
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div className="modal-body">
+          <iframe
+            src="http://thescalli.com/emperors/"
+            style={{ border: 'none', width: '100%', height: '500px' }}
+          />
+        </div>
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            data-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" className="btn btn-primary">
+            Save changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>;
+
+Modal.propTypes = {
+  id: PropTypes.string,
+  card: PropTypes.object
+};
+
+Modal.defaultProps = {
+  id: 'exampleModal',
+  card: {}
+};
+
 const AnimatedMap = ({
   width,
   height,
@@ -96,16 +150,27 @@ class MapView extends React.Component {
     super(props);
 
     // TODO put into container element
-    const { headerPad } = props;
+    const { headerPad, screenResize } = props;
 
-    this.cardClickHandler = this.cardClickHandler.bind(this);
     // this._onChangeViewport = this._onChangeViewport.bind(this);
     // this._userMove = this._userMove.bind(this);
     this.gridSpan = this.gridSpan.bind(this);
+
+    window.addEventListener('resize', e => {
+      screenResize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    });
+
+    screenResize({
+      width: window.innerWidth,
+      height: window.innerHeight
+    });
   }
 
   componentDidMount() {
-    const self = this;
+    const { screenResize } = this.props;
     // window.addEventListener('resize', () => {
     //   this.setState({
     //     mapHeight: {
@@ -117,7 +182,7 @@ class MapView extends React.Component {
 
     navigator.geolocation.watchPosition(
       pos => {
-        const { changeViewport } = this.props;
+        const { changeMapViewport, width, mapHeight, mapZoom } = this.props;
         const userLocation = {
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude
@@ -131,7 +196,11 @@ class MapView extends React.Component {
           centerLocation
         );
 
-        changeViewport({ centerLocation, userLocation });
+        // const mapDim = { width, height: mapHeight };
+        // // console.log('userLocation', userLocation, 'centerLocation', centerLocation);
+        // TODO: triggers before resize
+        // const mapViewport = { ...mapDim, ...centerLocation, zoom: mapZoom };
+        // changeMapViewport({ centerLocation, userLocation });
       },
       // 50.846749, 4.352349
       d => console.log('error watch pos', d),
@@ -160,6 +229,7 @@ class MapView extends React.Component {
     //     console.log('response', res);
     //     this.setState({ curPosId, watchPosId, cards: res.body });
     //   });
+    //
   }
 
   componentDidUpdate() {}
@@ -181,11 +251,6 @@ class MapView extends React.Component {
     });
 
     navigator.geolocation.clearWatch(this.state.watchPosId);
-  }
-
-  cardClickHandler(cardProps) {
-    const selectedCard = <CardCont {...cardProps} />;
-    // this.setState({ selectedCard });
   }
 
   // _userMove(pos) {
@@ -220,7 +285,7 @@ class MapView extends React.Component {
       userLocation,
       selectedCard,
       centerLocation,
-      changeViewport,
+      changeMapViewport,
       userMove,
       cardClick,
       mapHeight,
@@ -228,7 +293,10 @@ class MapView extends React.Component {
       defaultHeight,
       gridHeight,
       minHeight,
-      width
+      width,
+      selectCard,
+      cardChallengeOpen,
+      toggleCardChallenge
     } = this.props;
 
     // console.log('width', mapDim);
@@ -239,6 +307,14 @@ class MapView extends React.Component {
     const gridConfig = this.gridSpan();
     return (
       <div>
+        {selectedCard &&
+          <Modal
+            id="exampleModal"
+            content={selectedCard}
+            visible={cardChallengeOpen}
+            closeHandler={() =>
+              toggleCardChallenge({ cardChallengeOpen: false })}
+          />}
         <Resizable
           enable={{
             top: false,
@@ -260,10 +336,10 @@ class MapView extends React.Component {
             <Grid
               {...gridConfig}
               clickHandler={(card, selected) => {
-                cardClick({ card, selected });
+                selectCard({ card, selected });
               }}
             >
-              {cards.map(d => <CardCont {...d} detail={false} />)}
+              {cards.map(d => <CardCont {...d} {...this.props} />)}
             </Grid>
           </div>
         </Resizable>
@@ -276,16 +352,12 @@ class MapView extends React.Component {
           </div>
           <AnimatedMap
             {...mapViewport}
-            onChangeViewport={changeViewport}
+            onChangeViewport={changeMapViewport}
             onClick={userMove}
             isDragging={false}
             startDragLngLat={null}
           >
-            <CardOverlay
-              {...mapViewport}
-              cardClickHandler={this.cardClickHandler}
-              cards={cards}
-            />
+            <CardOverlay {...mapViewport} cards={cards} />
             <UserOverlay {...mapViewport} location={userLocation} />
           </AnimatedMap>
         </div>

@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const loaders = require('./webpack.loaders');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const HOST = process.env.HOST || '127.0.0.1';
 const PORT = process.env.PORT || '8888';
@@ -99,7 +99,7 @@ module.exports = {
   entry: [
     'react-hot-loader/patch',
 
-    `webpack-dev-server/client?https://${HOST}:${PORT}`,
+    `webpack-dev-server/client?http://${HOST}:${PORT}`,
     // bundle the client for webpack-dev-server
     // and connect to the provided endpoint
 
@@ -114,12 +114,12 @@ module.exports = {
     filename: 'bundle.js'
   },
   resolve: {
-    extensions: ['.js', '.jsx']
-    // alias: {
-    //   'mapbox-gl$': path.resolve('./node_modules/mapbox-gl/dist/mapbox-gl.js')
-    //   // TODO
-    //   // src$: './src'
-    // }
+    extensions: ['.js', '.jsx'],
+    alias: {
+      // 'mapbox-gl$': path.resolve('./node_modules/mapbox-gl/dist/mapbox-gl.js')
+      src$: './src',
+      DummyData: path.resolve(__dirname, './src/DummyData.js')
+    }
   },
   module: {
     loaders
@@ -131,7 +131,13 @@ module.exports = {
     inline: true,
     historyApiFallback: true,
     port: PORT,
-    host: HOST
+    host: HOST,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers':
+        'X-Requested-With, content-type, Authorization'
+    }
     // proxy: {
     //   '**': {
     //     target: 'http://localhost:8000/',
@@ -157,10 +163,10 @@ module.exports = {
     }),
     new webpack.EnvironmentPlugin({
       MapboxAccessToken:
-        'pk.eyJ1Ijoiam1hdXNoYWciLCJhIjoiY2l2ODkyaDl1MDAwdTJvbnlmbHdvODM0MiJ9.rLkNA-rO4xq0O4_xIeqXVg'
-    }),
+        'pk.eyJ1Ijoiam1hdXNoYWciLCJhIjoiY2o4dHlmZTBkMGowbTJ3cDI3a3J3cHhoZSJ9.W-cFyxdadt5EXzRXKuXKrQ'
+    })
     // new webpack.optimize.ModuleConcatenationPlugin(),
-    new ExtractTextPlugin('style.css')
+    // new ExtractTextPlugin('style.css')
     // new webpack.ProvidePlugin({
     // $: 'jquery',
     // jQuery: 'jquery',

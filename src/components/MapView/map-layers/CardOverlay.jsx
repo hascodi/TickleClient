@@ -1,6 +1,6 @@
 import React from 'react';
 import { Motion, spring } from 'react-motion';
-import styles from './CardOverlay.scss';
+// import styles from './CardOverlay.scss';
 // const window = require('global/window');
 import DIVOverlay from './div.react';
 
@@ -29,9 +29,7 @@ class ChalllengesOverlay extends React.Component {
     // console.log('PROPS', this.props);
     const { cards } = this.props;
     return cards.map(c => {
-      console.log('card', c);
       const pixel = opt.project([c.location.longitude, c.location.latitude]);
-      console.log('opt', opt);
       const pixelRounded = [round(pixel[0], 1), round(pixel[1], 1)];
       // console.log('pixel', pixel);
       return (
@@ -54,7 +52,7 @@ class ChalllengesOverlay extends React.Component {
                 // background: `url(${cardIconSrc})`
               }}
             >
-              <img src={cardIconSrc} width={width} height={height} />
+              <img src={cardIconSrc} alt="icon" width={width} height={height} />
             </div>}
         </Motion>
       );

@@ -3,11 +3,10 @@ import ReactDOM from 'react-dom';
 
 import 'font-awesome/css/font-awesome.css';
 // import 'bootstrap/dist/css/bootstrap.min.css';
-// import 'bootstrap';
+import 'bootstrap';
 
 import './bootstrap.scss';
 import { AppContainer } from 'react-hot-loader';
-// import 'materialize-css/dist/css/materialize.min.css';
 
 import Routes from './Routes';
 

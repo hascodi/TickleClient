@@ -398,12 +398,14 @@ CardBack.defaultProps = {
   author: { name: 'jan', comment: 'welcome to my super hard challenge!' }
 };
 
-const CollectButton = ({ collected }) =>
+const CollectButton = ({ collected, dataTarget, toggleCardChallenge }) =>
   <div className="p-1 pt-3">
     <button
-      onClick={() => alert('MiniGame')}
       className={`btn btn-secondary btn-lg btn-block}`}
       style={{ width: '100%' }}
+      data-toggle="modal"
+      data-target={dataTarget}
+      onClick={() => toggleCardChallenge({ cardChallengeOpen: true })}
     >
       <span>
         {`${collected ? 'RePlay' : 'Collect'}!`}
@@ -412,11 +414,17 @@ const CollectButton = ({ collected }) =>
     </button>
   </div>;
 
-const CardFront = props =>
-  <CardFrontPreview {...props}>
-    <CardFrontDetail {...props} />
-    <CollectButton {...props} />
-  </CardFrontPreview>;
+CollectButton.propTypes = {
+  dataTarget: PropTypes.string,
+  collected: PropTypes.bool,
+  toggleCardChallenge: PropTypes.func
+};
+
+CollectButton.defaultProps = {
+  dataTarget: '#exampleModal',
+  collected: false,
+  toggleCardChallenge: d => d
+};
 
 class Card extends React.Component {
   static propTypes = {
