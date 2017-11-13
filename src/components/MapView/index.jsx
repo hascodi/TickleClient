@@ -17,18 +17,20 @@ import MapView from './MapView';
 
 // Container
 const mapStateToProps = state => ({
-  ...state
+  ...state.MapView
 });
 
 const mapDispatchToProps = dispatch => ({
   cardClick: card => {
+    console.log('before dispatch cardClick');
     dispatch(selectCard(card));
   },
   resizeCardWindow: options => {
+    console.log('before dispatch resizeCardWindow');
     dispatch(resizeCardWindow(options));
   },
   userMove: pos => {
-    // console.log('dispatch', pos);
+    console.log('before dispatch usermove');
     dispatch(userMove(pos));
   },
   changeMapViewport: viewport => {
@@ -37,9 +39,11 @@ const mapDispatchToProps = dispatch => ({
   },
   selectCard: options => {
     // console.log('dispatch', viewport);
+    console.log('before dispatch selectCard');
     dispatch(selectCard(options));
   },
   screenResize: options => {
+    console.log('before dispatch screenResize');
     dispatch(screenResize(options));
   },
   playCardChallenge: options => {

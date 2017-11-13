@@ -18,7 +18,7 @@ import {
 import reducers from './reducers';
 
 import MapView from './components/MapView';
-import Hassan from './components/Hassan';
+import CardCreator from './components/CardCreator';
 
 import DefaultLayout from './layouts/MainLayout';
 
@@ -27,27 +27,35 @@ import { dummyCards } from './dummyData';
 
 // debug('lego:routes');
 const defaultState = {
-  headerPad: 60, // TODO: remove
-  cards: dummyCards,
-  mapZoom: 20,
-  centerLocation: {
-    latitude: 50.85146,
-    longitude: 4.315483
+  MapView: {
+    headerPad: 60, // TODO: remove
+    cards: dummyCards,
+    mapZoom: 20,
+    centerLocation: {
+      latitude: 50.85146,
+      longitude: 4.315483
+    },
+    userLocation: {
+      latitude: 50.85146,
+      longitude: 4.315483
+    },
+    selectedCard: null,
+    height: 100,
+    width: 100,
+    defaultHeight: 100,
+    gridWidth: 100,
+    maxHeight: 100,
+    minHeight: 100,
+    mapHeight: 100,
+    gridHeight: 100,
+    cardChallengeOpen: false
   },
-  userLocation: {
-    latitude: 50.85146,
-    longitude: 4.315483
-  },
-  selectedCard: null,
-  height: 100,
-  width: 100,
-  defaultHeight: 100,
-  gridWidth: 100,
-  maxHeight: 100,
-  minHeight: 100,
-  mapHeight: 100,
-  gridHeight: 100,
-  cardChallengeOpen: false
+  CardCreator: {
+    headerPad: 60, // TODO: remove
+    cards: dummyCards,
+    width: 100,
+    height: 100
+  }
 };
 
 const store = createStore(reducers, defaultState);
@@ -73,15 +81,17 @@ const Routes = () =>
           <DefaultLayout>
             <Provider store={store}>
               <MapView />
-            </Provider>;
+            </Provider>
           </DefaultLayout>}
       />
       <Route
         exact
-        path="/hassan"
+        path="/card_creator"
         render={() =>
           <DefaultLayout>
-            <Hassan />
+            <Provider store={store}>
+              <CardCreator />
+            </Provider>
           </DefaultLayout>}
       />
     </Switch>

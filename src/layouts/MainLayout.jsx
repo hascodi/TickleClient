@@ -1,16 +1,15 @@
 import React, { Component, PropTypes } from 'react';
-import DocumentMeta from 'react-document-meta';
+// import DocumentMeta from 'react-document-meta';
 
 // import { findRoute } from '../utils';
 
 // import userPic from './user.png';
-import cx from './MainLayout.scss';
+// import cx from './MainLayout.scss';
 
 export default class MainLayout extends Component {
   static propTypes() {
     return {
-      location: PropTypes.object,
-      children: PropTypes.Array
+      children: PropTypes.Array.isRequired
     };
   }
 
@@ -23,7 +22,6 @@ export default class MainLayout extends Component {
   }
 
   handleClick() {
-    console.log('state', this.state);
     this.setState(prevState => ({
       isToggleOn: !prevState.isToggleOn
     }));
@@ -69,7 +67,7 @@ export default class MainLayout extends Component {
                 </li>
                 <li className="nav-item">
                   <a className="nav-link disabled" href="#">
-                    Disabled
+                    Card authoring
                   </a>
                 </li>
               </ul>

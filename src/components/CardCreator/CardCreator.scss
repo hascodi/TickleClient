@@ -1,0 +1,38 @@
+// .base {
+// }
+
+.base {
+  height: 100%;
+  width: 100%;
+  overflow: scroll;
+
+  .row {
+    height: 100%;
+    overflow: scroll;
+
+    // .col-4 {
+    //   height: 100%;
+    //   overflow: scroll;
+    // }
+    //
+    // .col-8 {
+    //   height: 100%;
+    // }
+
+  }
+}
+
+.grid {
+  border: lightblue 2px solid;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-row-gap: 10px;
+  height: 100%;
+  overflow: scroll;
+}
+
+.main {
+  border: darkgoldenrod 2px solid;
+  height: 100%;
+  overflow: scroll;
+}

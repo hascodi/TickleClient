@@ -485,4 +485,4 @@ CardCont.defaultProps = {
 
 CardCont.propTypes = { selected: PropTypes.bool };
 
-export { Card, CardCont, CardFrontPreview, CardMini };
+export { CardCont, CardFrontPreview, CardMini };

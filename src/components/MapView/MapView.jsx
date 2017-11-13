@@ -339,7 +339,7 @@ class MapView extends React.Component {
                 selectCard({ card, selected });
               }}
             >
-              {cards.map(d => <CardCont {...d} {...this.props} />)}
+              {cards.map(d => <CardCont {...d} />)}
             </Grid>
           </div>
         </Resizable>
