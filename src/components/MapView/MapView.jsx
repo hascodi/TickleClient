@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 // import jsonp from 'superagent-jsonp';
 
 import MapGL from 'react-map-gl';
-import Resizable from 're-resizable';
 // import rasterTileStyle from 'raster-tile-style';
 // import Pusher from 'pusher-js';
 // import ngeohash from 'ngeohash';,
@@ -17,8 +16,10 @@ import Grid from './Grid';
 
 // import Modal from './components/utils/Modal';
 
-import CardOverlay from './map-layers/CardOverlay';
-import UserOverlay from './map-layers/UserOverlay';
+// import CardOverlay from '../utils/map-layers/CardOverlay';
+import UserOverlay from '../utils/map-layers/UserOverlay';
+import DivOverlay from '../utils/map-layers/DivOverlay';
+import cardIconSrc from '../utils/map-layers/cardIcon.svg';
 
 // import { dummyCards } from '../../dummyData';
 //
@@ -50,7 +51,9 @@ const Modal = ({ visible, card, closeHandler }) =>
           </button>
         </div>
         <div className="modal-body">
+          {/* TODO: include real game */}
           <iframe
+            title="emperors"
             src="http://thescalli.com/emperors/"
             style={{ border: 'none', width: '100%', height: '500px' }}
           />
@@ -72,14 +75,15 @@ const Modal = ({ visible, card, closeHandler }) =>
   </div>;
 
 Modal.propTypes = {
-  id: PropTypes.string,
-  card: PropTypes.object
+  card: PropTypes.object.isRequired,
+  visible: PropTypes.bool.isRequired,
+  closeHandler: PropTypes.func.isRequired
 };
 
-Modal.defaultProps = {
-  id: 'exampleModal',
-  card: {}
-};
+// Modal.defaultProps = {
+//   id: 'exampleModal',
+//   card: {}
+// };
 
 const AnimatedMap = ({
   width,
@@ -122,7 +126,7 @@ AnimatedMap.propTypes = {
   latitude: PropTypes.number,
   longitude: PropTypes.number,
   zoom: PropTypes.number,
-  MapboxAccessToken: PropTypes.string,
+  // MapboxAccessToken: PropTypes.string,
   onClick: PropTypes.func,
   onChangeViewport: PropTypes.func,
   isDragging: PropTypes.bool,
@@ -146,17 +150,38 @@ AnimatedMap.defaultProps = {
 };
 
 class MapView extends React.Component {
+  static propTypes = {
+    cards: PropTypes.array.isRequired,
+    mapZoom: PropTypes.number.isRequired,
+    userLocation: PropTypes.array.isRequired,
+    selectedCard: PropTypes.object.isRequired,
+    centerLocation: PropTypes.object.isRequired,
+    changeMapViewport: PropTypes.func.isRequired,
+    userMove: PropTypes.func.isRequired,
+    cardClick: PropTypes.func.isRequired,
+    mapHeight: PropTypes.number.isRequired,
+    defaultHeight: PropTypes.number.isRequired,
+    gridHeight: PropTypes.number.isRequired,
+    minHeight: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+    selectCard: PropTypes.func.isRequired,
+    cardChallengeOpen: PropTypes.bool.isRequired,
+    toggleCardChallenge: PropTypes.func.isRequired,
+    screenResize: PropTypes.func.isRequired
+  };
+
   constructor(props) {
     super(props);
 
     // TODO put into container element
-    const { headerPad, screenResize } = props;
+    const { screenResize } = props;
 
     // this._onChangeViewport = this._onChangeViewport.bind(this);
     // this._userMove = this._userMove.bind(this);
     this.gridSpan = this.gridSpan.bind(this);
 
-    window.addEventListener('resize', e => {
+    window.addEventListener('resize', () => {
       screenResize({
         width: window.innerWidth,
         height: window.innerHeight
@@ -170,7 +195,7 @@ class MapView extends React.Component {
   }
 
   componentDidMount() {
-    const { screenResize } = this.props;
+    // const { screenResize } = this.props;
     // window.addEventListener('resize', () => {
     //   this.setState({
     //     mapHeight: {
@@ -182,66 +207,19 @@ class MapView extends React.Component {
 
     navigator.geolocation.watchPosition(
       pos => {
-        const { changeMapViewport, width, mapHeight, mapZoom } = this.props;
         const userLocation = {
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude
         };
 
+        // TODO:
         const centerLocation = { ...userLocation };
-        console.log(
-          'userLocation',
-          userLocation,
-          'centerLocation',
-          centerLocation
-        );
-
-        // const mapDim = { width, height: mapHeight };
-        // // console.log('userLocation', userLocation, 'centerLocation', centerLocation);
-        // TODO: triggers before resize
-        // const mapViewport = { ...mapDim, ...centerLocation, zoom: mapZoom };
-        // changeMapViewport({ centerLocation, userLocation });
       },
       // 50.846749, 4.352349
       d => console.log('error watch pos', d),
       { timeout: 1000000 }
     );
-
-    // const curPosId = navigator.geolocation.getCurrentPosition(
-    //   pos => {
-    //     console.log('cur pos', pos.coords);
-    //     const userLocation = {
-    //       latitude: pos.coords.latitude,
-    //       longitude: pos.coords.longitude
-    //     };
-    //     const centerLocation = { ...userLocation };
-    //
-    //     self.setState({ centerLocation, userLocation });
-    //   },
-    //   d => console.log('error cur pos', d),
-    //   { maximumAge: 0, enableHighAccuracy: true }
-    // );
-
-    // request
-    //   .get('/api/data')
-    //   // .query({ geoHash })
-    //   .end((err, res) => {
-    //     console.log('response', res);
-    //     this.setState({ curPosId, watchPosId, cards: res.body });
-    //   });
-    //
   }
-
-  componentDidUpdate() {}
-
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   return nextState.cards.length !== this.state.cards.length;
-  // }
-
-  // componentWillUnmount() {
-  //   console.log('unmount', this);
-  //
-  // }
 
   componentWillUnmount() {
     window.addEventListener('resize', () => {});
@@ -253,17 +231,6 @@ class MapView extends React.Component {
     navigator.geolocation.clearWatch(this.state.watchPosId);
   }
 
-  // _userMove(pos) {
-  //   const centerLocation = {
-  //     longitude: pos.lngLat[0],
-  //     latitude: pos.lngLat[1]
-  //   };
-  //   const userLocation = { ...centerLocation };
-  //   // console.log('Pos', pos, 'centerLocation', centerLocation);
-  //
-  //   this.setState({ centerLocation, userLocation });
-  // }
-
   gridSpan() {
     const { height, gridHeight } = this.props;
     // console.log('gridSpan  height', height);
@@ -274,8 +241,6 @@ class MapView extends React.Component {
       return { columnWidth: 27, span: 3, activeSpan: 4, detail: false };
     if (gridHeight < height * 4 / 6)
       return { columnWidth: 27, span: 4, activeSpan: 5, detail: false };
-    // if (gridHeight.height < height * 4 / 6)
-    //   return { columnWidth: 27, span: 5, activeSpan: 7 };
     return { columnWidth: 27, span: 6, activeSpan: 8, detail: true };
   }
   render() {
@@ -287,12 +252,7 @@ class MapView extends React.Component {
       centerLocation,
       changeMapViewport,
       userMove,
-      cardClick,
       mapHeight,
-      maxHeight,
-      defaultHeight,
-      gridHeight,
-      minHeight,
       width,
       selectCard,
       cardChallengeOpen,
@@ -303,7 +263,6 @@ class MapView extends React.Component {
     const mapDim = { width, height: mapHeight };
     // console.log('userLocation', userLocation, 'centerLocation', centerLocation);
     const mapViewport = { ...mapDim, ...centerLocation, zoom: mapZoom };
-    console.log('mapViewport', mapViewport);
     const gridConfig = this.gridSpan();
     return (
       <div>
@@ -315,67 +274,38 @@ class MapView extends React.Component {
             closeHandler={() =>
               toggleCardChallenge({ cardChallengeOpen: false })}
           />}
-        <Resizable
-          enable={{
-            top: false,
-            right: false,
-            bottom: true,
-            left: false,
-            topRight: false,
-            bottomRight: false,
-            bottomLeft: false,
-            topLeft: false
-          }}
-          defaultSize={{ width, height: defaultHeight }}
-          maxHeight={maxHeight}
-          size={{ width, height: gridHeight }}
-          handleClasses={{ bottom: `${cx.handle}` }}
-          handleSize={[30, 40]}
-        >
-          <div className={`${cx.cardGridCont} `}>
-            <Grid
-              {...gridConfig}
-              clickHandler={(card, selected) => {
-                selectCard({ card, selected });
-              }}
-            >
-              {cards.map(d => <CardCont {...d} />)}
-            </Grid>
-          </div>
-        </Resizable>
+        <div className={`${cx.cardGridCont} `}>
+          <Grid
+            {...gridConfig}
+            clickHandler={(card, selected) => {
+              selectCard({ card, selected });
+            }}
+          >
+            {cards.map(d => <CardCont {...d} />)}
+          </Grid>
+        </div>
 
         <div style={{ position: 'relative' }}>
           <div className={`bg-1 text-center  text-white ${cx.handleBar}`}>
             <span className="align-middle">
-              {' '}{selectedCard ? selectedCard.place : null}{' '}
+              {selectedCard ? selectedCard.place : null}
             </span>
           </div>
           <AnimatedMap
             {...mapViewport}
             onChangeViewport={changeMapViewport}
             onClick={userMove}
-            isDragging={false}
-            startDragLngLat={null}
+            isdragging={false}
+            startdraglnglat={null}
           >
-            <CardOverlay {...mapViewport} cards={cards} />
+            <DivOverlay {...mapViewport} data={cards}>
+              <img src={cardIconSrc} alt="icon" width={30} height={40} />
+            </DivOverlay>
             <UserOverlay {...mapViewport} location={userLocation} />
           </AnimatedMap>
         </div>
       </div>
     );
-    // return r.div([
-    //   r(MapGL, Object.assign({}, this.state.viewport,
-    //     { mapboxApiAccessToken: accessToken },
-    //
-    //     {
-    //       onChangeViewport: this._onChangeViewport
-    //     }), [
-    //       r(Overlay, Object.assign({}, this.state.viewport, { locations }))
-    //     ])
-    // ]);
   }
 }
-// MapView.defaultProps = {
-//   headerPad: 60
-// };
 export default MapView;

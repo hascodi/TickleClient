@@ -1,7 +1,7 @@
 // import React from 'react';
 import { connect } from 'react-redux';
 // import { toggleChallenge } from '../actions';
-import { screenResize } from './actions_cardCreator';
+import { screenResize, changeMapViewport } from './actions_cardCreator';
 
 import CardCreator from './CardCreator';
 
@@ -15,6 +15,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   screenResize: options => {
     dispatch(screenResize(options));
+  },
+  changeMapViewport: options => {
+    dispatch(changeMapViewport(options));
   }
 });
 

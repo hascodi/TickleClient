@@ -20,10 +20,9 @@ import {
 
 function reducer(state = {}, action) {
   console.log('action', action);
-  const { MapView } = state;
   switch (action.type) {
     case RESIZE_CARD_WINDOW: {
-      return { ...state, MapView: { ...state.MapView, ...action } };
+      return { ...state, ...action };
     }
     case USER_MOVE: {
       const options = action.options;
@@ -41,7 +40,8 @@ function reducer(state = {}, action) {
       );
       return {
         ...state,
-        MapView: { ...state.MapView, centerLocation, userLocation }
+        centerLocation,
+        userLocation
       };
     }
     case CHANGE_MAP_VIEWPORT: {
@@ -52,7 +52,9 @@ function reducer(state = {}, action) {
 
       return {
         ...state,
-        MapView: { ...state.MapView, mapHeight, width, mapZoom }
+        mapHeight,
+        width,
+        mapZoom
       };
     }
     // case PLAY_CARD_CHALLENGE:
@@ -68,53 +70,44 @@ function reducer(state = {}, action) {
     case SELECT_CARD: {
       const { card, selected } = action.options;
       const newMapViewState = {
-        centerLocation: selected ? card.location : { ...MapView.userLocation },
-        mapZoom: selected ? 15 : MapView.mapZoom,
+        centerLocation: selected ? card.location : { ...state.userLocation },
+        mapZoom: selected ? 15 : state.mapZoom,
         selectedCard: card,
-        gridHeight: selected ? MapView.maxHeight : MapView.defaultHeight,
-        mapHeight: selected ? MapView.minHeight : MapView.defaultHeight
+        gridHeight: selected ? state.maxHeight : state.defaultHeight,
+        mapHeight: selected ? state.minHeight : state.defaultHeight
       };
-      return { ...state, MapView: { ...MapView, ...newMapViewState } };
+      return { ...state, ...newMapViewState };
     }
 
     case SCREEN_RESIZE: {
-      const height = action.options.height - MapView.headerPad;
+      const height = action.options.height - state.headerPad;
       const width = action.options.width;
-      const defaultHeight = height / 2;
       const gridWidth = width * 2;
-      const maxHeight = 3 / 4 * height;
-      const minHeight = 1 / 4 * height;
       const mapHeight = height / 2;
       const gridHeight = height / 2;
       const newState = {
         height,
         width,
-        defaultHeight,
         gridWidth,
-        maxHeight,
-        minHeight,
         mapHeight,
         gridHeight
       };
       console.log('action', action, 'oldstate', state, 'newState', newState);
-      return { ...state, MapView: { ...state.MapView, ...newState } };
+      return { ...state, ...newState };
     }
 
     case TOGGLE_CARD_CHALLENGE: {
       console.log('action options', action.options);
       return {
         ...state,
-        MapView: {
-          ...MapView,
-          cardChallengeOpen: action.options.cardChallengeOpen
-        }
+        cardChallengeOpen: action.options.cardChallengeOpen
       };
     }
 
     case PLAY_CARD_CHALLENGE: {
       return {
         ...state,
-        MapView: { ...MapView, modalOpen: !state.modalOpen }
+        modalOpen: !state.modalOpen
       };
     }
     default:

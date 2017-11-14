@@ -1,7 +1,11 @@
 // import { combineReducers } from 'redux';
 // import cards from './cards';
 // import visibilityFilter from './visibilityFilter';
-import { CARD_CREATOR_SCREEN_RESIZE, SELECT_CARD } from './actions_cardCreator';
+import {
+  CARD_CREATOR_SCREEN_RESIZE,
+  SELECT_CARD,
+  CHANGE_MAP_VIEWPORT
+} from './actions_cardCreator';
 
 // const mapViewApp = combineReducers({
 //   cards,
@@ -11,8 +15,7 @@ import { CARD_CREATOR_SCREEN_RESIZE, SELECT_CARD } from './actions_cardCreator';
 // export default mapViewApp;
 
 function reducer(state = {}, action) {
-  console.log('action cardCreator', action);
-  const { CardCreator } = state;
+  console.log('action cardCreator state', state, action);
   switch (action.type) {
     // case SELECT_CARD: {
     //   // const { card, selected } = action.options;
@@ -27,20 +30,22 @@ function reducer(state = {}, action) {
     // }
 
     case CARD_CREATOR_SCREEN_RESIZE: {
-      console.log('CardCreator taken', action);
-      const height = action.options.height - CardCreator.headerPad;
+      console.log('state taken', action);
+      const height = action.options.height - state.headerPad;
       const width = action.options.width;
       console.log('width', width, 'height', height);
-      console.log('newState', {
-        ...state,
-        CardCreator: { ...CardCreator, width, height }
-      });
-      return {
-        ...state,
-        CardCreator: { ...CardCreator, width, height }
-      };
+      return { ...state, width, height };
     }
 
+    case CHANGE_MAP_VIEWPORT: {
+      console.log('CHANGE_MAP_VIEWPORT', action.options);
+      const mapViewport = action.options;
+
+      return {
+        ...state,
+        mapViewport
+      };
+    }
     default:
       return state;
   }

@@ -25,20 +25,20 @@ import DefaultLayout from './layouts/MainLayout';
 import { dummyCards } from './dummyData';
 // import NotFound from './containers/NotFound/NotFound';
 
+console.log('reducers', reducers);
+
+const defaultLocation = {
+  latitude: 50.85146,
+  longitude: 4.315483
+};
 // debug('lego:routes');
 const defaultState = {
   MapView: {
     headerPad: 60, // TODO: remove
     cards: dummyCards,
     mapZoom: 20,
-    centerLocation: {
-      latitude: 50.85146,
-      longitude: 4.315483
-    },
-    userLocation: {
-      latitude: 50.85146,
-      longitude: 4.315483
-    },
+    centerLocation: defaultLocation,
+    userLocation: defaultLocation,
     selectedCard: null,
     height: 100,
     width: 100,
@@ -54,7 +54,8 @@ const defaultState = {
     headerPad: 60, // TODO: remove
     cards: dummyCards,
     width: 100,
-    height: 100
+    height: 100,
+    mapViewport: { ...defaultLocation, zoom: 10 }
   }
 };
 
