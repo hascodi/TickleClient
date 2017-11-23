@@ -50,9 +50,11 @@ class CardCreator extends Component {
   // startDragLngLat={startDragLngLat}
   render() {
     const { mapViewport, cards, width, height, changeMapViewport } = this.props;
-    const { selected } = this.state;
+    const { selectedCardId } = this.state;
     const mapState = { width, height, ...mapViewport };
     console.log('mapState', mapState, mapViewport);
+    const [w, h] = [50, 50];
+    const delay = '.75s';
     return (
       <div
         className={`${cxx.base}`}
@@ -66,24 +68,70 @@ class CardCreator extends Component {
             height={height}
           >
             <DivOverlay {...mapState} data={cards}>
-              <img
-                src={cardIconSrc}
-                alt="icon"
-                width={30}
-                height={40}
-                className={cxx.card}
-              />
+              {(c, [x, y]) =>
+                <div
+                  key={c.key}
+                  style={{
+                    position: 'absolute',
+                    left: selectedCardId === c.id ? `${0}px` : `${x - w / 2}px`,
+                    top: selectedCardId === c.id ? `${0}px` : `${y - h / 2}px`,
+                    width: `${w}px`,
+                    height: `${h}px`,
+                    cursor: 'pointer',
+                    transition: `left ${delay}, top ${delay}`,
+                    zIndex: selectedCardId === c.id ? 1000 : null
+                  }}
+                >
+                  <div
+                    onClick={() =>
+                      this.setState(oldState => ({
+                        selectedCardId:
+                          oldState.selectedCardId === c.id ? null : c.id
+                      }))}
+                    style={{
+                      width: c.id === selectedCardId ? `${width}px` : `${w}px`,
+                      height:
+                        c.id === selectedCardId ? `${height}px` : `${h}px`,
+                      transition: `width ${delay}, height ${delay}`
+                    }}
+                  >
+                    {
+                      do {
+                        if (selectedCardId === c.id) {
+                          <CardCont {...c} />;
+                        } else {
+                          <img
+                            src={cardIconSrc}
+                            alt="icon"
+                            className={cxx.card}
+                          />;
+                        }
+                      }
+                    }
+                  </div>
+                </div>}
             </DivOverlay>
           </MapGL>
         </div>
         <div
           className="row no-gutters"
-          style={{ height: '100%', width: '100%' }}
+          style={{
+            height: '100%',
+            width: '100%',
+            opacity: !selectedCardId ? 1 : 0,
+            transition: 'opacity .25s ease-in-out'
+          }}
         >
-          <div className="col-2" style={{ height: '100%', width: '100%' }}>
+          <div
+            className="col-2"
+            style={{
+              height: '100%',
+              width: '100%'
+            }}
+          >
             <div className={cxx.grid}>
               {cards.map(d =>
-                <div onClick={() => this.setState({ selected: d })}>
+                <div onClick={() => this.setState({ selectedCardId: d.id })}>
                   <CardMini
                     key={`${d.title}  ${d.date}`}
                     {...d}
@@ -93,11 +141,7 @@ class CardCreator extends Component {
               )}
             </div>
           </div>
-          {selected &&
-            <div className="col-10" style={{ height: '80%', marginTop: '10%' }}>
-              <CardCont {...selected} />
-            </div>}
-        </div>
+        </div>;
       </div>
     );
   }

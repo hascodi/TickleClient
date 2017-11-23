@@ -23,6 +23,11 @@ import CardCreator from './components/CardCreator';
 import DefaultLayout from './layouts/MainLayout';
 
 import { dummyCards } from './dummyData';
+
+dummyCards.forEach((d, i) => {
+  d.id = i;
+  return d;
+});
 // import NotFound from './containers/NotFound/NotFound';
 
 console.log('reducers', reducers);
