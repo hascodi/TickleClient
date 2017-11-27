@@ -1,10 +1,13 @@
 // import { combineReducers } from 'redux';
 // import cards from './cards';
 // import visibilityFilter from './visibilityFilter';
+import ViewportMercator from 'viewport-mercator-project';
 import {
   CARD_CREATOR_SCREEN_RESIZE,
+  CHANGE_MAP_VIEWPORT,
   SELECT_CARD,
-  CHANGE_MAP_VIEWPORT
+  UPDATE_CARD,
+  CREATE_CARD
 } from './actions_cardCreator';
 
 // const mapViewApp = combineReducers({
@@ -14,21 +17,29 @@ import {
 //
 // export default mapViewApp;
 
-function reducer(state = {}, action) {
-  console.log('action cardCreator state', state, action);
-  switch (action.type) {
-    // case SELECT_CARD: {
-    //   // const { card, selected } = action.options;
-    //   // const newCardCreatorState = {
-    //   //   centerLocation: selected ? card.location : { ...state.userLocation },
-    //   //   mapZoom: selected ? 15 : state.mapZoom,
-    //   //   selectedCard: card,
-    //   //   gridHeight: selected ? state.maxHeight : state.defaultHeight,
-    //   //   mapHeight: selected ? state.minHeight : state.defaultHeight
-    //   // };
-    //   // return { ...state, ...newCardCreatorState };
-    // }
+const dummyCard = ({ latitude, longitude }) => ({
+  title: '-',
+  type: '-',
+  key: 4,
+  date: '04/04/2012 10:00',
+  tags: ['', ''],
+  img: '',
+  caption: '',
+  xpPoints: 0,
+  // TODO: remove in future to component
+  description: '',
+  location: { latitude, longitude },
+  place: '',
+  creator: 'Jan',
+  media: [],
+  friends: [],
+  rating: [],
+  cardSets: [],
+  linkedCards: []
+});
 
+function reducer(state = {}, action) {
+  switch (action.type) {
     case CARD_CREATOR_SCREEN_RESIZE: {
       console.log('state taken', action);
       const height = action.options.height - state.headerPad;
@@ -44,6 +55,39 @@ function reducer(state = {}, action) {
       return {
         ...state,
         mapViewport
+      };
+    }
+    case SELECT_CARD: {
+      const selectedCardId = action.options;
+      console.log('SELECTCARD', selectedCardId);
+
+      return {
+        ...state,
+        selectedCardId
+      };
+    }
+    case UPDATE_CARD: {
+      console.log(UPDATE_CARD, action.options);
+      const { selectedCardId } = action.options;
+
+      return {
+        ...state,
+        selectedCardId
+      };
+    }
+    case CREATE_CARD: {
+      console.log(CREATE_CARD, action.options);
+      const { width, height, mapViewport } = state;
+
+      const mercator = ViewportMercator({ width, height, ...mapViewport });
+      const { unproject } = mercator;
+      const { x, y, id } = action.options;
+      console.log('unproject', unproject([x, y]));
+      const pos = unproject([x, y]);
+
+      return {
+        ...state
+        // newCards: [dummyCard({ latitude: pos[0], longitude: pos[1] })]
       };
     }
     default:

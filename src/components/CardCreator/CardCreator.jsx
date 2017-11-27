@@ -2,165 +2,24 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-import { DragSource, DropTarget, DragDropContextProvider } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+// import HTML5Backend from 'react-dnd-html5-backend';
+
 import { default as TouchBackend } from 'react-dnd-touch-backend';
+import { DragDropContextProvider } from 'react-dnd';
+
 import MapGL from 'react-map-gl';
 import update from 'immutability-helper';
 
 import { CardMini, CardCont } from '../cards/Card';
 import cxx from './CardCreator.scss';
 
-// import { ScrollView, ScrollElement } from '../utils/ScrollView';
 import DivOverlay from '../utils/map-layers/DivOverlay';
 import cardIconSrc from '../utils/map-layers/cardIcon.svg';
 
-const style = {
-  border: '1px dashed gray',
-  // backgroundColor: 'white',
-  // padding: '0.5rem 1rem',
-  // marginRight: '1.5rem',
-  // marginBottom: '1.5rem',
-  cursor: 'move'
-  // float: 'left'
-};
+import CardDragPreview from './DragLayer/CardDragPreview';
 
-const boxSource = {
-  beginDrag(props) {
-    return props.children.props;
-  }
-
-  // endDrag(props, monitor) {
-  //   const item = monitor.getItem();
-  //   const dropResult = monitor.getDropResult();
-  //
-  //   // if (dropResult) {
-  //   //   alert(`You dropped ${item.name} into ${dropResult.name}!`); // eslint-disable-line no-alert
-  //   // }
-  // }
-};
-
-@DragSource('DragSourceCont', boxSource, (connect, monitor) => ({
-  connectDragSource: connect.dragSource(),
-  isDragging: monitor.isDragging(),
-  clientOffset: monitor.getClientOffset(),
-  sourceClientOffset: monitor.getSourceClientOffset(),
-  diffFromInitialOffset: monitor.getDifferenceFromInitialOffset()
-}))
-class DragSourceCont extends Component {
-  static propTypes = {
-    connectDragSource: PropTypes.func.isRequired,
-    isDragging: PropTypes.bool.isRequired,
-    // name: PropTypes.string.isRequired,
-    children: PropTypes.element.isRequired
-  };
-
-  render() {
-    const { isDragging, connectDragSource, children } = this.props;
-    // const { name } = this.props;
-    const opacity = isDragging ? 0.4 : 1;
-
-    return connectDragSource(
-      <div style={{ ...style, opacity }}>
-        {children}
-      </div>
-    );
-  }
-}
-
-const boxTarget = {
-  drop(props, monitor, component) {
-    const delta = monitor.getDifferenceFromInitialOffset();
-    const item = monitor.getItem();
-    console.log('item', item);
-
-    const left = Math.round(delta.x);
-    const top = Math.round(delta.y);
-
-    component.moveBox(item.id, left, top);
-  }
-};
-
-@DropTarget('DragSourceCont', boxTarget, (connect, monitor) => ({
-  connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver(),
-  canDrop: monitor.canDrop(),
-  clientOffset: monitor.getClientOffset(),
-  sourceClientOffset: monitor.getSourceClientOffset(),
-  diffFromInitialOffset: monitor.getDifferenceFromInitialOffset()
-}))
-class DropTargetCont extends Component {
-  static propTypes = {
-    connectDropTarget: PropTypes.func.isRequired,
-    isOver: PropTypes.bool.isRequired,
-    canDrop: PropTypes.bool.isRequired,
-    clientOffset: PropTypes.object.isRequired,
-    children: PropTypes.element.isRequired,
-    dropped: PropTypes.bool.isRequired
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      top: 20,
-      left: 80,
-      dropped: false
-    };
-  }
-
-  moveBox(id, left, top) {
-    this.setState({ left, top, dropped: true });
-  }
-
-  render() {
-    const {
-      canDrop,
-      isOver,
-      connectDropTarget,
-      clientOffset,
-      children
-    } = this.props;
-    const { dropped, left, top } = this.state;
-    const { x, y } = clientOffset || { x: 0, y: 0 };
-
-    console.log('dropped', this.state);
-
-    const isActive = canDrop && isOver;
-    let backgroundColor = '#222';
-    if (isActive) {
-      backgroundColor = 'darkgreen';
-    } else if (canDrop) {
-      backgroundColor = 'darkkhaki';
-    }
-    return connectDropTarget(
-      <div>
-        <div
-          style={{
-            ...style,
-            height: `${children.props.height}px`,
-            width: `${children.props.width}px`
-          }}
-        >
-          {isActive ? 'Release to drop' : 'Drag a box here'}
-          {dropped &&
-            <img
-              width={50}
-              height={50}
-              src={cardIconSrc}
-              alt="icon"
-              className={cxx.card}
-              style={{
-                position: 'absolute',
-                left: `${left}px`,
-                top: `${top}px`
-              }}
-            />}
-        </div>
-        {children}
-      </div>
-    );
-  }
-}
+import { DragSourceCont, DropTargetCont } from './DragLayer/SourceTargetCont';
+import DragLayer from './DragLayer/DragLayer';
 
 class CardCreator extends Component {
   static propTypes = {
@@ -176,7 +35,7 @@ class CardCreator extends Component {
     // TODO: fix later;
     const [width, height] = [window.innerWidth - 4, window.innerHeight];
     screenResize({ width, height });
-    this.state = { selected: null };
+    this.state = { selectedCardId: null, newCards: [] };
   }
 
   componentDidMount() {
@@ -202,12 +61,20 @@ class CardCreator extends Component {
   // isDragging={isDragging}
   // startDragLngLat={startDragLngLat}
   render() {
-    const { mapViewport, cards, width, height, changeMapViewport } = this.props;
-    const { selectedCardId } = this.state;
+    const {
+      mapViewport,
+      cards,
+      width,
+      height,
+      changeMapViewport,
+      selectedCardId,
+      selectCard,
+      createCard
+    } = this.props;
+    const { newCards } = this.state;
     const mapState = { width, height, ...mapViewport };
-    console.log('mapState', mapState, mapViewport);
     const [w, h] = [50, 50];
-    const delay = '.75s';
+    const delay = '0.5s';
     return (
       <DragDropContextProvider backend={TouchBackend}>
         <div
@@ -215,15 +82,16 @@ class CardCreator extends Component {
           style={{ width: `${width}px`, height: `${height}px` }}
         >
           <div style={{ position: 'absolute' }}>
+            <DragLayer />
             <MapGL
               {...mapViewport}
               onViewportChange={changeMapViewport}
               width={width}
               height={height}
             >
-              <DropTargetCont>
+              <DropTargetCont dropHandler={createCard}>
                 <DivOverlay {...mapState} data={cards}>
-                  {(c, [x, y]) =>
+                  {(c, [x, y], unproject) =>
                     <div
                       key={c.key}
                       style={{
@@ -241,10 +109,7 @@ class CardCreator extends Component {
                     >
                       <div
                         onClick={() =>
-                          this.setState(oldState => ({
-                            selectedCardId:
-                              oldState.selectedCardId === c.id ? null : c.id
-                          }))}
+                          selectCard(selectedCardId === c.id ? null : c.id)}
                         style={{
                           width:
                             c.id === selectedCardId ? `${width}px` : `${w}px`,
@@ -258,11 +123,7 @@ class CardCreator extends Component {
                             if (selectedCardId === c.id) {
                               <CardCont {...c} />;
                             } else {
-                              <img
-                                src={cardIconSrc}
-                                alt="icon"
-                                className={cxx.card}
-                              />;
+                              <CardDragPreview />;
                             }
                           }
                         }
@@ -290,7 +151,7 @@ class CardCreator extends Component {
             >
               <div className={cxx.grid}>
                 {cards.map(d =>
-                  <div onClick={() => this.setState({ selectedCardId: d.id })}>
+                  <div onClick={() => selectCard(d.id)}>
                     <DragSourceCont key={`${d.title}  ${d.date}`}>
                       <CardMini {...d} {...this.props} />
                     </DragSourceCont>

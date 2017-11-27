@@ -439,6 +439,7 @@ class Card extends React.Component {
 
   render() {
     const { frontView } = this.state;
+    // const { closeHandler } = this.props;
     const sideToggler = frontView ? cx.flipAnim : null;
     // const style = { position: !this.state.frontView ? 'absolute' : null };
 

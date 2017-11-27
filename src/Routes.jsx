@@ -30,8 +30,6 @@ dummyCards.forEach((d, i) => {
 });
 // import NotFound from './containers/NotFound/NotFound';
 
-console.log('reducers', reducers);
-
 const defaultLocation = {
   latitude: 50.85146,
   longitude: 4.315483
@@ -60,7 +58,9 @@ const defaultState = {
     cards: dummyCards,
     width: 100,
     height: 100,
-    mapViewport: { ...defaultLocation, zoom: 10 }
+    mapViewport: { ...defaultLocation, zoom: 10 },
+    selectedCardId: null,
+    crudCards: []
   }
 };
 

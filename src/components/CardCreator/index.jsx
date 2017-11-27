@@ -1,7 +1,12 @@
 // import React from 'react';
 import { connect } from 'react-redux';
 // import { toggleChallenge } from '../actions';
-import { screenResize, changeMapViewport } from './actions_cardCreator';
+import {
+  screenResize,
+  changeMapViewport,
+  selectCard,
+  createCard
+} from './actions_cardCreator';
 
 import CardCreator from './CardCreator';
 
@@ -18,6 +23,12 @@ const mapDispatchToProps = dispatch => ({
   },
   changeMapViewport: options => {
     dispatch(changeMapViewport(options));
+  },
+  selectCard: options => {
+    dispatch(selectCard(options));
+  },
+  createCard: options => {
+    dispatch(createCard(options));
   }
 });
 

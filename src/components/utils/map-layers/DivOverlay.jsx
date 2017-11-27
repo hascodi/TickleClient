@@ -53,7 +53,7 @@ class DivOverlay extends React.Component {
       const [x, y] = [round(pixel[0], 1), round(pixel[1], 1)];
 
       if (typeof children === 'function') {
-        return children(c, [x, y]);
+        return children(c, [x, y], opt.unproject);
       }
 
       const [w, h] = this.getDim(children);
