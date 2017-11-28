@@ -7,7 +7,8 @@ import {
   CHANGE_MAP_VIEWPORT,
   SELECT_CARD,
   UPDATE_CARD,
-  CREATE_CARD
+  CREATE_CARD,
+  DRAG_CARD
 } from './actions_cardCreator';
 
 // const mapViewApp = combineReducers({
@@ -20,7 +21,8 @@ import {
 const dummyCard = ({ latitude, longitude }) => ({
   title: '-',
   type: '-',
-  key: 4,
+  // TODO: change
+  key: Math.random() * 1000,
   date: '04/04/2012 10:00',
   tags: ['', ''],
   img: '',
@@ -81,13 +83,24 @@ function reducer(state = {}, action) {
 
       const mercator = ViewportMercator({ width, height, ...mapViewport });
       const { unproject } = mercator;
-      const { x, y, id } = action.options;
+      const { x, y } = action.options;
       console.log('unproject', unproject([x, y]));
       const pos = unproject([x, y]);
+      const newCard = dummyCard({ longitude: pos[0], latitude: pos[1] });
+      newCard.temp = true;
+      return {
+        ...state,
+        tempCards: [...state.tempCards, newCard],
+        isDragging: false
+      };
+    }
+
+    case DRAG_CARD: {
+      console.log(DRAG_CARD, action.options);
 
       return {
-        ...state
-        // newCards: [dummyCard({ latitude: pos[0], longitude: pos[1] })]
+        ...state,
+        isDragging: true
       };
     }
     default:

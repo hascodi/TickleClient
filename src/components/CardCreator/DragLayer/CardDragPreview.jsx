@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 // import cxx from './DragPreview.scss';
 import cardIconSrc from '../../utils/map-layers/cardIcon.svg';
 
-const CardDragPreview = ({ width, height, left, top }) =>
+const CardDragPreview = ({ width, height, left, top, fill }) =>
   <img
     width={width}
     height={height}
     src={cardIconSrc}
     alt="icon"
+    background={fill}
     style={{
       position: !(left === null || top === null) ? 'absolute' : null,
       left: `${left}px`,
@@ -28,7 +29,8 @@ CardDragPreview.defaultProps = {
   width: 50,
   height: 50,
   left: null,
-  top: null
+  top: null,
+  fill: 'transparent'
 };
 
 export default CardDragPreview;

@@ -5,7 +5,8 @@ import {
   screenResize,
   changeMapViewport,
   selectCard,
-  createCard
+  createCard,
+  dragCard
 } from './actions_cardCreator';
 
 import CardCreator from './CardCreator';
@@ -29,6 +30,9 @@ const mapDispatchToProps = dispatch => ({
   },
   createCard: options => {
     dispatch(createCard(options));
+  },
+  dragCard: options => {
+    dispatch(dragCard(options));
   }
 });
 

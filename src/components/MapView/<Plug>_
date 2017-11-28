@@ -69,7 +69,7 @@ class CardCreator extends Component {
     selectCard: d => d,
     createCard: d => d,
     screenResize: d => d,
-    changeMapViewport: d => d,
+    changeMapViewport: d => d
     dragCard: d => d
   };
   constructor(props) {
@@ -90,17 +90,6 @@ class CardCreator extends Component {
   }
 
   componentDidUpdate() {}
-
-  shouldComponentUpdate(nextProps) {
-    const { mapViewport, tempCards, isDragging } = nextProps;
-    const newVpStr = JSON.stringify(mapViewport);
-    const vpStr = JSON.stringify(this.props.mapViewport);
-    // mapViewport.latitude !== this.props.mapViewport.latitude ||
-    // mapViewport.longitude !== this.props.mapViewport.longitude;
-
-    if (!isDragging) return true;
-    return false;
-  }
 
   // scrollTo = name => {
   //
@@ -126,7 +115,7 @@ class CardCreator extends Component {
       selectCard,
       createCard,
       tempCards,
-      dragCard
+      handleDrag
     } = this.props;
 
     const mapState = { width, height, ...mapViewport };
@@ -143,9 +132,9 @@ class CardCreator extends Component {
             <DropTargetCont dropHandler={createCard}>
               <MapGL
                 {...mapViewport}
+                onViewportChange={changeMapViewport}
                 width={width}
                 height={height}
-                onViewportChange={changeMapViewport}
               >
                 {/* TODO: change Key */}
                 <DivOverlay {...mapState} data={tempCards}>
@@ -167,7 +156,7 @@ class CardCreator extends Component {
                     >
                       <DragSourceCont
                         key={`${c.title}  ${c.date}`}
-                        dragHandler={dragCard}
+                        dragHandler={handleDrag}
                       >
                         <div
                           onClick={() =>

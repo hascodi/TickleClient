@@ -4,6 +4,7 @@ export const CHANGE_MAP_VIEWPORT = 'CHANGE_MAP_VIEWPORT';
 export const CREATE_CARD = 'CREATE_CARD';
 export const UPDATE_CARD = 'UPDATE_CARD';
 export const REMOVE_CARD = 'REMOVE_CARD';
+export const DRAG_CARD = 'DRAG_CARD';
 
 // export const VisibilityFilters = {
 //   SHOW_ALL: 'SHOW_ALL',
@@ -40,6 +41,10 @@ export function updateCard(options) {
 
 export function createCard(options) {
   return { type: CREATE_CARD, options };
+}
+
+export function dragCard(options) {
+  return { type: DRAG_CARD, options };
 }
 // export function toggleTodo(index) {
 //   return { type: TOGGLE_TODO, index };

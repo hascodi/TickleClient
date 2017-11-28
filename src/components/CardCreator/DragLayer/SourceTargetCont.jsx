@@ -45,8 +45,20 @@ class DragSourceCont extends Component {
     connectDragSource: PropTypes.func.isRequired,
     isDragging: PropTypes.bool.isRequired,
     // name: PropTypes.string.isRequired,
-    children: PropTypes.element.isRequired
+    children: PropTypes.element.isRequired,
+    dragHandler: PropTypes.func
   };
+
+  static defaultProps = {
+    dragHandler: d => d
+  };
+
+  componentDidUpdate() {
+    const { dragHandler, isDragging } = this.props;
+    if (isDragging) {
+      dragHandler(isDragging);
+    }
+  }
 
   render() {
     const { isDragging, connectDragSource, children } = this.props;
@@ -105,14 +117,17 @@ class DropTargetCont extends Component {
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { dropHandler } = this.props;
+    const { dropped, id, left, top } = this.state;
+
+    if (dropped && !prevState.dropped) dropHandler({ id, x: left, y: top });
+  }
+
   moveBox(id, left, top) {
     this.setState({ id, left, top, dropped: true });
   }
-
-  // componentWillUpdate(nextProps, nextState) {
-  //   const { dropHandler } = nextProps;
-  //
-  //   if (dropped) dropHandler({ id, x: left, y: top });
+  // componentDidUpdate(nextProps, nextState) {
   // }
 
   render() {
@@ -121,25 +136,20 @@ class DropTargetCont extends Component {
       // isOver,
       connectDropTarget,
       // clientOffset,
-      children,
-      dropHandler
+      children
     } = this.props;
     const { id, left, top, dropped } = this.state;
     // const { x, y } = clientOffset || { x: 0, y: 0 };
 
-    if (dropped) dropHandler({ id, x: left, y: top });
     return connectDropTarget(
-      <div>
-        <div
-          style={{
-            ...style,
-            height: `${children.props.height}px`,
-            width: `${children.props.width}px`
-          }}
-        >
-          {dropped &&
-            <CardDragPreview width={50} height={50} left={left} top={top} />}
-        </div>
+      <div
+        style={{
+          position: 'absolute',
+          height: `${children.props.height}px`,
+          width: `${children.props.width}px`
+        }}
+      >
+        <div style={style} />
         {children}
       </div>
     );

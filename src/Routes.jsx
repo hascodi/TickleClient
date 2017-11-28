@@ -60,7 +60,7 @@ const defaultState = {
     height: 100,
     mapViewport: { ...defaultLocation, zoom: 10 },
     selectedCardId: null,
-    crudCards: []
+    tempCards: []
   }
 };
 
