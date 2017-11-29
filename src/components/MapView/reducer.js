@@ -68,13 +68,16 @@ function reducer(state = {}, action) {
     //     ]
     // });
     case SELECT_CARD: {
-      const { card, selected } = action.options;
+      const { selectedId } = action.options;
+      const selectedCard = state.cards.find(d => d.id === selectedId);
       const newMapViewState = {
-        centerLocation: selected ? card.location : { ...state.userLocation },
-        mapZoom: selected ? 15 : state.mapZoom,
-        selectedCard: card,
-        gridHeight: selected ? state.maxHeight : state.defaultHeight,
-        mapHeight: selected ? state.minHeight : state.defaultHeight
+        centerLocation: selectedId
+          ? selectedCard.location
+          : { ...state.userLocation },
+        mapZoom: selectedId ? 15 : state.mapZoom,
+        selectedId,
+        gridHeight: selectedId ? state.maxHeight : state.defaultHeight,
+        mapHeight: selectedId ? state.minHeight : state.defaultHeight
       };
       return { ...state, ...newMapViewState };
     }
@@ -98,9 +101,10 @@ function reducer(state = {}, action) {
 
     case TOGGLE_CARD_CHALLENGE: {
       console.log('action options', action.options);
+      const { cardChallengeOpen } = action.options;
       return {
         ...state,
-        cardChallengeOpen: action.options.cardChallengeOpen
+        cardChallengeOpen
       };
     }
 

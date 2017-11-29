@@ -42,7 +42,7 @@ const defaultState = {
     mapZoom: 20,
     centerLocation: defaultLocation,
     userLocation: defaultLocation,
-    selectedCard: null,
+    selectedId: null,
     height: 100,
     width: 100,
     defaultHeight: 100,

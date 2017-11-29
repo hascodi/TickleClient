@@ -1,5 +1,5 @@
 import React from 'react';
-import { Motion, spring } from 'react-motion';
+// import { Motion, spring } from 'react-motion';
 import PropTypes from 'prop-types';
 // import Immutable from 'immutable';
 // import _ from 'lodash';
@@ -11,7 +11,7 @@ import MapGL from 'react-map-gl';
 // import Pusher from 'pusher-js';
 // import ngeohash from 'ngeohash';,
 import cx from './MapView.scss';
-import { CardCont } from '../cards/Card';
+import { Card, CardFrame } from '../cards/Card';
 import Grid from './Grid';
 
 // import Modal from './components/utils/Modal';
@@ -20,6 +20,7 @@ import Grid from './Grid';
 import UserOverlay from '../utils/map-layers/UserOverlay';
 import DivOverlay from '../utils/map-layers/DivOverlay';
 import cardIconSrc from '../utils/map-layers/cardIcon.svg';
+import Modal from '../utils/Modal';
 
 // import { dummyCards } from '../../dummyData';
 //
@@ -27,127 +28,6 @@ import cardIconSrc from '../utils/map-layers/cardIcon.svg';
 // dummyCards.forEach((d, i) => {
 //   d.id = i;
 // });
-
-const Modal = ({ visible, card, closeHandler }) =>
-  <div
-    className="modal"
-    tabIndex="-1"
-    style={{ display: visible ? 'block' : 'none' }}
-  >
-    <div className="modal-dialog" role="document">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h5 className="modal-title" id="exampleModalLabel">
-            Modal title
-          </h5>
-          <button
-            type="button"
-            className="close"
-            data-dismiss="modal"
-            aria-label="Close"
-            onClick={closeHandler}
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div className="modal-body">
-          {/* TODO: include real game */}
-          <iframe
-            title="emperors"
-            src="http://thescalli.com/emperors/"
-            style={{ border: 'none', width: '100%', height: '500px' }}
-          />
-        </div>
-        <div className="modal-footer">
-          <button
-            type="button"
-            className="btn btn-secondary"
-            data-dismiss="modal"
-          >
-            Close
-          </button>
-          <button type="button" className="btn btn-primary">
-            Save changes
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>;
-
-Modal.propTypes = {
-  card: PropTypes.object.isRequired,
-  visible: PropTypes.bool.isRequired,
-  closeHandler: PropTypes.func.isRequired
-};
-
-// Modal.defaultProps = {
-//   id: 'exampleModal',
-//   card: {}
-// };
-
-const AnimatedMap = ({
-  width,
-  height,
-  latitude,
-  longitude,
-  zoom,
-  onClick,
-  onChangeViewport,
-  isDragging,
-  startDragLngLat,
-  children
-}) =>
-  <Motion
-    style={{
-      lat: spring(latitude),
-      long: spring(longitude)
-    }}
-  >
-    {({ long, lat }) =>
-      <MapGL
-        width={width}
-        height={height}
-        latitude={lat}
-        longitude={long}
-        zoom={zoom}
-        mapboxApiAccessToken={process.env.MapboxAccessToken}
-        onChangeViewport={onChangeViewport}
-        onClick={onClick}
-        isDragging={isDragging}
-        startDragLngLat={startDragLngLat}
-      >
-        {children}
-      </MapGL>}
-  </Motion>;
-
-AnimatedMap.propTypes = {
-  width: PropTypes.number,
-  height: PropTypes.number,
-  latitude: PropTypes.number,
-  longitude: PropTypes.number,
-  zoom: PropTypes.number,
-  // MapboxAccessToken: PropTypes.string,
-  onClick: PropTypes.func,
-  onChangeViewport: PropTypes.func,
-  isDragging: PropTypes.bool,
-  startDragLngLat: PropTypes.number,
-  children: PropTypes.node
-};
-
-AnimatedMap.defaultProps = {
-  width: 400,
-  height: 400,
-  latitude: 0,
-  longitude: 0,
-  zoom: 10,
-  MapboxAccessToken: 'wrong Api String',
-  onClick: d => d,
-  onChangeViewport: d => d,
-  isDragging: false,
-  // TODO: not sure, update
-  startDragLngLat: [0, 0],
-  children: <div> overlay</div>
-};
 
 class MapView extends React.Component {
   static propTypes = {
@@ -232,23 +112,22 @@ class MapView extends React.Component {
   }
 
   gridSpan() {
-    const { height, gridHeight } = this.props;
+    // const { height, gridHeight } = this.props;
     // console.log('gridSpan  height', height);
-    if (gridHeight < height * 2 / 6) {
-      return { columnWidth: 27, span: 2, activeSpan: 3, detail: false };
-    }
-    if (gridHeight < height * 3 / 6)
-      return { columnWidth: 27, span: 3, activeSpan: 4, detail: false };
-    if (gridHeight < height * 4 / 6)
-      return { columnWidth: 27, span: 4, activeSpan: 5, detail: false };
-    return { columnWidth: 27, span: 6, activeSpan: 8, detail: true };
+    return { columnWidth: 27, span: 4, activeSpan: 8, detail: false };
+    // if (gridHeight < height * 3 / 6)
+    //   return { columnWidth: 27, span: 3, activeSpan: 4, detail: false };
+    // if (gridHeight < height * 4 / 6)
+    //   return { columnWidth: 27, span: 4, activeSpan: 5, detail: false };
+    // return { columnWidth: 27, span: 6, activeSpan: 8, detail: true };
   }
+
   render() {
     const {
       cards,
       mapZoom,
       userLocation,
-      selectedCard,
+      selectedId,
       centerLocation,
       changeMapViewport,
       userMove,
@@ -263,25 +142,45 @@ class MapView extends React.Component {
     const mapDim = { width, height: mapHeight };
     // console.log('userLocation', userLocation, 'centerLocation', centerLocation);
     const mapViewport = { ...mapDim, ...centerLocation, zoom: mapZoom };
-    const gridConfig = this.gridSpan();
+    // const gridConfig = this.gridSpan();
+    const selectedCard = selectedId
+      ? cards.find(d => d.id === selectedId)
+      : null;
     return (
       <div>
-        {selectedCard &&
+        {
           <Modal
             id="exampleModal"
             content={selectedCard}
             visible={cardChallengeOpen}
             closeHandler={() =>
               toggleCardChallenge({ cardChallengeOpen: false })}
-          />}
-        <div className={`${cx.cardGridCont} `}>
-          <Grid
-            {...gridConfig}
-            clickHandler={(card, selected) => {
-              selectCard({ card, selected });
-            }}
           >
-            {cards.map(d => <CardCont {...d} />)}
+            <iframe
+              title="emperors"
+              src="http://thescalli.com/emperors/"
+              style={{ border: 'none', width: '100%', height: '500px' }}
+            />
+          </Modal>
+        }
+        <div className={`${cx.cardGridCont}`}>
+          <Grid
+            {...this.gridSpan()}
+            clickHandler={d => selectCard({ selectedId: 0 })}
+          >
+            {cards.map(d => {
+              if (selectedId === d.id) {
+                return (
+                  <Card
+                    {...d}
+                    selected
+                    collectHandler={() =>
+                      toggleCardChallenge({ cardChallengeOpen: true })}
+                  />
+                );
+              }
+              return <CardFrame {...d} />;
+            })})
           </Grid>
         </div>
 
@@ -291,7 +190,8 @@ class MapView extends React.Component {
               {selectedCard ? selectedCard.place : null}
             </span>
           </div>
-          <AnimatedMap
+
+          <MapGL
             {...mapViewport}
             onChangeViewport={changeMapViewport}
             onClick={userMove}
@@ -302,7 +202,7 @@ class MapView extends React.Component {
               <img src={cardIconSrc} alt="icon" width={30} height={40} />
             </DivOverlay>
             <UserOverlay {...mapViewport} location={userLocation} />
-          </AnimatedMap>
+          </MapGL>
         </div>
       </div>
     );

@@ -90,18 +90,12 @@ const defaultProps = {
   challenge: { type: 'quiz' }
 };
 
-const CardFrontDetail = ({
-  description,
-  media,
-  cardSets,
-  linkedCards,
-  children
-}) =>
+const CardFront = ({ description, media, cardSets, linkedCards, children }) =>
   <div className={cx.cardDetail}>
     <div className={cx.textClamp}>
       <fieldset className={cx.field}>
         <legend>description</legend>
-        <span onClick={() => alert(description)}>
+        <span>
           {description}
         </span>
       </fieldset>
@@ -143,7 +137,7 @@ const CardFrontDetail = ({
     {children}
   </div>;
 
-CardFrontDetail.propTypes = {
+CardFront.propTypes = {
   place: PropTypes.string.isRequired,
   location: PropTypes.object,
   description: PropTypes.string.isRequired,
@@ -153,7 +147,7 @@ CardFrontDetail.propTypes = {
   children: PropTypes.node
 };
 
-CardFrontDetail.defaultProps = defaultProps;
+CardFront.defaultProps = defaultProps;
 
 const MediaGrid = ({ data }) =>
   <div className="row">
@@ -223,15 +217,15 @@ const Tags = ({ data }) =>
     )}
   </small>;
 
-const CardMini = ({
+const CardFrame = ({
   title,
   tags,
   img,
-  clickHandler,
+  closeHandler,
   challenge,
   children,
-  detailHandler,
-  selected
+  flipHandler,
+  onClick
   // id
 }) =>
   <div
@@ -240,11 +234,12 @@ const CardMini = ({
       zIndex: 2,
       background: colorScale(challenge.type)
     }}
+    onClick={onClick}
   >
     <div className={cx.cardHeader}>
       {
         do {
-          if (selected) {
+          if (children) {
             <h5 className="text-truncate">
               {title}
             </h5>;
@@ -255,28 +250,20 @@ const CardMini = ({
           }
         }
       }
-      {
-        do {
-          if (selected) {
-            <div className="btn-group">
-              <button className="close mr-2">
-                <i
-                  className="fa fa-window-close fa-lg"
-                  aria-hidden="true"
-                  onClick={clickHandler}
-                />
-              </button>
-              <button className="close">
-                <i
-                  className="fa fa-retweet fa-lg"
-                  aria-hidden="true"
-                  onClick={detailHandler}
-                />
-              </button>
-            </div>;
-          }
-        }
-      }
+      {closeHandler &&
+        <div className="btn-group">
+          <button className="close mr-2" onClick={closeHandler}>
+            <i className="fa fa-window-close fa-lg" aria-hidden="true" />
+          </button>
+        </div>}
+      {flipHandler &&
+        <button className="close">
+          <i
+            className="fa fa-retweet fa-lg"
+            aria-hidden="true"
+            onClick={flipHandler}
+          />
+        </button>}
     </div>
     <div>
       <Tags data={tags} />
@@ -295,18 +282,18 @@ const CardMini = ({
     </div>
   </div>;
 
-CardMini.propTypes = {
+CardFrame.propTypes = {
   title: PropTypes.string,
   tags: PropTypes.array,
   img: PropTypes.string,
-  clickHandler: PropTypes.function,
+  flipHandler: PropTypes.func,
   challenge: PropTypes.object,
   children: PropTypes.node
 };
 
-CardMini.defaultProps = CardFrontPreview.defaultProps;
+CardFrame.defaultProps = CardFrontPreview.defaultProps;
 
-const CardBack = ({ key, friends, challenge, author, detailHandler }) =>
+const CardBack = ({ key, friends, challenge, author, flipHandler }) =>
   <div
     className={`container ${cx.cardMini2} `}
     style={{
@@ -321,7 +308,7 @@ const CardBack = ({ key, friends, challenge, author, detailHandler }) =>
           <i
             className="col-1 fa fa-retweet fa-lg"
             aria-hidden="true"
-            onClick={detailHandler}
+            onClick={flipHandler}
           />
         </button>
       </div>
@@ -398,14 +385,14 @@ CardBack.defaultProps = {
   author: { name: 'jan', comment: 'welcome to my super hard challenge!' }
 };
 
-const CollectButton = ({ collected, dataTarget, toggleCardChallenge }) =>
+const CollectButton = ({ collected, dataTarget, onClick }) =>
   <div className="p-1 pt-3">
     <button
       className={`btn btn-secondary btn-lg btn-block}`}
       style={{ width: '100%' }}
       data-toggle="modal"
       data-target={dataTarget}
-      onClick={() => toggleCardChallenge({ cardChallengeOpen: true })}
+      onClick={onClick}
     >
       <span>
         {`${collected ? 'RePlay' : 'Collect'}!`}
@@ -417,7 +404,7 @@ const CollectButton = ({ collected, dataTarget, toggleCardChallenge }) =>
 CollectButton.propTypes = {
   dataTarget: PropTypes.string,
   collected: PropTypes.bool,
-  toggleCardChallenge: PropTypes.func
+  onClick: PropTypes.func
 };
 
 CollectButton.defaultProps = {
@@ -428,7 +415,12 @@ CollectButton.defaultProps = {
 
 class Card extends React.Component {
   static propTypes = {
-    onMinify: PropTypes.function
+    closeHandler: PropTypes.oneOf([null, PropTypes.func]),
+    collectHandler: PropTypes.oneOf([null, PropTypes.func])
+  };
+  static defaultProps = {
+    closeHandler: d => d,
+    collectHandler: null
   };
   constructor(props) {
     super(props);
@@ -441,24 +433,22 @@ class Card extends React.Component {
     const { frontView } = this.state;
     // const { closeHandler } = this.props;
     const sideToggler = frontView ? cx.flipAnim : null;
-    // const style = { position: !this.state.frontView ? 'absolute' : null };
+    const { collectHandler } = this.props;
 
     const ToggleCard = do {
       if (this.state.frontView) {
-        <CardMini
+        <CardFrame
+          flipHandler={() => this.setState({ frontView: !frontView })}
           {...this.props}
-          detailHandler={() =>
-            this.setState({ frontView: !this.state.frontView })}
         >
-          <CardFrontDetail {...this.props}>
-            <CollectButton {...this.props} />
-          </CardFrontDetail>
-        </CardMini>;
+          <CardFront {...this.props}>
+            <CollectButton onClick={collectHandler} />
+          </CardFront>
+        </CardFrame>;
       } else {
         <CardBack
           {...this.props}
-          detailHandler={() =>
-            this.setState({ frontView: !this.state.frontView })}
+          flipHandler={() => this.setState({ frontView: !frontView })}
         />;
       }
     };
@@ -477,13 +467,10 @@ Card.propTypes = {
   closeHandler: React.PropTypes.func
 };
 
-const CardCont = ({ ...props }) =>
-  props.selected ? <Card {...props} /> : <CardMini {...props} />;
+// CardCont.defaultProps = {
+//   selected: true
+// };
 
-CardCont.defaultProps = {
-  selected: true
-};
+// CardCont.propTypes = { selected: PropTypes.bool };
 
-CardCont.propTypes = { selected: PropTypes.bool };
-
-export { CardCont, CardFrontPreview, CardMini };
+export { Card, CardFrontPreview, CardFrame };
