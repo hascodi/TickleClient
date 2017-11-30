@@ -6,7 +6,8 @@ import {
   changeMapViewport,
   selectCard,
   createCard,
-  dragCard
+  dragCard,
+  openCardDetails
 } from './actions_cardCreator';
 
 import CardCreator from './CardCreator';
@@ -27,6 +28,9 @@ const mapDispatchToProps = dispatch => ({
   },
   selectCard: options => {
     dispatch(selectCard(options));
+  },
+  openCardDetails: options => {
+    dispatch(openCardDetails(options));
   },
   createCard: options => {
     dispatch(createCard(options));

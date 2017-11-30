@@ -8,7 +8,8 @@ import {
   SELECT_CARD,
   UPDATE_CARD,
   CREATE_CARD,
-  DRAG_CARD
+  DRAG_CARD,
+  OPEN_CARD_DETAILS
 } from './actions_cardCreator';
 
 // const mapViewApp = combineReducers({
@@ -60,8 +61,20 @@ function reducer(state = {}, action) {
       };
     }
     case SELECT_CARD: {
+      console.log(action.type, action);
+      const { latitude, longitude } = action.options.location;
+      const selected = { ...action.options, extended: false };
+      const mapViewport = { ...state.mapViewport, latitude, longitude };
+
+      return {
+        ...state,
+        mapViewport,
+        selected
+      };
+    }
+    case OPEN_CARD_DETAILS: {
       const selectedCardId = action.options;
-      console.log('SELECTCARD', selectedCardId);
+      // console.log('SELECTCARD', selectedCardId);
 
       return {
         ...state,

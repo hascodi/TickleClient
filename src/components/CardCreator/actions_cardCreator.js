@@ -1,4 +1,5 @@
 export const SELECT_CARD = 'SELECT_CARD';
+export const OPEN_CARD_DETAILS = 'OPEN_CARD_DETAILS';
 export const CARD_CREATOR_SCREEN_RESIZE = 'CARD_CREATOR_SCREEN_RESIZE';
 export const CHANGE_MAP_VIEWPORT = 'CHANGE_MAP_VIEWPORT';
 export const CREATE_CARD = 'CREATE_CARD';
@@ -18,6 +19,9 @@ export const DRAG_CARD = 'DRAG_CARD';
 
 export function selectCard(options) {
   return { type: SELECT_CARD, options };
+}
+export function openCardDetails(options) {
+  return { type: OPEN_CARD_DETAILS, options };
 }
 
 // export function clickCard(options) {

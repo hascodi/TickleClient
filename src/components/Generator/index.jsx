@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
 import styles from './index.scss';
+import cardIconSrc from '../utils/map-layers/cardIcon.svg';
 
 import graph from './exampleData.json';
 
@@ -61,7 +62,35 @@ class index extends Component {
             )}
           </g>
           <g>
-            {nodes.map(d => <circle cx={d.x} cy={d.y} r={8} fill={'green'} />)}
+            {nodes.map(d =>
+              <g transform={`translate(${d.x}, ${d.y})`}>
+                <path
+                  style={{ fill: '#E7ECED', stroke: '#424A60' }}
+                  strokeWidth="2"
+                  d="M46.5,5h-34c-1.1,0-2,0.9-2,2v50c0,1.1,0.9,2,2,2h34c1.1,0,2-0.9,2-2V7C48.5,5.9,47.6,5,46.5,5z"
+                />
+
+                <rect
+                  x="17.4"
+                  y="9"
+                  style={{ fill: '#EFCE4A' }}
+                  width="24"
+                  height="18"
+                />
+                <path
+                  style={{ fill: '#424A60' }}
+                  d="M39.5,43h-20c-0.553,0-1-0.447-1-1s0.447-1,1-1h20c0.553,0,1,0.447,1,1S40.053,43,39.5,43z"
+                />
+                <path
+                  style={{ fill: '#424A60' }}
+                  d="M39.5,48h-20c-0.553,0-1-0.447-1-1s0.447-1,1-1h20c0.553,0,1,0.447,1,1S40.053,48,39.5,48z"
+                />
+                <path
+                  style={{ fill: '#424A60' }}
+                  d="M39.5,53h-20c-0.553,0-1-0.447-1-1s0.447-1,1-1h20c0.553,0,1,0.447,1,1S40.053,53,39.5,53z"
+                />
+              </g>
+            )}
           </g>
         </svg>
       </div>

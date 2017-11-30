@@ -21,20 +21,9 @@ import CardDragPreview from './DragLayer/CardDragPreview';
 import { DragSourceCont, DropTargetCont } from './DragLayer/SourceTargetCont';
 import DragLayer from './DragLayer/DragLayer';
 
-const Marker = ({
-  key,
-  width,
-  height,
-  selected,
-  delay,
-  x,
-  y,
-  children,
-  onClick
-}) =>
+const Marker = ({ key, width, height, selected, delay, x, y, children }) =>
   <div
     key={key}
-    onClick={onClick}
     style={{
       position: 'absolute',
       left: selected ? `${0}px` : `${x - width / 2}px`,
@@ -55,6 +44,7 @@ Marker.PropTypes = {
   width: PropTypes.string,
   height: PropTypes.string,
   selected: PropTypes.bool,
+  delay: PropTypes.number,
   x: PropTypes.number,
   y: PropTypes.number,
   children: PropTypes.element
@@ -70,7 +60,7 @@ class CardCreator extends Component {
     width: PropTypes.number,
     height: PropTypes.number,
     tempCards: PropTypes.array,
-    selected: PropTypes.string,
+    selectedCardId: PropTypes.string,
     openCardDetails: PropTypes.func,
     selectCard: PropTypes.func,
     createCard: PropTypes.func,
@@ -91,7 +81,7 @@ class CardCreator extends Component {
     width: 100,
     height: 100,
     tempCards: [],
-    selected: null,
+    selectedCardId: [],
     openCardDetails: d => d,
     selectedCard: d => d,
     createCard: d => d,
@@ -149,9 +139,9 @@ class CardCreator extends Component {
       width,
       height,
       changeMapViewport,
+      selectedCardId,
       openCardDetails,
       selectCard,
-      selected,
       createCard,
       tempCards,
       dragCard
@@ -159,12 +149,6 @@ class CardCreator extends Component {
 
     const mapState = { width, height, ...mapViewport };
     const [w, h] = [50, 50];
-
-    const selectedCardId = selected ? selected.id : null;
-    const selectedExtended = selected ? selected.extended : null;
-
-    console.log('selected', selected);
-
     return (
       <DragDropContextProvider backend={TouchBackend}>
         <div
@@ -183,45 +167,82 @@ class CardCreator extends Component {
                 {/* TODO: change Key */}
                 <DivOverlay {...mapState} data={tempCards}>
                   {(c, [x, y]) =>
-                    <Marker
+                    <div
                       key={Math.random()}
-                      selected={selectedCardId === c.id}
-                      width={c.id === selectedCardId ? width : w}
-                      height={c.id === selectedCardId ? height : h}
-                      x={x}
-                      y={y}
-                      onClick={() =>
-                        openCardDetails(selectedCardId === c.id ? null : c.id)}
+                      style={{
+                        position: 'absolute',
+                        left:
+                          selectedCardId === c.id ? `${0}px` : `${x - w / 2}px`,
+                        top:
+                          selectedCardId === c.id ? `${0}px` : `${y - h / 2}px`,
+                        width: `${w}px`,
+                        height: `${h}px`,
+                        cursor: 'pointer',
+                        transition: `left ${delay}, top ${delay}`,
+                        zIndex: selectedCardId === c.id ? 1000 : 500
+                      }}
                     >
                       <DragSourceCont
                         key={`${c.title}  ${c.date}`}
                         dragHandler={dragCard}
                       >
-                        <div>
+                        <div
+                          onClick={() =>
+                            openCardDetails(
+                              selectedCardId === c.id ? null : c.id
+                            )}
+                          style={{
+                            width:
+                              c.id === selectedCardId ? `${width}px` : `${w}px`,
+                            height:
+                              c.id === selectedCardId
+                                ? `${height}px`
+                                : `${h}px`,
+                            transition: `width ${delay}, height ${delay}`
+                          }}
+                        >
                           {selectedCardId === c.id
                             ? <Card {...c} />
                             : <CardDragPreview />}
                         </div>
                       </DragSourceCont>
-                    </Marker>}
+                    </div>}
                 </DivOverlay>
                 <DivOverlay {...mapState} data={cards}>
                   {(c, [x, y]) =>
-                    <Marker
-                      key={Math.random()}
-                      selected={selectedCardId === c.id}
-                      width={c.id === selectedCardId ? width : w}
-                      height={c.id === selectedCardId ? height : h}
-                      x={x}
-                      y={y}
-                      onClick={() => selectCard(c)}
+                    <div
+                      key={c.key}
+                      style={{
+                        position: 'absolute',
+                        left:
+                          selectedCardId === c.id ? `${0}px` : `${x - w / 2}px`,
+                        top:
+                          selectedCardId === c.id ? `${0}px` : `${y - h / 2}px`,
+                        width: `${w}px`,
+                        height: `${h}px`,
+                        cursor: 'pointer',
+                        transition: `left ${delay}, top ${delay}`,
+                        zIndex: selectedCardId === c.id ? 1000 : null
+                      }}
                     >
-                      <div>
-                        {selectedExtended
+                      <div
+                        onClick={() =>
+                          openCardDetails(
+                            selectedCardId === c.id ? null : c.id
+                          )}
+                        style={{
+                          width:
+                            c.id === selectedCardId ? `${width}px` : `${w}px`,
+                          height:
+                            c.id === selectedCardId ? `${height}px` : `${h}px`,
+                          transition: `width ${delay}, height ${delay}`
+                        }}
+                      >
+                        {selectedCardId === c.id
                           ? <Card {...c} />
                           : <CardDragPreview />}
                       </div>
-                    </Marker>}
+                    </div>}
                 </DivOverlay>
               </MapGL>
             </DropTargetCont>
@@ -231,11 +252,17 @@ class CardCreator extends Component {
             style={{
               height: '100%',
               width: '100%',
-              // opacity: !selectedCardId ? 1 : 0,
+              opacity: !selectedCardId ? 1 : 0,
               transition: 'opacity .25s ease-in-out'
             }}
           >
-            <div className="col-2">
+            <div
+              className="col-2"
+              style={{
+                height: '100%',
+                width: '100%'
+              }}
+            >
               <div className={cxx.grid}>
                 {[{ template: true }, ...cards].map(d =>
                   <div onClick={() => openCardDetails(d.id)}>
@@ -250,14 +277,6 @@ class CardCreator extends Component {
                 )}
               </div>
             </div>
-            {selected &&
-              <div className="col-10">
-                <div className={cxx.grid}>
-                  <h1>
-                    {'ANALYTICS'}
-                  </h1>
-                </div>
-              </div>}
           </div>
         </div>
       </DragDropContextProvider>

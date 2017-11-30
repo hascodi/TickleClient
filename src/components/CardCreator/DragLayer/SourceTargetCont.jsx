@@ -9,7 +9,7 @@ import CardDragPreview from './CardDragPreview';
 // import update from 'immutability-helper';
 
 const style = {
-  border: '1px dashed gray',
+  // border: '1px dashed gray',
   // backgroundColor: 'white',
   // padding: '0.5rem 1rem',
   // marginRight: '1.5rem',

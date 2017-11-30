@@ -13,6 +13,7 @@ const CardDragPreview = ({ width, height, left, top, fill }) =>
     background={fill}
     style={{
       position: !(left === null || top === null) ? 'absolute' : null,
+      border: '1px dashed gray',
       left: `${left}px`,
       top: `${top}px`
     }}
