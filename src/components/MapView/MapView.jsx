@@ -146,6 +146,7 @@ class MapView extends React.Component {
     const selectedCard = selectedId
       ? cards.find(d => d.id === selectedId)
       : null;
+
     return (
       <div>
         {
@@ -166,21 +167,22 @@ class MapView extends React.Component {
         <div className={`${cx.cardGridCont}`}>
           <Grid
             {...this.gridSpan()}
-            clickHandler={d => selectCard({ selectedId: 0 })}
+            clickHandler={d => selectCard({ selectedId: d })}
+            selected={selectedId}
           >
             {cards.map(d => {
               if (selectedId === d.id) {
                 return (
                   <Card
                     {...d}
-                    selected
                     collectHandler={() =>
                       toggleCardChallenge({ cardChallengeOpen: true })}
+                    closeHandler={() => selectCard({ selectedId: null })}
                   />
                 );
               }
               return <CardFrame {...d} />;
-            })})
+            })}
           </Grid>
         </div>
 

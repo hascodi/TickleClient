@@ -27,23 +27,24 @@ class Grid extends Component {
     clickHandler: PropTypes.function,
     span: PropTypes.number,
     activeSpan: PropTypes.number,
-    columnWidth: PropTypes.number,
-    selected: PropTypes.string
+    columnWidth: PropTypes.number
   };
 
-  static defaultProps = { selected: null };
+  constructor(props) {
+    super(props);
+    // this.cardClickHandler = this.cardClickHandler.bind(this);
+    this.state = { selected: null };
+  }
 
   componentDidMount() {
     // $(ReactDOM.findDOMNode(this)).carousel({ ride: 'pause', interval: false });
     //
     // scrollToComponent(this.Violet);
-    //            scrollTo();
-    // this.forceUpdate();
   }
 
   componentDidUpdate() {
-    const { selected } = this.props;
-    if (selected) this._scroller.scrollTo(selected);
+    // console.log('item', this.item);
+    // scrollToComponent(this.Violet);
   }
 
   // shouldComponentUpdate(nextProps) {
@@ -72,11 +73,6 @@ class Grid extends Component {
     // );
     //
     //
-    // const scrollTo = name => {
-    //   console.log('this', this);
-    //   this._scroller.scrollTo(name);
-    // };
-
     return (
       <ScrollView ref={scroller => (this._scroller = scroller)}>
         <div
@@ -99,10 +95,11 @@ class Grid extends Component {
                   <ScrollElement name={i}>
                     <Item
                       {...this.props}
-                      selected={selected === comp.props.id}
+                      selected={this.props.selected === comp.props.id}
                       defaultCol={col}
                       visible={isVisible}
                       index={i}
+                      scrollTo={() => this.scrollTo(i)}
                     >
                       {comp}
                     </Item>
@@ -136,12 +133,42 @@ class Item extends Component {
     activeSpan: PropTypes.number,
     opacity: PropTypes.number,
     visible: PropTypes.bool,
-    clickHandler: PropTypes.func
+    clickHandler: PropTypes.func,
+    scrollTo: PropTypes.func
   };
 
   static defaultProps = {
     clickHandler: d => d
   };
+
+  constructor(props) {
+    super(props);
+    const { selected } = props;
+    this.onClick = this.onClick.bind(this);
+    // this.state = { selected };
+  }
+
+  // componentWillReceiveProps(nextProps) {
+  //   // const { visible } = nextProps;
+  //   // this.setState({ selected: visible });
+  // }
+
+  componentDidUpdate(prevProps, prevState) {
+    // const { children, scrollTo, clickHandler } = this.props;
+    // const { selected } = this.state;
+    if (prevProps.selected !== this.props.selected) {
+      scrollTo();
+    }
+  }
+
+  // onClick() {
+  //   const { visible } = this.props;
+  //   if (visible) {
+  //     this.setState(oldState => ({
+  //       selected: !oldState.selected
+  //     }));
+  //   }
+  // }
 
   render() {
     const {
@@ -153,7 +180,15 @@ class Item extends Component {
       activeSpan,
       clickHandler,
       selected
+      // scrollTo
     } = this.props;
+
+    // const selected = children.props.selected;
+    // const { selected } = this.state;
+
+    // const clickHandler = this.clickHandler;
+
+    // if (clicked) console.log(`${defaultCol} / span ${activeSpan}`);
 
     return (
       <div
@@ -166,7 +201,7 @@ class Item extends Component {
           gridRowEnd: selected ? 'span 2' : 'span 1',
           opacity: visible || selected ? 1 : opacity
         }}
-        onClick={() => !selected && clickHandler(children.props.id)}
+        onClick={() => clickHandler(children.props.id)}
       >
         {children}
       </div>

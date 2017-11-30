@@ -29,7 +29,6 @@ class DivOverlay extends React.Component {
   }
 
   getDim(childComp) {
-    console.log('childComp', childComp);
     if (
       childComp.props.style &&
       childComp.props.style.width &&

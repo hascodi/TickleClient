@@ -19,6 +19,7 @@ import reducers from './reducers';
 
 import MapView from './components/MapView';
 import CardCreator from './components/CardCreator';
+import Generator from './components/Generator';
 
 import DefaultLayout from './layouts/MainLayout';
 
@@ -97,6 +98,16 @@ const Routes = () =>
           <DefaultLayout>
             <Provider store={store}>
               <CardCreator />
+            </Provider>
+          </DefaultLayout>}
+      />
+      <Route
+        exact
+        path="/generator"
+        render={() =>
+          <DefaultLayout>
+            <Provider store={store}>
+              <Generator />
             </Provider>
           </DefaultLayout>}
       />

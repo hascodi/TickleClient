@@ -69,6 +69,7 @@ function reducer(state = {}, action) {
     // });
     case SELECT_CARD: {
       const { selectedId } = action.options;
+      console.log(SELECT_CARD, selectedId);
       const selectedCard = state.cards.find(d => d.id === selectedId);
       const newMapViewState = {
         centerLocation: selectedId
@@ -87,8 +88,10 @@ function reducer(state = {}, action) {
       const width = action.options.width;
       const gridWidth = width * 2;
       const mapHeight = height / 2;
+      const defaultHeight = mapHeight;
       const gridHeight = height / 2;
       const newState = {
+        defaultHeight,
         height,
         width,
         gridWidth,

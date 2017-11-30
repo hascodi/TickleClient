@@ -10,7 +10,7 @@ import { DragDropContextProvider } from 'react-dnd';
 import MapGL from 'react-map-gl';
 import update from 'immutability-helper';
 
-import { CardMini, CardCont } from '../cards/Card';
+import { CardFrame, Card } from '../cards/Card';
 import cxx from './CardCreator.scss';
 
 import DivOverlay from '../utils/map-layers/DivOverlay';
@@ -183,7 +183,7 @@ class CardCreator extends Component {
                           }}
                         >
                           {selectedCardId === c.id
-                            ? <CardCont {...c} />
+                            ? <Card {...c} />
                             : <CardDragPreview />}
                         </div>
                       </DragSourceCont>
@@ -218,7 +218,7 @@ class CardCreator extends Component {
                         }}
                       >
                         {selectedCardId === c.id
-                          ? <CardCont {...c} />
+                          ? <Card {...c} />
                           : <CardDragPreview />}
                       </div>
                     </div>}
@@ -235,6 +235,16 @@ class CardCreator extends Component {
               transition: 'opacity .25s ease-in-out'
             }}
           >
+            <div className="col-10">
+              <div style={{ height: '60px', width: '100%' }}>
+                <input
+                  type="text"
+                  value="SearchBox"
+                  style={{ height: '60px', width: '100%' }}
+                />
+              </div>
+            </div>
+
             <div
               className="col-2"
               style={{
@@ -243,16 +253,18 @@ class CardCreator extends Component {
               }}
             >
               <div className={cxx.grid}>
-                {cards.map(d =>
+                {[{ template: true }, ...cards].map(d =>
                   <div onClick={() => selectCard(d.id)}>
                     <DragSourceCont key={`${d.title}  ${d.date}`}>
-                      <CardMini {...d} {...this.props} />
+                      {d.template
+                        ? <div style={{ background: 'grey', height: '96px' }} />
+                        : <CardFrame {...d} {...this.props} />}
                     </DragSourceCont>
                   </div>
                 )}
               </div>
             </div>
-          </div>;
+          </div>
         </div>
       </DragDropContextProvider>
     );
