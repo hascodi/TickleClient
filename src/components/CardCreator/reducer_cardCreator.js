@@ -62,9 +62,15 @@ function reducer(state = {}, action) {
     }
     case SELECT_CARD: {
       console.log(action.type, action);
+      const { width, height } = state;
       const { latitude, longitude } = action.options.location;
       const selected = { ...action.options, extended: false };
-      const mapViewport = { ...state.mapViewport, latitude, longitude };
+      const mapViewport = {
+        ...state.mapViewport,
+        latitude,
+        longitude,
+        height: height * 1.5
+      };
 
       return {
         ...state,

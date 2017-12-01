@@ -8,7 +8,7 @@ import { default as TouchBackend } from 'react-dnd-touch-backend';
 import { DragDropContextProvider } from 'react-dnd';
 
 import MapGL from 'react-map-gl';
-import update from 'immutability-helper';
+// import update from 'immutability-helper';
 
 import { CardFrame, Card } from '../cards/Card';
 import cxx from './CardCreator.scss';
@@ -20,6 +20,9 @@ import CardDragPreview from './DragLayer/CardDragPreview';
 
 import { DragSourceCont, DropTargetCont } from './DragLayer/SourceTargetCont';
 import DragLayer from './DragLayer/DragLayer';
+import Analytics from './Analytics';
+
+// const container = ({}) =>
 
 const Marker = ({
   key,
@@ -228,15 +231,16 @@ class CardCreator extends Component {
           </div>
           <div
             className="row no-gutters"
-            style={{
-              height: '100%',
-              width: '100%',
-              // opacity: !selectedCardId ? 1 : 0,
-              transition: 'opacity .25s ease-in-out'
-            }}
+            style={{ transition: 'opacity .25s ease-in-out' }}
           >
+            <div
+              className={`col-12 ${cxx.animHeight}`}
+              style={{ height: `${selected ? height / 2 : 0}px` }}
+            >
+              <Analytics />
+            </div>
             <div className="col-2">
-              <div className={cxx.grid}>
+              <div className={cxx.grid} style={{}}>
                 {[{ template: true }, ...cards].map(d =>
                   <div onClick={() => openCardDetails(d.id)}>
                     <DragSourceCont key={`${d.title}  ${d.date}`}>
@@ -250,14 +254,6 @@ class CardCreator extends Component {
                 )}
               </div>
             </div>
-            {selected &&
-              <div className="col-10">
-                <div className={cxx.grid}>
-                  <h1>
-                    {'ANALYTICS'}
-                  </h1>
-                </div>
-              </div>}
           </div>
         </div>
       </DragDropContextProvider>

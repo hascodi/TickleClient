@@ -1,4 +1,5 @@
-export const SELECT_CARD = 'SELECT_CARD';
+// TODO: do something better
+export const SELECT_CARD = 'SELECT_CARD_1';
 export const OPEN_CARD_DETAILS = 'OPEN_CARD_DETAILS';
 export const CARD_CREATOR_SCREEN_RESIZE = 'CARD_CREATOR_SCREEN_RESIZE';
 export const CHANGE_MAP_VIEWPORT = 'CHANGE_MAP_VIEWPORT';
