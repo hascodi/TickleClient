@@ -14,7 +14,8 @@ const style = {
   // padding: '0.5rem 1rem',
   // marginRight: '1.5rem',
   // marginBottom: '1.5rem',
-  cursor: 'move'
+  cursor: 'move',
+  zIndex: 2000
   // float: 'left'
 };
 

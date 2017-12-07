@@ -42,6 +42,7 @@ const dummyCard = ({ latitude, longitude }) => ({
 });
 
 function reducer(state = {}, action) {
+  console.log(action.type, action.options);
   switch (action.type) {
     case CARD_CREATOR_SCREEN_RESIZE: {
       console.log('state taken', action);
@@ -52,7 +53,6 @@ function reducer(state = {}, action) {
     }
 
     case CHANGE_MAP_VIEWPORT: {
-      console.log('CHANGE_MAP_VIEWPORT', action.options);
       const mapViewport = action.options;
 
       return {
@@ -61,34 +61,39 @@ function reducer(state = {}, action) {
       };
     }
     case SELECT_CARD: {
-      console.log(action.type, action);
       const { width, height } = state;
-      const { latitude, longitude } = action.options.location;
-      const selected = { ...action.options, extended: false };
-      const mapViewport = {
-        ...state.mapViewport,
-        latitude,
-        longitude,
-        height: height * 1.5
-      };
-
+      if (action.options) {
+        const { latitude, longitude } = action.options.location;
+        const selected = { ...action.options, extended: false };
+        const mapViewport = {
+          ...state.mapViewport,
+          latitude,
+          longitude,
+          height: height * 1.5
+        };
+        return {
+          ...state,
+          mapViewport,
+          oldViewport: { ...state.mapViewport },
+          selected
+        };
+      }
       return {
         ...state,
-        mapViewport,
-        selected
+        mapViewport: state.oldViewport,
+        selected: null
       };
     }
     case OPEN_CARD_DETAILS: {
       const selectedCardId = action.options;
-      // console.log('SELECTCARD', selectedCardId);
+      console.log('open', action);
 
       return {
         ...state,
-        selectedCardId
+        highlighted: true
       };
     }
     case UPDATE_CARD: {
-      console.log(UPDATE_CARD, action.options);
       const { selectedCardId } = action.options;
 
       return {
@@ -97,15 +102,17 @@ function reducer(state = {}, action) {
       };
     }
     case CREATE_CARD: {
-      console.log(CREATE_CARD, action.options);
       const { width, height, mapViewport } = state;
 
       const mercator = ViewportMercator({ width, height, ...mapViewport });
       const { unproject } = mercator;
       const { x, y } = action.options;
-      console.log('unproject', unproject([x, y]));
       const pos = unproject([x, y]);
-      const newCard = dummyCard({ longitude: pos[0], latitude: pos[1] });
+      const newCard = dummyCard({
+        id: 'tempCard',
+        longitude: pos[0],
+        latitude: pos[1]
+      });
       newCard.temp = true;
       return {
         ...state,
@@ -115,8 +122,6 @@ function reducer(state = {}, action) {
     }
 
     case DRAG_CARD: {
-      console.log(DRAG_CARD, action.options);
-
       return {
         ...state,
         isDragging: true

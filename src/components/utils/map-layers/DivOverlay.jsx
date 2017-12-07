@@ -68,6 +68,7 @@ class DivOverlay extends React.Component {
             height: `${h}px`,
             cursor: 'pointer',
             transition: 'left 1s, top 1s'
+            // zIndex: 1000
             // border: '2px black solid'
             // background: `url(${cardIconSrc})`
           }}

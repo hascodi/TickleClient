@@ -49,6 +49,7 @@ class index extends Component {
     const { nodes, links, width, height } = this.state;
     return (
       <div className={`${styles.base} container `}>
+        <input title="nodes" onClick={() => this.setState({ nodes: [] })} />
         <svg width={width} height={height}>
           <g>
             {links.map(d =>
@@ -63,32 +64,15 @@ class index extends Component {
           </g>
           <g>
             {nodes.map(d =>
-              <g transform={`translate(${d.x}, ${d.y})`}>
-                <path
-                  style={{ fill: '#E7ECED', stroke: '#424A60' }}
-                  strokeWidth="2"
-                  d="M46.5,5h-34c-1.1,0-2,0.9-2,2v50c0,1.1,0.9,2,2,2h34c1.1,0,2-0.9,2-2V7C48.5,5.9,47.6,5,46.5,5z"
-                />
-
-                <rect
-                  x="17.4"
-                  y="9"
-                  style={{ fill: '#EFCE4A' }}
-                  width="24"
-                  height="18"
-                />
-                <path
-                  style={{ fill: '#424A60' }}
-                  d="M39.5,43h-20c-0.553,0-1-0.447-1-1s0.447-1,1-1h20c0.553,0,1,0.447,1,1S40.053,43,39.5,43z"
-                />
-                <path
-                  style={{ fill: '#424A60' }}
-                  d="M39.5,48h-20c-0.553,0-1-0.447-1-1s0.447-1,1-1h20c0.553,0,1,0.447,1,1S40.053,48,39.5,48z"
-                />
-                <path
-                  style={{ fill: '#424A60' }}
-                  d="M39.5,53h-20c-0.553,0-1-0.447-1-1s0.447-1,1-1h20c0.553,0,1,0.447,1,1S40.053,53,39.5,53z"
-                />
+              <g
+                transform={`translate(${d.x}, ${d.y})`}
+                onClick={() => {
+                  this.setState(oldState => ({
+                    nodes: oldState.nodes.slice(1)
+                  }));
+                }}
+              >
+                <circle r={10} />
               </g>
             )}
           </g>

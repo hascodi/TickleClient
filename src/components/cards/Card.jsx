@@ -45,7 +45,8 @@ const defaultProps = {
   key: 3,
   date: '28/04/2012 10:00',
   tags: ['Uni', 'education'],
-  img: exampleImg,
+  img:
+    'http://uabsport.be/wp-content/uploads/2015/10/817SOap_binnenzicht_01.jpg',
   xpPoints: 50,
   // TODO: remove in future to component
   description: 'description',

@@ -43,8 +43,14 @@
 }
 
 .cardTemp {
-  background: grey;
+  background: lightgray;
   height: 96px;
+  padding-top: 20px;
+  color: gray;
+  border: 1px dashed black;
+
+  // line-height: 96px;
+  text-align: center;
 }
 
 .animHeight {

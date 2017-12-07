@@ -33,7 +33,8 @@ const Marker = ({
   x,
   y,
   children,
-  onClick
+  onClick,
+  zIndex
 }) =>
   <div
     key={key}
@@ -46,7 +47,7 @@ const Marker = ({
       height: `${height}px`,
       cursor: 'pointer',
       transition: `left ${delay}s, top ${delay}s`,
-      zIndex: selected ? 1000 : null
+      zIndex: selected ? 5000 : zIndex
     }}
   >
     {children}
@@ -102,6 +103,7 @@ class CardCreator extends Component {
     changeMapViewport: d => d,
     dragCard: d => d
   };
+
   constructor(props) {
     super(props);
 
@@ -157,7 +159,8 @@ class CardCreator extends Component {
       selected,
       createCard,
       tempCards,
-      dragCard
+      dragCard,
+      highlighted
     } = this.props;
 
     const mapState = { width, height, ...mapViewport };
@@ -187,23 +190,21 @@ class CardCreator extends Component {
                 <DivOverlay {...mapState} data={tempCards}>
                   {(c, [x, y]) =>
                     <Marker
-                      key={Math.random()}
-                      selected={selectedCardId === c.id}
-                      width={c.id === selectedCardId ? width : w}
-                      height={c.id === selectedCardId ? height : h}
+                      key={c.id}
+                      selected={highlighted}
+                      width={highlighted ? width : w}
+                      height={highlighted ? height : h}
                       x={x}
                       y={y}
-                      onClick={() =>
-                        openCardDetails(selectedCardId === c.id ? null : c.id)}
+                      zIndex={1000}
+                      onClick={() => openCardDetails(c.id)}
                     >
                       <DragSourceCont
                         key={`${c.title}  ${c.date}`}
                         dragHandler={dragCard}
                       >
-                        <div>
-                          {selectedCardId === c.id
-                            ? <Card {...c} />
-                            : <CardDragPreview />}
+                        <div style={{ background: 'lightgreen' }}>
+                          {highlighted ? <Card {...c} /> : <CardDragPreview />}
                         </div>
                       </DragSourceCont>
                     </Marker>}
@@ -229,25 +230,39 @@ class CardCreator extends Component {
               </MapGL>
             </DropTargetCont>
           </div>
-          <div
-            className="row no-gutters"
-            style={{ transition: 'opacity .25s ease-in-out' }}
-          >
+          <div className="row no-gutters">
             <div
               className={`col-12 ${cxx.animHeight}`}
-              style={{ height: `${selected ? height / 2 : 0}px` }}
+              style={{
+                height: `${selected ? height / 2 : 0}px`,
+                background: 'white',
+                zIndex: 10000
+              }}
             >
-              <Analytics />
+              <Analytics
+                width={width}
+                height={height / 2}
+                closeHandler={() => selectCard(null)}
+              />
             </div>
             <div className="col-2">
-              <div className={cxx.grid} style={{}}>
-                {[{ template: true }, ...cards].map(d =>
+              <div
+                className={cxx.grid}
+                style={{
+                  transition: 'opacity .25s ease-in-out',
+                  opacity: !selected ? 1 : 0
+                }}
+              >
+                <DragSourceCont key={'newCard'}>
+                  <div className={cxx.cardTemp}>
+                    <i className="fa fa-4x fa-plus" aria-hidden="true" />
+                  </div>
+                </DragSourceCont>
+                {cards.map(d =>
                   <div onClick={() => openCardDetails(d.id)}>
                     <DragSourceCont key={`${d.title}  ${d.date}`}>
                       <div style={{ border: '1px dashed gray' }}>
-                        {d.template
-                          ? <div className={cxx.cardTemp} />
-                          : <CardFrame {...d} {...this.props} />}
+                        <CardFrame {...d} {...this.props} />
                       </div>
                     </DragSourceCont>
                   </div>

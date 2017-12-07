@@ -16,6 +16,7 @@ const CardDragPreview = ({ width, height, left, top, fill }) =>
       border: '1px dashed gray',
       left: `${left}px`,
       top: `${top}px`
+      // zIndex: 2000
     }}
   />;
 
