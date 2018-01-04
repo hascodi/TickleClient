@@ -83,7 +83,8 @@ class Grid extends Component {
           className={cx.wrapper}
           style={{
             gridTemplateColumns: `repeat(${children.length *
-              activeSpan}, ${columnWidth}px)`
+              activeSpan}, ${columnWidth}px)`,
+            gridTemplateRows: '50% 50%'
           }}
         >
           {React.Children.map(children, (comp, i) => {

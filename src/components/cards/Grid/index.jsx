@@ -64,11 +64,11 @@ class Grid extends Component {
       span,
       // columns,
       cols,
-      // gap,
+      gap,
       rows
     } = this.props;
 
-    const gap = 1;
+    // const gap = 1;
     const columnWidth = (100 - cols * gap + 1) / cols;
     const rowHeight = 100 / rows;
 
@@ -95,16 +95,9 @@ class Grid extends Component {
           // alignItems: 'end'
         }}
       >
-        {React.Children.map(children, (comp, i) => (
-          <Cell
-            key={d3.timeFormat('%B %d, %Y')(comp.props.date)}
-            {...comp.props}
-            defaultCol={getCol({ i, cols, rows, span })}
-            index={i}
-          >
-            {comp}
-          </Cell>
-        ))}
+        {React.Children.map(children, (comp, i) =>
+          comp
+        )}
       </div>
     );
   }
@@ -164,7 +157,10 @@ Cell.defaultProps = {
   activeSpan: 2,
   clickHandler: d => d,
   selected: null,
-  children: d => <div>{d}</div>,
+  children: d =>
+    <div>
+      {d}
+    </div>,
   defaultCol: 1
 };
 

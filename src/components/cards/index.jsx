@@ -92,37 +92,34 @@ const defaultProps = {
   challenge: { type: 'quiz' }
 };
 
+const Media = ({ data }) =>
+  <fieldset className={cx.field}>
+    <legend>media:</legend>
+    <div className="row no-gutters">
+      {data.map(m =>
+        <span className="row no-gutters" key={m.src}>
+          <div className="col mr-1">
+            <i className={`fa ${mediaScale(m.type)} fa-3`} aria-hidden="true" />
+          </div>
+          <div className="col mr-1">
+            <a href={m.src}>name</a>
+          </div>
+        </span>
+      )}
+    </div>
+  </fieldset>;
+
+Media.propTypes = { data: PropTypes.array.isRequired };
+
 const CardFront = ({ description, media, cardSets, linkedCards, children }) =>
   <div className={cx.cardDetail} style={{ height: '100%' }}>
     <div className={cx.textClamp}>
       <fieldset className={cx.field}>
         <legend>description</legend>
-        <div>
+        <div style={{ minHeight: '50px' }}>
           {description}
         </div>
       </fieldset>
-    </div>
-    <div>
-      <div>
-        <fieldset className={cx.field}>
-          <legend>media:</legend>
-          <div className="row no-gutters">
-            {media.map(m =>
-              <span className="row no-gutters" key={m.src}>
-                <div className="col mr-1">
-                  <i
-                    className={`fa ${mediaScale(m.type)} fa-3`}
-                    aria-hidden="true"
-                  />
-                </div>
-                <div className="col mr-1">
-                  <a href={m.src}>name</a>
-                </div>
-              </span>
-            )}
-          </div>
-        </fieldset>
-      </div>
     </div>
     {children}
   </div>;
@@ -256,6 +253,7 @@ const CardFrame = ({
   challenge,
   children,
   flipHandler,
+  style,
   onClick
   // id
 }) =>
@@ -263,7 +261,8 @@ const CardFrame = ({
     className={`${cx.cardMini2} `}
     style={{
       zIndex: 2,
-      background: colorScale(challenge.type)
+      background: colorScale(challenge.type),
+      ...style
     }}
     onClick={onClick}
   >
@@ -345,9 +344,9 @@ Comments.defaultProps = {
 };
 
 const SmallComments = ({ data, extended }) =>
-  <div>
+  <Grid rows={2} cols={data.length * 2} gap={0}>
     {data.map(({ comment, user, date }) =>
-      <div className="media mt-3">
+      <div className="media">
         <img
           className={`${cx.avatar}`}
           width={32}
@@ -357,7 +356,7 @@ const SmallComments = ({ data, extended }) =>
         />
       </div>
     )}
-  </div>;
+  </Grid>;
 
 const Profile = ({ data }) =>
   <div className="media mt-3">
@@ -381,61 +380,135 @@ const Profile = ({ data }) =>
   </div>;
 
 Profile.PropTypes = {
-  author: PropTypes.object
+  data: PropTypes.object.isRequired
 };
 
 // TODO; rempve
 Profile.defaultProps = { name: 'jan', comment: 'yeah' };
 
-const CardBack = ({ key, friends, challenge, author, flipHandler }) =>
-  <div
-    className={`container ${cx.cardMini2} `}
-    style={{
-      zIndex: 2,
-      background: colorScale(challenge.type),
-      height: '100%'
-    }}
-  >
-    <div className={cx.cardHeader}>
-      <button className="close" onClick={flipHandler}>
-        <i className="col-1 fa fa-retweet fa-lg" aria-hidden="true" />
-      </button>
-    </div>
-    <Grid cols={2} rows={2}>
-      <div style={{ border: 'solid 1px black', width: '100%', height: '100%' }}>
-        {'Author'}
-      </div>
-      <div style={{ border: 'solid 1px black', width: '100%', height: '100%' }}>
-        <div>
-          {'Map'}
-        </div>
-      </div>
-      <div style={{ border: 'solid 1px black', width: '100%', height: '100%' }}>
-        {'media'}
-      </div>
-      <div style={{ border: 'solid 1px black', width: '100%', height: '100%' }}>
-        {'Comments'}
-      </div>
-      <div>
-        <fieldset className={cx.field}>
-          <legend>Cardsets:</legend>
-          <Tags data={cardSets} />
-        </fieldset>
-      </div>
-      <div>
-        <fieldset className={cx.field}>
-          <legend>Linked Cards</legend>
-          <Tags data={linkedCards} />
-        </fieldset>
-      </div>
-    </Grid>
-  </div>;
+class CardBack extends Component {
+  static propTypes = {
+    key: PropTypes.string,
+    friends: PropTypes.array,
+    challenge: PropTypes.object.isRequired,
+    author: PropTypes.object.isRequired,
+    flipHandler: PropTypes.func.isRequired,
+    cardSets: PropTypes.object.isRequired,
+    linkedCards: PropTypes.object.isRequireds
+  };
 
-CardBack.propTypes = {
-  key: React.PropTypes.string.isRequired,
-  author: React.PropTypes.string.isRequired,
-  friends: React.PropTypes.array.isRequired
-};
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    const {
+      challenge,
+      friends,
+      cardSets,
+      linkedCards,
+      flipHandler
+    } = this.props;
+    return (
+      <div
+        className={`container ${cx.cardMini2} `}
+        style={{
+          zIndex: 2,
+          background: colorScale(challenge.type),
+          height: '100%'
+        }}
+      >
+        <div className={cx.cardHeader}>
+          <button className="close" onClick={flipHandler}>
+            <i className="col-1 fa fa-retweet fa-lg" aria-hidden="true" />
+          </button>
+        </div>
+        <Grid cols={2} rows={3} gap={0}>
+          <fieldset className={cx.field} style={{ height: '100%' }}>
+            <legend>Author:</legend>
+            <Tags data={cardSets} />
+          </fieldset>
+          <fieldset className={cx.field}>
+            <legend>Map:</legend>
+            <Tags data={cardSets} />
+          </fieldset>
+          <fieldset className={cx.field}>
+            <legend>Cardsets:</legend>
+            <Tags data={cardSets} />
+          </fieldset>
+          <fieldset className={cx.field}>
+            <legend>Linked Cards</legend>
+            <Tags data={linkedCards} />
+          </fieldset>
+          <fieldset className={cx.field} style={{ gridColumn: `span ${2}` }}>
+            <legend>Comments:</legend>
+            <SmallComments data={friends} />
+          </fieldset>
+          <fieldset className={cx.field}>
+            <legend>Media:</legend>
+            <Tags data={cardSets} />
+          </fieldset>
+        </Grid>
+      </div>
+    );
+  }
+}
+
+// const CardBack = ({
+//   key,
+//   friends,
+//   challenge,
+//   author,
+//   flipHandler,
+//   cardSets,
+//   linkedCards
+// }) =>
+//   <div
+//     className={`container ${cx.cardMini2} `}
+//     style={{
+//       zIndex: 2,
+//       background: colorScale(challenge.type),
+//       height: '100%'
+//     }}
+//   >
+//     <div className={cx.cardHeader}>
+//       <button className="close" onClick={flipHandler}>
+//         <i className="col-1 fa fa-retweet fa-lg" aria-hidden="true" />
+//       </button>
+//     </div>
+//     <Grid cols={2} rows={3}>
+//       <fieldset className={cx.field} style={{ height: '100%' }}>
+//         <legend>Author:</legend>
+//         <Tags data={cardSets} />
+//       </fieldset>
+//       <fieldset className={cx.field}>
+//         <legend>Map:</legend>
+//         <Tags data={cardSets} />
+//       </fieldset>
+//       <fieldset className={cx.field}>
+//         <legend>Cardsets:</legend>
+//         <Tags data={cardSets} />
+//       </fieldset>
+//       <fieldset className={cx.field}>
+//         <legend>Linked Cards</legend>
+//         <Tags data={linkedCards} />
+//       </fieldset>
+//       <fieldset className={cx.field}>
+//         <legend>Comments:</legend>
+//         <SmallComments data={friends} />
+//       </fieldset>
+//       <fieldset className={cx.field}>
+//         <legend>Media:</legend>
+//         <Tags data={cardSets} />
+//       </fieldset>
+//     </Grid>
+//   </div>;
+//
+// CardBack.propTypes = {
+//   key: React.PropTypes.string.isRequired,
+//   author: React.PropTypes.string.isRequired,
+//   friends: React.PropTypes.array.isRequired
+// };
 
 CardBack.defaultProps = {
   key: 'asa',
