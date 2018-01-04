@@ -1,0 +1,47 @@
+// TODO
+// @import "Src/styles/variables.scss";
+// @import "../../../styles/variables.scss";
+
+.base {
+  height: 100%;
+}
+
+.wrapper {
+  display: grid;
+  // height: inherit;
+  // width: inherit;
+
+  // grid-gap: 10px;
+  // height: 100%;
+    // width: 100%;
+  // grid-auto-flow: column;
+
+  // grid-template-areas: "a a";
+  // grid-template-columns: repeat(30, 78px);
+  // grid-template-rows: 50% 50%;
+  // min-height: 0;
+  // min-width: 0;
+}
+
+.item {
+  // grid-column-end: span 2;
+  // transition: opacity 0.1s;
+  // border: $secBrown 2px solid;
+  border-radius: 10px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+// todo
+.wrapper::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  background-color: tomato;
+}
+
+// .wrapper::-webkit-scrollbar {
+//   width: 5px;
+//   height: 8px;
+//   background-color: tomato;
+// }

@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
+import Grid from './Grid';
 import Modal from '../utils/Modal';
 import { challengeTypes, mediaTypes } from '../../dummyData';
+// TODO: replace
 import 'w3-css';
 
 import * as chromatic from 'd3-scale-chromatic';
@@ -45,8 +47,7 @@ const defaultProps = {
   key: 3,
   date: '28/04/2012 10:00',
   tags: ['Uni', 'education'],
-  img:
-    'http://uabsport.be/wp-content/uploads/2015/10/817SOap_binnenzicht_01.jpg',
+  img: exampleImg,
   xpPoints: 50,
   // TODO: remove in future to component
   description: 'description',
@@ -92,13 +93,13 @@ const defaultProps = {
 };
 
 const CardFront = ({ description, media, cardSets, linkedCards, children }) =>
-  <div className={cx.cardDetail}>
+  <div className={cx.cardDetail} style={{ height: '100%' }}>
     <div className={cx.textClamp}>
       <fieldset className={cx.field}>
         <legend>description</legend>
-        <span>
+        <div>
           {description}
-        </span>
+        </div>
       </fieldset>
     </div>
     <div>
@@ -122,18 +123,6 @@ const CardFront = ({ description, media, cardSets, linkedCards, children }) =>
           </div>
         </fieldset>
       </div>
-    </div>
-    <div>
-      <fieldset className={cx.field}>
-        <legend>Cardsets:</legend>
-        <Tags data={cardSets} />
-      </fieldset>
-    </div>
-    <div>
-      <fieldset className={cx.field}>
-        <legend>Linked Cards</legend>
-        <Tags data={linkedCards} />
-      </fieldset>
     </div>
     {children}
   </div>;
@@ -218,6 +207,47 @@ const Tags = ({ data }) =>
     )}
   </small>;
 
+const PreviewCard = ({ title, tags, img, closeHandler, challenge, onClick }) =>
+  <div
+    className={`${cx.cardMini2} `}
+    style={{
+      zIndex: 2,
+      background: colorScale(challenge.type)
+    }}
+    onClick={onClick}
+  >
+    <div className={cx.cardHeader}>
+      <h5 className="text-truncate">
+        {title}
+      </h5>
+    </div>
+    <div>
+      <Tags data={tags} />
+      <div className="mt-1 mb-1">
+        <img
+          style={{
+            display: 'block',
+            maxWidth: '100%',
+            height: 'auto'
+          }}
+          src={img}
+          alt="Card cap"
+        />
+      </div>
+    </div>
+  </div>;
+
+PreviewCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  tags: PropTypes.array.isRequired,
+  img: PropTypes.string,
+  closeHandler: PropTypes.func.isRequired,
+  challenge: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired
+};
+
+PreviewCard.defaultProps = defaultProps;
+
 const CardFrame = ({
   title,
   tags,
@@ -238,33 +268,17 @@ const CardFrame = ({
     onClick={onClick}
   >
     <div className={cx.cardHeader}>
-      {
-        do {
-          if (children) {
-            <h5 className="text-truncate">
-              {title}
-            </h5>;
-          } else {
-            <h4 className="text-truncate">
-              {title}
-            </h4>;
-          }
-        }
-      }
-      {closeHandler &&
-        <div className="btn-group">
-          <button className="close mr-2" onClick={closeHandler}>
-            <i className="fa fa-window-close fa-lg" aria-hidden="true" />
-          </button>
-        </div>}
-      {flipHandler &&
-        <button className="close">
-          <i
-            className="fa fa-retweet fa-lg"
-            aria-hidden="true"
-            onClick={flipHandler}
-          />
-        </button>}
+      <h4 className="text-truncate">
+        {title}
+      </h4>
+      <div className="btn-group">
+        <button className="close mr-2" onClick={closeHandler}>
+          <i className="fa fa-window-close fa-lg" aria-hidden="true" />
+        </button>
+      </div>
+      <button className="close" onClick={flipHandler}>
+        <i className="fa fa-retweet fa-lg" aria-hidden="true" />
+      </button>
     </div>
     <div>
       <Tags data={tags} />
@@ -292,73 +306,129 @@ CardFrame.propTypes = {
   children: PropTypes.node
 };
 
-CardFrame.defaultProps = CardFrontPreview.defaultProps;
+CardFrame.defaultProps = defaultProps;
+
+const Comments = ({ data, extended }) =>
+  <div>
+    {data.map(({ comment, user, date }) =>
+      <div className="media mt-3">
+        <img
+          className={`${cx.avatar}`}
+          width={32}
+          height={32}
+          src={profileSrc()}
+          alt="alt"
+        />
+        <div className="media-body">
+          <div className={cx.textClamp}>
+            <small>
+              {comment}
+            </small>
+          </div>
+          <div>
+            <small className="font-italic">
+              - {user}, {date}
+            </small>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>;
+
+Comments.PropTypes = {
+  data: PropTypes.array.isRequired,
+  extended: PropTypes.bool.isRequired
+};
+
+Comments.defaultProps = {
+  data: [{ user: 'Jan', date: new Date(), comment: 'Yes, cool shit' }]
+};
+
+const SmallComments = ({ data, extended }) =>
+  <div>
+    {data.map(({ comment, user, date }) =>
+      <div className="media mt-3">
+        <img
+          className={`${cx.avatar}`}
+          width={32}
+          height={32}
+          src={profileSrc()}
+          alt="alt"
+        />
+      </div>
+    )}
+  </div>;
+
+const Profile = ({ data }) =>
+  <div className="media mt-3">
+    <img
+      className={`d-flex mr-3 ${cx.avatar}`}
+      width={64}
+      height={64}
+      src={profileSrc()}
+      alt="alt"
+    />
+    <div className="media-body">
+      <div className={cx.textClamp}>
+        {data.comment}
+      </div>
+      <div>
+        <small className="font-italic">
+          - {data.name}
+        </small>
+      </div>
+    </div>
+  </div>;
+
+Profile.PropTypes = {
+  author: PropTypes.object
+};
+
+// TODO; rempve
+Profile.defaultProps = { name: 'jan', comment: 'yeah' };
 
 const CardBack = ({ key, friends, challenge, author, flipHandler }) =>
   <div
     className={`container ${cx.cardMini2} `}
     style={{
       zIndex: 2,
-      background: colorScale(challenge.type)
+      background: colorScale(challenge.type),
+      height: '100%'
     }}
   >
-    <div>
-      <div className={cx.cardHeader}>
-        <h5>Comments</h5>
-        <button className="close">
-          <i
-            className="col-1 fa fa-retweet fa-lg"
-            aria-hidden="true"
-            onClick={flipHandler}
-          />
-        </button>
-      </div>
-      <div>
-        {friends.map(({ comment, user, date }) =>
-          <div className="media mt-3">
-            <img
-              className={`d-flex mr-3 ${cx.avatar}`}
-              width={64}
-              height={64}
-              src={profileSrc()}
-              alt="alt"
-            />
-            <div className="media-body">
-              <div className={cx.textClamp}>
-                {comment}
-              </div>
-              <div>
-                <small className="font-italic">
-                  - {user}, {date}
-                </small>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+    <div className={cx.cardHeader}>
+      <button className="close" onClick={flipHandler}>
+        <i className="col-1 fa fa-retweet fa-lg" aria-hidden="true" />
+      </button>
     </div>
-    <div>
-      <h3>Author</h3>
-      <div className="media mt-3">
-        <img
-          className={`d-flex mr-3 ${cx.avatar}`}
-          width={64}
-          height={64}
-          src={profileSrc()}
-          alt="alt"
-        />
-        <div className="media-body">
-          <div className={cx.textClamp}>
-            {author.comment}
-          </div>
-          <div>
-            <small className="font-italic">
-              - {author.name}
-            </small>
-          </div>
+    <Grid cols={2} rows={2}>
+      <div style={{ border: 'solid 1px black', width: '100%', height: '100%' }}>
+        {'Author'}
+      </div>
+      <div style={{ border: 'solid 1px black', width: '100%', height: '100%' }}>
+        <div>
+          {'Map'}
         </div>
       </div>
-    </div>
+      <div style={{ border: 'solid 1px black', width: '100%', height: '100%' }}>
+        {'media'}
+      </div>
+      <div style={{ border: 'solid 1px black', width: '100%', height: '100%' }}>
+        {'Comments'}
+      </div>
+      <div>
+        <fieldset className={cx.field}>
+          <legend>Cardsets:</legend>
+          <Tags data={cardSets} />
+        </fieldset>
+      </div>
+      <div>
+        <fieldset className={cx.field}>
+          <legend>Linked Cards</legend>
+          <Tags data={linkedCards} />
+        </fieldset>
+      </div>
+    </Grid>
   </div>;
 
 CardBack.propTypes = {
@@ -423,6 +493,7 @@ class Card extends React.Component {
     closeHandler: d => d,
     collectHandler: null
   };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -435,22 +506,21 @@ class Card extends React.Component {
     // const { closeHandler } = this.props;
     const sideToggler = frontView ? cx.flipAnim : null;
     const { collectHandler } = this.props;
-
+    const flipHandler = () => {
+      console.log('flipHandler');
+      this.setState(oldState => ({
+        frontView: !oldState.frontView
+      }));
+    };
     const ToggleCard = do {
-      if (this.state.frontView) {
-        <CardFrame
-          flipHandler={() => this.setState({ frontView: !frontView })}
-          {...this.props}
-        >
+      if (frontView) {
+        <CardFrame {...this.props} flipHandler={flipHandler}>
           <CardFront {...this.props}>
             <CollectButton onClick={collectHandler} />
           </CardFront>
         </CardFrame>;
       } else {
-        <CardBack
-          {...this.props}
-          flipHandler={() => this.setState({ frontView: !frontView })}
-        />;
+        <CardBack {...this.props} flipHandler={flipHandler} />;
       }
     };
 
@@ -474,4 +544,4 @@ Card.propTypes = {
 
 // CardCont.propTypes = { selected: PropTypes.bool };
 
-export { Card, CardFrontPreview, CardFrame };
+export { Card, CardFrontPreview, PreviewCard };

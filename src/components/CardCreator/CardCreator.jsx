@@ -10,7 +10,7 @@ import { DragDropContextProvider } from 'react-dnd';
 import MapGL from 'react-map-gl';
 // import update from 'immutability-helper';
 
-import { CardFrame, Card } from '../cards/Card';
+import { CardFrame, Card } from '../cards';
 import cxx from './CardCreator.scss';
 
 import DivOverlay from '../utils/map-layers/DivOverlay';

@@ -11,7 +11,7 @@ import MapGL from 'react-map-gl';
 // import Pusher from 'pusher-js';
 // import ngeohash from 'ngeohash';,
 import cx from './MapView.scss';
-import { Card, CardFrame } from '../cards/Card';
+import { Card, PreviewCard } from '../cards';
 import Grid from './Grid';
 
 // import Modal from './components/utils/Modal';
@@ -149,21 +149,18 @@ class MapView extends React.Component {
 
     return (
       <div>
-        {
-          <Modal
-            id="exampleModal"
-            content={selectedCard}
-            visible={cardChallengeOpen}
-            closeHandler={() =>
-              toggleCardChallenge({ cardChallengeOpen: false })}
-          >
-            <iframe
-              title="emperors"
-              src="http://thescalli.com/emperors/"
-              style={{ border: 'none', width: '100%', height: '500px' }}
-            />
-          </Modal>
-        }
+        <Modal
+          id="exampleModal"
+          content={selectedCard}
+          visible={cardChallengeOpen}
+          closeHandler={() => toggleCardChallenge({ cardChallengeOpen: false })}
+        >
+          <iframe
+            title="emperors"
+            src="http://thescalli.com/emperors/"
+            style={{ border: 'none', width: '100%', height: '500px' }}
+          />
+        </Modal>
         <div className={`${cx.cardGridCont}`}>
           <Grid
             {...this.gridSpan()}
@@ -181,7 +178,7 @@ class MapView extends React.Component {
                   />
                 );
               }
-              return <CardFrame {...d} />;
+              return <PreviewCard {...d} />;
             })}
           </Grid>
         </div>
