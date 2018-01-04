@@ -558,6 +558,7 @@ const dummyCards = [
   notification2,
   MapEvent,
   jimiHendrixCard,
+  jimiHendrixCard2,
   ArthurDeGreefCard,
   ArthurDeGreefCard2,
   ArthurDeGreefCard3,

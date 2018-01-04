@@ -93,23 +93,22 @@ const defaultProps = {
 };
 
 const Media = ({ data }) =>
-  <fieldset className={cx.field}>
-    <legend>media:</legend>
-    <div className="row no-gutters">
-      {data.map(m =>
-        <span className="row no-gutters" key={m.src}>
-          <div className="col mr-1">
-            <i className={`fa ${mediaScale(m.type)} fa-3`} aria-hidden="true" />
-          </div>
-          <div className="col mr-1">
-            <a href={m.src}>name</a>
-          </div>
-        </span>
-      )}
-    </div>
-  </fieldset>;
+  <div className="row no-gutters">
+    {data.map(m =>
+      <span className="row no-gutters" key={m.src}>
+        <div className="col mr-1">
+          <i className={`fa ${mediaScale(m.type)} fa-3`} aria-hidden="true" />
+        </div>
+        <div className="col mr-1">
+          <a href={m.src}>name</a>
+        </div>
+      </span>
+    )}
+  </div>;
 
 Media.propTypes = { data: PropTypes.array.isRequired };
+
+Media.defaultProps = defaultProps.media;
 
 const CardFront = ({ description, media, cardSets, linkedCards, children }) =>
   <div className={cx.cardDetail} style={{ height: '100%' }}>
@@ -125,13 +124,8 @@ const CardFront = ({ description, media, cardSets, linkedCards, children }) =>
   </div>;
 
 CardFront.propTypes = {
-  place: PropTypes.string.isRequired,
-  location: PropTypes.object,
   description: PropTypes.string.isRequired,
-  media: PropTypes.array.isRequired,
-  cardSets: PropTypes.array.isRequired,
-  linkedCards: PropTypes.array.isRequired,
-  children: PropTypes.node
+  img: PropTypes.string.isRequired
 };
 
 CardFront.defaultProps = defaultProps;
@@ -196,7 +190,7 @@ const CardFrontPreview = ({
 CardFrontPreview.defaultProps = defaultProps;
 
 const Tags = ({ data }) =>
-  <small className={`text-truncate ${cx.tags}`}>
+  <small className={`${cx.tags}`}>
     {data.map(t =>
       <span key={t} className={`${cx.tag} ${colorClass()}`}>
         {t}
@@ -399,6 +393,8 @@ class CardBack extends Component {
 
   constructor(props) {
     super(props);
+
+    this.state = { extended: null };
   }
 
   render() {
@@ -409,6 +405,19 @@ class CardBack extends Component {
       linkedCards,
       flipHandler
     } = this.props;
+    const { extended } = this.state;
+    const selectField = field => () =>
+      this.setState(prevstate => ({
+        extended: prevstate.extended !== field ? field : null
+      }));
+    const setStyle = field => {
+      if (field === extended)
+        return { gridColumn: `span ${2}`, gridRow: `span ${3}` };
+      return {
+        display: extended !== null ? 'none' : null
+      };
+    };
+
     return (
       <div
         className={`container ${cx.cardMini2} `}
@@ -424,29 +433,53 @@ class CardBack extends Component {
           </button>
         </div>
         <Grid cols={2} rows={3} gap={0}>
-          <fieldset className={cx.field} style={{ height: '100%' }}>
+          <fieldset
+            className={cx.field}
+            style={setStyle('author')}
+            onClick={selectField('author')}
+          >
             <legend>Author:</legend>
             <Tags data={cardSets} />
           </fieldset>
-          <fieldset className={cx.field}>
+          <fieldset
+            className={cx.field}
+            style={setStyle('map')}
+            onClick={selectField('map')}
+          >
             <legend>Map:</legend>
             <Tags data={cardSets} />
           </fieldset>
-          <fieldset className={cx.field}>
+          <fieldset
+            className={cx.field}
+            style={setStyle('cardSets')}
+            onClick={selectField('cardSets')}
+          >
             <legend>Cardsets:</legend>
             <Tags data={cardSets} />
           </fieldset>
-          <fieldset className={cx.field}>
+          <fieldset
+            className={cx.field}
+            style={setStyle('linkedCards')}
+            onClick={selectField('linkedCards')}
+          >
             <legend>Linked Cards</legend>
             <Tags data={linkedCards} />
           </fieldset>
-          <fieldset className={cx.field} style={{ gridColumn: `span ${2}` }}>
+          <fieldset
+            className={cx.field}
+            style={setStyle('comments')}
+            onClick={selectField('comments')}
+          >
             <legend>Comments:</legend>
             <SmallComments data={friends} />
           </fieldset>
-          <fieldset className={cx.field}>
+          <fieldset
+            className={cx.field}
+            style={setStyle('media')}
+            onClick={selectField('media')}
+          >
             <legend>Media:</legend>
-            <Tags data={cardSets} />
+            <Media data={[]} />
           </fieldset>
         </Grid>
       </div>

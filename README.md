@@ -2,6 +2,13 @@
 
 TICKLE playground for our Project
 
+### Todo
+* CardCreator everything
+* Server side
+* Card components
+
+* Fork and clone the project:
+
 ### To run
 
 * You'll need to have [git](https://git-scm.com/) and [node](https://nodejs.org/en/) installed in your system.
