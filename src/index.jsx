@@ -6,6 +6,7 @@ import 'font-awesome/css/font-awesome.css';
 import 'bootstrap';
 
 import './bootstrap.scss';
+import './index.scss';
 import { AppContainer } from 'react-hot-loader';
 
 import Routes from './Routes';

@@ -17,10 +17,13 @@ import Grid from './Grid';
 // import Modal from './components/utils/Modal';
 
 // import CardOverlay from '../utils/map-layers/CardOverlay';
-import UserOverlay from '../utils/map-layers/UserOverlay';
-import DivOverlay from '../utils/map-layers/DivOverlay';
+import {
+  DivOverlay,
+  UserOverlay,
+  CardOverlay
+} from '../utils/map-layers/DivOverlay';
 import cardIconSrc from '../utils/map-layers/cardIcon.svg';
-import Modal from '../utils/Modal';
+import { Modal } from '../utils';
 
 // import { dummyCards } from '../../dummyData';
 //
@@ -171,7 +174,6 @@ class MapView extends React.Component {
               if (selectedId === d.id) {
                 return (
                   <Card
-                    {...d}
                     collectHandler={() =>
                       toggleCardChallenge({ cardChallengeOpen: true })}
                     closeHandler={() => selectCard({ selectedId: null })}
@@ -197,9 +199,7 @@ class MapView extends React.Component {
             isdragging={false}
             startdraglnglat={null}
           >
-            <DivOverlay {...mapViewport} data={cards}>
-              <img src={cardIconSrc} alt="icon" width={30} height={40} />
-            </DivOverlay>
+            <CardOverlay mapViewport={mapViewport} cards={cards} />
             <UserOverlay {...mapViewport} location={userLocation} />
           </MapGL>
         </div>

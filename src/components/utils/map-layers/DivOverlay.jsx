@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 // import styles from './CardOverlay.scss';
 // const window = require('global/window');
 import DIVOverlay from './div.react';
+import cardIconSrc from './cardIcon.svg';
 
 function round(x, n) {
   const tenN = 10 ** n;
@@ -92,4 +93,35 @@ DivOverlay.defaultProps = {
   itemWidth: 30
 };
 
-export default DivOverlay;
+const UserOverlay = props => {
+  function redraw(opt) {
+    const { longitude, latitude } = props.location;
+    const pixel = opt.project([longitude, latitude]);
+    return (
+      <i
+        style={{
+          transform: `translate(${pixel[0]}px, ${pixel[1]}px)`
+        }}
+        className="fa fa-street-view fa-2x"
+        aria-hidden="true"
+      />
+    );
+  }
+  return <DIVOverlay {...props} redraw={redraw} />;
+};
+
+UserOverlay.propTypes = {
+  location: React.PropTypes.object.isRequired
+};
+
+const CardOverlay = ({ mapViewport, cards }) =>
+  <DivOverlay {...mapViewport} data={cards}>
+    <img src={cardIconSrc} alt="icon" width={30} height={40} />
+  </DivOverlay>;
+
+CardOverlay.propTypes = {
+  mapViewport: PropTypes.object.isRequired,
+  cards: PropTypes.array.isRequired
+};
+
+export { DivOverlay, UserOverlay, CardOverlay};

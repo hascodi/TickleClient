@@ -24,9 +24,7 @@ class Grid extends Component {
     clickHandler: PropTypes.function,
     span: PropTypes.number,
     activeSpan: PropTypes.number,
-    columnWidth: PropTypes.number,
-    rowHeight: PropTypes.string,
-    columns: PropTypes.number,
+    cols: PropTypes.number,
     gap: PropTypes.number,
     rows: PropTypes.number
   };
@@ -63,6 +61,7 @@ class Grid extends Component {
       activeSpan,
       span,
       // columns,
+      style,
       cols,
       gap,
       rows
@@ -72,9 +71,8 @@ class Grid extends Component {
     const columnWidth = (100 - cols * gap + 1) / cols;
     const rowHeight = 100 / rows;
 
-    const gridTemplateRows = `repeat(${rows}%, ${Math.floor(rowHeight)}%)`;
+    const gridTemplateRows = `repeat(${rows}, ${Math.floor(rowHeight)}%)`;
 
-    console.log('gridTemplateRows', gridTemplateRows);
     // return (
     //   <div className={cx.wrapper}>
     //     {React.Children.map(children, (comp, i) => comp)}
@@ -91,13 +89,12 @@ class Grid extends Component {
           gridTemplateColumns: `repeat(${cols}, ${columnWidth}%)`,
           gridGap: `${gap}%`,
           transition: 'width 2s, height 2s',
-          gridTemplateRows
+          gridTemplateRows,
+          ...style
           // alignItems: 'end'
         }}
       >
-        {React.Children.map(children, (comp, i) =>
-          comp
-        )}
+        {React.Children.map(children, comp => comp)}
       </div>
     );
   }
@@ -106,16 +103,13 @@ class Grid extends Component {
 Grid.defaultProps = {
   data: [],
   id: 'carouselExampleIndicators',
-  height: 100,
   children: () => <div>test</div>,
-  clickHandler: PropTypes.function,
   span: 3,
   activeSpan: 2,
-  columnWidth: 35,
   columns: 4,
   gap: 10,
   rows: 3,
-  rowHeight: 50
+  style: {}
 };
 
 class Cell extends Component {

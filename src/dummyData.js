@@ -30,7 +30,7 @@ const ArthurDeGreefCard = {
       src: ''
     }
   ],
-  friends: [
+  comments: [
     {
       user: 'Nils',
       comment: 'I did not know that he was such a famous composer'
@@ -47,7 +47,7 @@ const ArthurDeGreefCard = {
     }
   ],
   cardSets: ['european_composers'],
-  linkedCards: ['Frank Liszt', 'Music school Arthur de Greef']
+  linkedCards: ['Frank Liszt', 'Music school Arthur de Greef', 'next tag, yeah']
 };
 
 const ArthurDeGreefCard2 = {
@@ -81,7 +81,7 @@ const ArthurDeGreefCard2 = {
       src: ''
     }
   ],
-  friends: [
+  comments: [
     {
       user: 'Nils',
       comment: 'I did not know that he was such a famous composer'
@@ -132,7 +132,7 @@ const ArthurDeGreefCard3 = {
       src: ''
     }
   ],
-  friends: [
+  comments: [
     {
       user: 'Nils',
       comment: 'I did not know that he was such a famous composer',
@@ -193,7 +193,7 @@ const FranzLisztCard = {
         'http://www.wagner-heavymetal.com/franz-liszt---the-first-rock-star.html'
     }
   ],
-  friends: [
+  comments: [
     {
       user: 'Nils',
       comment: 'the band Phoenix dedicated an album to Liszt',
@@ -244,7 +244,7 @@ const jimiHendrixCard = {
       src: 'https://www.youtube.com/watch?v=_PVjcIO4MT4'
     }
   ],
-  friends: [
+  comments: [
     {
       user: 'Nils',
       comment: 'jimi yeah'
@@ -300,7 +300,7 @@ const jimiHendrixCard2 = {
       src: 'https://www.youtube.com/watch?v=_PVjcIO4MT4'
     }
   ],
-  friends: [
+  comments: [
     {
       user: 'Nils',
       comment: 'jimi yeah',
@@ -338,14 +338,60 @@ const notification = {
     type: 'hangman'
   },
   date: '02/04/2012 10:00',
-  tags: ["Rock 'n ' Roll", 'Culture', 'music'],
+  tags: ["Rock 'n ' Roll", 'Culture', 'music', 'techno', 'yeah'],
   // img: "https://www.w3schools.com/images/w3schools_green.jpg",
   xpPoints: 50,
   description: 'more descriptive text',
   location: { latitude: 50.893793, longitude: 4.352083 },
   place: 'Amerikaans Theater',
   creator: 'Jan',
-  cardSets: ['european_composers', 'Music challenge'],
+  media: [
+    {
+      type: 'hyperlink',
+      name: 'Le Twenty Club',
+      src:
+        'http://www.memoire60-70.be/Chronique_1960_1965/Twenty_Club_Relais_de_la_Poste.htm'
+    },
+    {
+      type: 'video',
+      name: 'Live at woodstock',
+      src: 'https://www.youtube.com/watch?v=_PVjcIO4MT4'
+    }
+  ],
+  comments: [
+    {
+      user: 'Nils',
+      comment: 'jimi yeah',
+      date: '22/04/2017'
+    },
+    {
+      user: 'Kiran',
+      comment: 'My hero, I want to have his haircut',
+      date: '22/04/2017'
+    },
+    {
+      user: 'babba',
+      comment: 'all along the watch tower!',
+      date: '22/03/2017'
+    },
+    {
+      user: 'gab',
+      comment: 'BEER',
+      date: '22/02/2017'
+    }
+  ],
+  rating: [
+    {
+      user: 'Nils',
+      value: 4
+    }
+  ],
+  cardSets: [
+    'european_composers',
+    'Music challenge',
+    'technoCards',
+    'music4ever'
+  ],
   linkedCards: ['Frank Liszt', 'Music school Arthur de Greef']
 };
 
@@ -362,6 +408,47 @@ const notification2 = {
   location: { latitude: 50.893793, longitude: 4.352083 },
   place: 'Amerikaans Theater',
   creator: 'Jan',
+  media: [
+    {
+      type: 'hyperlink',
+      name: 'Le Twenty Club',
+      src:
+        'http://www.memoire60-70.be/Chronique_1960_1965/Twenty_Club_Relais_de_la_Poste.htm'
+    },
+    {
+      type: 'video',
+      name: 'Live at woodstock',
+      src: 'https://www.youtube.com/watch?v=_PVjcIO4MT4'
+    }
+  ],
+  comments: [
+    {
+      user: 'Nils',
+      comment: 'jimi yeah',
+      date: '22/04/2017'
+    },
+    {
+      user: 'Kiran',
+      comment: 'My hero, I want to have his haircut',
+      date: '22/04/2017'
+    },
+    {
+      user: 'babba',
+      comment: 'all along the watch tower!',
+      date: '22/03/2017'
+    },
+    {
+      user: 'gab',
+      comment: 'BEER',
+      date: '22/02/2017'
+    }
+  ],
+  rating: [
+    {
+      user: 'Nils',
+      value: 4
+    }
+  ],
   cardSets: ['european_composers', 'Music challenge'],
   linkedCards: ['Frank Liszt', 'Music school Arthur de Greef']
 };
@@ -393,7 +480,7 @@ const VUBcard = {
       src: 'https://www.youtube.com/watch?v=YFCzlOqQW7M'
     }
   ],
-  friends: [
+  comments: [
     {
       user: 'Chauncey',
       comment: 'here I succeeded my Master studies.',
@@ -442,7 +529,7 @@ const VubCard2 = {
       src: 'https://www.youtube.com/watch?v=YFCzlOqQW7M'
     }
   ],
-  friends: [
+  comments: [
     {
       user: 'Chauncey',
       comment: 'here I succeeded my Master studies.',
@@ -486,7 +573,7 @@ const VUBSports = {
       src: 'http://www.vub.ac.be/en/sport'
     }
   ],
-  friends: [
+  comments: [
     {
       user: 'Lars',
       comment: 'they have two squash courts and they are not expensive',
@@ -531,23 +618,23 @@ const VUBSports2 = {
       src: 'http://www.vub.ac.be/en/sport'
     }
   ],
-  // friends: [
-  //   {
-  //     user: 'Lars',
-  //     comment: 'they have two squash courts and they are not expensive'
-  //   },
-  //   {
-  //     user: 'Jan',
-  //     comment:
-  //       'In the basic fit you can work out with many different equipment!'
-  //   }
-  // ],
-  // rating: [
-  //   {
-  //     user: 'Nils',
-  //     value: 4
-  //   }
-  // ],
+  comments: [
+    {
+      user: 'Lars',
+      comment: 'they have two squash courts and they are not expensive'
+    },
+    {
+      user: 'Jan',
+      comment:
+        'In the basic fit you can work out with many different equipment!'
+    }
+  ],
+  rating: [
+    {
+      user: 'Nils',
+      value: 4
+    }
+  ],
   cardSets: ['Fitness_Brussels', 'Squash_brussels'],
   linkedCards: ['VUB', 'ULB_brussels']
 };

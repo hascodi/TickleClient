@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import MapGL from 'react-map-gl';
 
 import Grid from './Grid';
-import Modal from '../utils/Modal';
+// import Modal from '../utils/Modal';
 import { challengeTypes, mediaTypes } from '../../dummyData';
 // TODO: replace
 import 'w3-css';
@@ -14,7 +15,7 @@ import cx from './Card.scss';
 import colorClasses from '../colorClasses';
 // import StarRating from './utils/StarRating';
 import exampleImg from './example_challenge.jpg';
-// import Modal from '../utils/Modal';
+import { Wrapper } from '../utils';
 
 const profileSrc = () => {
   const gender = Math.random() < 0.5 ? 'men' : 'women';
@@ -43,74 +44,79 @@ const colorScaleRandom = d3
 const colorClass = () => colorScaleRandom(Math.random() * 30);
 
 const defaultProps = {
-  title: 'Vrije Universiteit Brussel',
-  key: 3,
+  title: 'The peculiar story of Arthur De Greef',
+  challenge: { type: 'gap text' },
   date: '28/04/2012 10:00',
-  tags: ['Uni', 'education'],
-  img: exampleImg,
-  xpPoints: 50,
+  tags: ['Art', 'Culture', 'Music'],
+  img:
+    'https://drive.google.com/uc?export=view&id=1N9Ed6a_CDa8SEMZeLaxULF4FtkHBQf4Feg',
+  xpPoints: 100,
   // TODO: remove in future to component
-  description: 'description',
-  location: { latitude: 50.821705, longitude: 4.395165 },
-  place: 'Pleinlaan 2 - 1050 BRUSSEL',
-  author: {
-    name: 'Jan',
-    comment: 'Yes, I wanna beat you all with super hard challenge!'
-  },
+  description:
+    'Pianist Arthur De Greef born in Louvain. He was a pupil of Frank Liszt. I do not why there is statue is placed here. There is music school with the same name not far.',
+  location: { latitude: 50.828797, longitude: 4.352191 },
+  place: 'Park next to my Home',
+  creator: 'Jan',
   media: [
     {
-      type: 'hyperlink',
-      name: 'Website',
-      src: 'http://we.vub.ac.be'
+      type: 'photo',
+      name: 'franz-liszt---the-first-rock-star',
+      src: ''
     },
     {
-      type: 'video',
-      name: "Some of the VUB's international students",
-      src: 'https://www.youtube.com/watch?v=YFCzlOqQW7M'
+      type: 'hyperlink',
+      name: 'franz-liszt---the-first-rock-star',
+      src: ''
+    },
+    {
+      type: 'game',
+      name: 'franz-liszt---the-first-rock-star',
+      src: ''
     }
   ],
-  friends: [
+  comments: [
     {
-      user: 'Chauncey',
-      comment: 'here I succeeded my Master studies.',
-      date: '22/04/2016'
+      user: 'Nils',
+      comment: 'I did not know that he was such a famous composer'
     },
     {
-      user: 'Jan',
-      comment: 'Now, I finally earn money as PhD student at the VUB!',
-      date: '22/04/2016'
+      user: 'Babba',
+      comment: 'What a nice park, strange, that they put a mask on his face!'
     }
   ],
   rating: [
     {
       user: 'Nils',
-      value: 4,
-      date: '22/04/2016'
+      value: 4
     }
   ],
-  cardSets: ['scavenger_hunt_vub', 'Brussels_city_tour'],
-  challenge: { type: 'quiz' }
+  cardSets: ['european_composers'],
+  linkedCards: ['Frank Liszt', 'Music school Arthur de Greef']
 };
 
-const Media = ({ data }) =>
-  <div className="row no-gutters">
+const Media = ({ data, extended }) =>
+  <div style={{ display: 'flex', justifyContent: 'center' }}>
     {data.map(m =>
-      <span className="row no-gutters" key={m.src}>
+      <div className="row no-gutters" key={m.src}>
         <div className="col mr-1">
-          <i className={`fa ${mediaScale(m.type)} fa-3`} aria-hidden="true" />
+          <i className={`fa ${mediaScale(m.type)} fa-2x`} aria-hidden="true" />
         </div>
-        <div className="col mr-1">
-          <a href={m.src}>name</a>
-        </div>
-      </span>
+        {extended &&
+          <div className="col mr-1">
+            <a href={m.src}>name</a>
+          </div>}
+      </div>
     )}
   </div>;
 
-Media.propTypes = { data: PropTypes.array.isRequired };
+Media.propTypes = {
+  data: PropTypes.array.isRequired,
+  extended: PropTypes.bool
+};
 
-Media.defaultProps = defaultProps.media;
+Media.defaultProps = { data: defaultProps.media, extended: false };
 
-const CardFront = ({ description, media, cardSets, linkedCards, children }) =>
+const CardFront = ({ description, children }) =>
   <div className={cx.cardDetail} style={{ height: '100%' }}>
     <div className={cx.textClamp}>
       <fieldset className={cx.field}>
@@ -125,7 +131,8 @@ const CardFront = ({ description, media, cardSets, linkedCards, children }) =>
 
 CardFront.propTypes = {
   description: PropTypes.string.isRequired,
-  img: PropTypes.string.isRequired
+  img: PropTypes.string.isRequired,
+  children: PropTypes.array
 };
 
 CardFront.defaultProps = defaultProps;
@@ -151,9 +158,9 @@ const CardFrontPreview = ({
 }) =>
   <div key={key}>
     <section className="m-1 container">
-      <h3>
+      <h4>
         {title}
-      </h3>
+      </h4>
       <div className="row">
         <div className="col-4">
           <span className="w3-badge w3-round w3-large w3-green">
@@ -190,13 +197,29 @@ const CardFrontPreview = ({
 CardFrontPreview.defaultProps = defaultProps;
 
 const Tags = ({ data }) =>
-  <small className={`${cx.tags}`}>
+  <div
+    style={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      alignItems: 'center'
+    }}
+    className={`${cx.textTrunc} ${cx.tags}`}
+  >
     {data.map(t =>
-      <span key={t} className={`${cx.tag} ${colorClass()}`}>
+      <small key={t} className={`${cx.tag} ${colorClass()}`}>
         {t}
-      </span>
+      </small>
     )}
-  </small>;
+  </div>;
+
+const SmallCategories = ({ data }) =>
+  <div className={`${cx.textTrunc} ${cx.tags}`}>
+    {data.map(t =>
+      <small key={t} className={`${cx.tag} ${colorClass()}`}>
+        {t}
+      </small>
+    )}
+  </div>;
 
 const PreviewCard = ({ title, tags, img, closeHandler, challenge, onClick }) =>
   <div
@@ -213,7 +236,7 @@ const PreviewCard = ({ title, tags, img, closeHandler, challenge, onClick }) =>
       </h5>
     </div>
     <div>
-      <Tags data={tags} />
+      <SmallCategories data={tags} />
       <div className="mt-1 mb-1">
         <img
           style={{
@@ -261,17 +284,17 @@ const CardFrame = ({
     onClick={onClick}
   >
     <div className={cx.cardHeader}>
-      <h4 className="text-truncate">
+      <h3 className="text-truncate">
         {title}
-      </h4>
+      </h3>
       <div className="btn-group">
         <button className="close mr-2" onClick={closeHandler}>
           <i className="fa fa-window-close fa-lg" aria-hidden="true" />
         </button>
+        <button className="close" onClick={flipHandler}>
+          <i className="fa fa-retweet fa-lg" aria-hidden="true" />
+        </button>
       </div>
-      <button className="close" onClick={flipHandler}>
-        <i className="fa fa-retweet fa-lg" aria-hidden="true" />
-      </button>
     </div>
     <div>
       <Tags data={tags} />
@@ -302,28 +325,29 @@ CardFrame.propTypes = {
 CardFrame.defaultProps = defaultProps;
 
 const Comments = ({ data, extended }) =>
-  <div>
+  <div style={{ display: 'flex', justifyContent: 'center' }}>
     {data.map(({ comment, user, date }) =>
-      <div className="media mt-3">
+      <div>
         <img
           className={`${cx.avatar}`}
-          width={32}
-          height={32}
+          width={'100%'}
+          height={'100%'}
           src={profileSrc()}
           alt="alt"
         />
-        <div className="media-body">
-          <div className={cx.textClamp}>
-            <small>
-              {comment}
-            </small>
-          </div>
-          <div>
-            <small className="font-italic">
-              - {user}, {date}
-            </small>
-          </div>
-        </div>
+        {extended &&
+          <div className="media-body">
+            <div className={cx.textClamp}>
+              <small>
+                {comment}
+              </small>
+            </div>
+            <div>
+              <small className="font-italic">
+                - {user}, {date}
+              </small>
+            </div>
+          </div>}
       </div>
     )}
   </div>;
@@ -334,23 +358,27 @@ Comments.PropTypes = {
 };
 
 Comments.defaultProps = {
-  data: [{ user: 'Jan', date: new Date(), comment: 'Yes, cool shit' }]
+  data: [{ user: 'Jan', date: new Date(), comment: 'Yes, cool shit' }],
+  extended: false
 };
 
-const SmallComments = ({ data, extended }) =>
-  <Grid rows={2} cols={data.length * 2} gap={0}>
-    {data.map(({ comment, user, date }) =>
-      <div className="media">
-        <img
-          className={`${cx.avatar}`}
-          width={32}
-          height={32}
-          src={profileSrc()}
-          alt="alt"
-        />
-      </div>
-    )}
-  </Grid>;
+const Author = ({ profile, extended }) =>
+  <div
+    className="media"
+    style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}
+  >
+    <img
+      className={`${cx.avatar}`}
+      width={82}
+      height={82}
+      src={profileSrc()}
+      alt="alt"
+    />
+  </div>;
 
 const Profile = ({ data }) =>
   <div className="media mt-3">
@@ -382,13 +410,18 @@ Profile.defaultProps = { name: 'jan', comment: 'yeah' };
 
 class CardBack extends Component {
   static propTypes = {
-    key: PropTypes.string,
-    friends: PropTypes.array,
+    key: PropTypes.string.isRequired,
+    comments: PropTypes.array.isRequired,
     challenge: PropTypes.object.isRequired,
     author: PropTypes.object.isRequired,
     flipHandler: PropTypes.func.isRequired,
     cardSets: PropTypes.object.isRequired,
-    linkedCards: PropTypes.object.isRequireds
+    linkedCards: PropTypes.object.isRequireds,
+    loc: PropTypes.shape({
+      latitude: PropTypes.number,
+      longitude: PropTypes.number
+    }),
+    media: PropTypes.array.isRequired
   };
 
   constructor(props) {
@@ -400,10 +433,14 @@ class CardBack extends Component {
   render() {
     const {
       challenge,
-      friends,
+      comments,
+      media,
+      closeHandler,
       cardSets,
       linkedCards,
-      flipHandler
+      flipHandler,
+      loc,
+      author
     } = this.props;
     const { extended } = this.state;
     const selectField = field => () =>
@@ -427,19 +464,22 @@ class CardBack extends Component {
           height: '100%'
         }}
       >
-        <div className={cx.cardHeader}>
+        <div style={{ display: 'flex', justifyContent: 'end' }}>
+          <button className="close mr-2" onClick={closeHandler}>
+            <i className="fa fa-window-close fa-lg" aria-hidden="true" />
+          </button>
           <button className="close" onClick={flipHandler}>
-            <i className="col-1 fa fa-retweet fa-lg" aria-hidden="true" />
+            <i className="fa fa-retweet fa-lg" aria-hidden="true" />
           </button>
         </div>
-        <Grid cols={2} rows={3} gap={0}>
+        <Grid cols={2} rows={3} gap={2}>
           <fieldset
             className={cx.field}
-            style={setStyle('author')}
+            style={{ ...setStyle('author') }}
             onClick={selectField('author')}
           >
             <legend>Author:</legend>
-            <Tags data={cardSets} />
+            <Author profile={author} />
           </fieldset>
           <fieldset
             className={cx.field}
@@ -447,7 +487,16 @@ class CardBack extends Component {
             onClick={selectField('map')}
           >
             <legend>Map:</legend>
-            <Tags data={cardSets} />
+            <Wrapper>
+              {(width, height) =>
+                <MapGL
+                  width={width - 4}
+                  height={height}
+                  latitude={loc.latitude}
+                  longitude={loc.langitude}
+                  zoom={8}
+                />}
+            </Wrapper>
           </fieldset>
           <fieldset
             className={cx.field}
@@ -471,7 +520,7 @@ class CardBack extends Component {
             onClick={selectField('comments')}
           >
             <legend>Comments:</legend>
-            <SmallComments data={friends} />
+            <Comments data={comments} />
           </fieldset>
           <fieldset
             className={cx.field}
@@ -479,7 +528,7 @@ class CardBack extends Component {
             onClick={selectField('media')}
           >
             <legend>Media:</legend>
-            <Media data={[]} />
+            <Media data={media} />
           </fieldset>
         </Grid>
       </div>
@@ -487,65 +536,19 @@ class CardBack extends Component {
   }
 }
 
-// const CardBack = ({
-//   key,
-//   friends,
-//   challenge,
-//   author,
-//   flipHandler,
-//   cardSets,
-//   linkedCards
-// }) =>
-//   <div
-//     className={`container ${cx.cardMini2} `}
-//     style={{
-//       zIndex: 2,
-//       background: colorScale(challenge.type),
-//       height: '100%'
-//     }}
-//   >
-//     <div className={cx.cardHeader}>
-//       <button className="close" onClick={flipHandler}>
-//         <i className="col-1 fa fa-retweet fa-lg" aria-hidden="true" />
-//       </button>
-//     </div>
-//     <Grid cols={2} rows={3}>
-//       <fieldset className={cx.field} style={{ height: '100%' }}>
-//         <legend>Author:</legend>
-//         <Tags data={cardSets} />
-//       </fieldset>
-//       <fieldset className={cx.field}>
-//         <legend>Map:</legend>
-//         <Tags data={cardSets} />
-//       </fieldset>
-//       <fieldset className={cx.field}>
-//         <legend>Cardsets:</legend>
-//         <Tags data={cardSets} />
-//       </fieldset>
-//       <fieldset className={cx.field}>
-//         <legend>Linked Cards</legend>
-//         <Tags data={linkedCards} />
-//       </fieldset>
-//       <fieldset className={cx.field}>
-//         <legend>Comments:</legend>
-//         <SmallComments data={friends} />
-//       </fieldset>
-//       <fieldset className={cx.field}>
-//         <legend>Media:</legend>
-//         <Tags data={cardSets} />
-//       </fieldset>
-//     </Grid>
-//   </div>;
-//
-// CardBack.propTypes = {
-//   key: React.PropTypes.string.isRequired,
-//   author: React.PropTypes.string.isRequired,
-//   friends: React.PropTypes.array.isRequired
-// };
+CardBack.defaultProps = {
+  challenge: { type: '0' },
+  comments: Comments.defaultProps.data,
+  media: Media.defaultProps.data,
+  cardSets: ['testseries', 'pirateSet'],
+  linkedCards: ['Captain hook', 'yeah'],
+  loc: { latitude: 0, longitude: 0 },
+  author: Profile.defaultProps.data
+};
 
 CardBack.defaultProps = {
   key: 'asa',
-  friends: [
+  comments: [
     {
       user: 'Nils',
       img:
@@ -641,7 +644,13 @@ class Card extends React.Component {
 }
 
 Card.propTypes = {
-  closeHandler: React.PropTypes.func
+  ...CardFront.propTypes,
+  ...CardBack.propTypes
+};
+
+Card.defaultProps = {
+  ...CardFront.defaultProps,
+  ...CardBack.defaultProps
 };
 
 // CardCont.defaultProps = {

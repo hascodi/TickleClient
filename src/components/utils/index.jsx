@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 const Modal = ({ visible, children, closeHandler }) =>
@@ -59,4 +60,32 @@ Modal.defaultProps = {
   closeHandler: d => d
 };
 
-export default Modal;
+class Wrapper extends React.Component {
+  static propTypes = {
+    children: PropTypes.func.isRequired
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = { width: 0, height: 0 };
+  }
+
+  componentDidMount() {
+    const node = ReactDOM.findDOMNode(this);
+    const width = node.offsetWidth;
+    const height = node.offsetHeight;
+    this.setState ( { width, height } );
+  }
+
+  render() {
+    const { children } = this.props;
+    const { width, height } = this.state;
+    return (
+      <div style={{ height: '100%', width: '100%' }}>
+        {children(width, height)}
+      </div>
+    );
+  }
+}
+
+export { Modal, Wrapper };
