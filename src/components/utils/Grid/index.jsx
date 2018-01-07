@@ -26,9 +26,10 @@ class Grid extends Component {
     height: PropTypes.number,
     clickHandler: PropTypes.function,
     span: PropTypes.number,
-    activeSpan: PropTypes.number,
-    columnWidth: PropTypes.number,
-    selected: PropTypes.string
+    selectedColSpan: PropTypes.number,
+    colWidth: PropTypes.number,
+    selected: PropTypes.string,
+    style: PropTypes.object
   };
 
   static defaultProps = { selected: null };
@@ -37,7 +38,6 @@ class Grid extends Component {
     super(props);
     this.scrollTo = this.scrollTo.bind(this);
   }
-
 
   componentDidUpdate() {
     const { children } = this.props;
@@ -50,20 +50,51 @@ class Grid extends Component {
   };
 
   render() {
-    const { children, activeSpan, span, columnWidth } = this.props;
+    const {
+      children,
+      selectedColSpan,
+      selectedRowSpan,
+      colSpan,
+      rowSpan,
+      colWidth,
+      rowHeight,
+      cols,
+      rows,
+      gap,
+      style
+    } = this.props;
 
+    let gridTemplateColumns = null;
+    if (cols !== null && colWidth !== null) {
+      gridTemplateColumns = `repeat(${cols}, ${colWidth})`;
+    } else if (cols !== null) {
+      const columnWidth = (100 - cols * gap + 1) / cols;
+      gridTemplateColumns = `repeat(${cols}, ${columnWidth}%)`;
+    } else if (colWidth !== null)
+      gridTemplateColumns = `repeat(${children.length}, ${colWidth})`;
+
+    let gridTemplateRows = null;
+    if (rows && rowHeight) gridTemplateRows = `repeat(${rows}, ${rowHeight})`;
+    else if (rows)
+      gridTemplateRows = `repeat(${rows}, ${Math.floor(100 / rows)}%)`;
+    else if (rowHeight)
+      gridTemplateRows = `repeat(${children.length}, ${colWidth})`;
+    else gridTemplateRows = null;
+
+    console.log(
+      'gridTemplateColumns',
+      gridTemplateColumns,
+      'gridTemplateRows',
+      gridTemplateColumns
+    );
     return (
       <ScrollView ref={scroller => (this._scroller = scroller)}>
         <div
           className={cx.wrapper}
-          style={{
-            gridTemplateColumns: `repeat(${children.length *
-              activeSpan}, ${columnWidth}px)`,
-            gridTemplateRows: '50% 50%'
-          }}
+          style={{ ...style, gridTemplateRows, gridTemplateColumns, gridGap: `${gap}%` }}
         >
           {React.Children.map(children, (comp, i) => {
-            const col = getCol(i, children.length, span); // Math.floor(i / 2) + 1;
+            const col = getCol(i, children.length, colSpan); // Math.floor(i / 2) + 1;
             const selectedComp = comp.props.selected;
             return (
               <VisibilitySensor
@@ -75,7 +106,7 @@ class Grid extends Component {
                 {({ isVisible }) =>
                   <ScrollElement name={i}>
                     <Item
-                      colSpan={selectedComp ? activeSpan : span}
+                      colSpan={selectedComp ? selectedColSpan : colSpan}
                       rowSpan={selectedComp ? 2 : 1}
                       col={selectedComp ? col : null}
                       visible={isVisible}
@@ -98,10 +129,15 @@ Grid.defaultProps = {
   id: '0',
   height: 100,
   children: () => <div>test</div>,
-  clickHandler: d => d,
-  span: 3,
-  activeSpan: 4,
-  columnWidth: 35
+  span: 1,
+  selectedColSpan: 2,
+  selctedRowSpan: 2,
+  colWidth: null,
+  colHeight: null,
+  cols: null,
+  rows: null,
+  gap: 0,
+  style:{}
 };
 
 class Item extends Component {

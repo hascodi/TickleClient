@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
+import Grid from './Grid';
+
 const Modal = ({ visible, children, closeHandler }) =>
   <div
     className="modal"
@@ -88,4 +90,4 @@ class Wrapper extends React.Component {
   }
 }
 
-export { Modal, Wrapper };
+export { Modal, Wrapper, Grid};

@@ -12,7 +12,7 @@ import MapGL from 'react-map-gl';
 // import ngeohash from 'ngeohash';,
 import cx from './MapView.scss';
 import { Card, PreviewCard } from '../cards';
-import Grid from './Grid';
+import { Grid } from '../utils';
 
 // import Modal from './components/utils/Modal';
 
@@ -165,7 +165,16 @@ class MapView extends React.Component {
           />
         </Modal>
         <div className={`${cx.cardGridCont}`}>
-          <Grid columnWidth={27} span={4} activeSpan={8}>
+          <Grid
+            rows={2}
+            cols={Math.floor(cards.length)}
+            colSpan={2}
+            rowSpan={1}
+            selectedColSpan={4}
+            selectedRowSpan={2}
+            gap={0.5}
+            style={{ width: '200%' }}
+          >
             {cards.map(d => {
               if (selectedId === d.id) {
                 return (
