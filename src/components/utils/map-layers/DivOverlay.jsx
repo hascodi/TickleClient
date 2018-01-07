@@ -20,7 +20,8 @@ class DivOverlay extends React.Component {
     data: PropTypes.array.isRequired,
     children: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
     itemWidth: PropTypes.number,
-    itemHeight: PropTypes.number
+    itemHeight: PropTypes.number,
+    location: PropTypes.func
   };
 
   constructor(props) {
@@ -48,7 +49,8 @@ class DivOverlay extends React.Component {
   redraw(opt) {
     const { data, children } = this.props;
     return data.map(c => {
-      const loc = [c.location.longitude, c.location.latitude];
+      //TODO
+      const loc = [c.loc.longitude, c.loc.latitude];
       const pixel = opt.project(loc);
       const [x, y] = [round(pixel[0], 1), round(pixel[1], 1)];
 
@@ -91,6 +93,7 @@ DivOverlay.defaultProps = {
   cards: [],
   itemHeight: 40,
   itemWidth: 30
+  // location(c) {return }
 };
 
 const UserOverlay = props => {
@@ -124,4 +127,4 @@ CardOverlay.propTypes = {
   cards: PropTypes.array.isRequired
 };
 
-export { DivOverlay, UserOverlay, CardOverlay};
+export { DivOverlay, UserOverlay, CardOverlay };

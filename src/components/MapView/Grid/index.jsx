@@ -33,49 +33,24 @@ class Grid extends Component {
 
   static defaultProps = { selected: null };
 
-  componentDidMount() {
-    // $(ReactDOM.findDOMNode(this)).carousel({ ride: 'pause', interval: false });
-    //
-    // scrollToComponent(this.Violet);
-    //            scrollTo();
-    // this.forceUpdate();
+  constructor(props) {
+    super(props);
+    this.scrollTo = this.scrollTo.bind(this);
   }
+
 
   componentDidUpdate() {
-    const { selected } = this.props;
-    if (selected) this._scroller.scrollTo(selected);
+    const { children } = this.props;
+    const selectedIndex = children.findIndex(d => d.props.selected);
+    if (selectedIndex) this.scrollTo(selectedIndex);
   }
 
-  // shouldComponentUpdate(nextProps) {
-  //   const { height, children } = this.props;
-  //   if (
-  //     height !== nextProps.height ||
-  //     children.length !== nextProps.children.length
-  //   )
-  //     return true;
-  //   return false;
-  // }
   scrollTo = name => {
     this._scroller.scrollTo(name);
   };
 
-  // cardClickHandler(d) {
-  //   this.props.clickHandler(d);
-  // }
-
   render() {
-    const { children, activeSpan, span, columnWidth, selected } = this.props;
-    // return (
-    //   <div className={cx.wrapper}>
-    //     {React.Children.map(children, (comp, i) => comp)}
-    //   </div>
-    // );
-    //
-    //
-    // const scrollTo = name => {
-    //   console.log('this', this);
-    //   this._scroller.scrollTo(name);
-    // };
+    const { children, activeSpan, span, columnWidth } = this.props;
 
     return (
       <ScrollView ref={scroller => (this._scroller = scroller)}>
@@ -89,6 +64,7 @@ class Grid extends Component {
         >
           {React.Children.map(children, (comp, i) => {
             const col = getCol(i, children.length, span); // Math.floor(i / 2) + 1;
+            const selectedComp = comp.props.selected;
             return (
               <VisibilitySensor
                 offset={{
@@ -99,9 +75,9 @@ class Grid extends Component {
                 {({ isVisible }) =>
                   <ScrollElement name={i}>
                     <Item
-                      {...this.props}
-                      selected={selected === comp.props.id}
-                      defaultCol={col}
+                      colSpan={selectedComp ? activeSpan : span}
+                      rowSpan={selectedComp ? 2 : 1}
+                      col={selectedComp ? col : null}
                       visible={isVisible}
                       index={i}
                     >
@@ -119,10 +95,10 @@ class Grid extends Component {
 
 Grid.defaultProps = {
   data: [],
-  id: 'carouselExampleIndicators',
+  id: '0',
   height: 100,
   children: () => <div>test</div>,
-  clickHandler: PropTypes.function,
+  clickHandler: d => d,
   span: 3,
   activeSpan: 4,
   columnWidth: 35
@@ -132,9 +108,9 @@ class Item extends Component {
   static propTypes = {
     children: PropTypes.node,
     selected: PropTypes.bool,
-    defaultCol: PropTypes.number,
-    span: PropTypes.number,
-    activeSpan: PropTypes.number,
+    col: PropTypes.number,
+    rowSpan: PropTypes.number,
+    colSpan: PropTypes.number,
     opacity: PropTypes.number,
     visible: PropTypes.bool,
     clickHandler: PropTypes.func
@@ -147,11 +123,11 @@ class Item extends Component {
   render() {
     const {
       children,
-      defaultCol,
       visible,
       opacity,
-      span,
-      activeSpan,
+      colSpan,
+      rowSpan,
+      col,
       clickHandler,
       selected
     } = this.props;
@@ -160,11 +136,8 @@ class Item extends Component {
       <div
         className={cx.item}
         style={{
-          height: '100%',
-          gridColumn: selected
-            ? `${defaultCol} / span ${activeSpan}`
-            : `span ${span}`,
-          gridRowEnd: selected ? 'span 2' : 'span 1',
+          gridColumn: col ? `${col} / span ${colSpan}` : `span ${colSpan}`,
+          gridRowEnd: `span ${rowSpan}`,
           opacity: visible || selected ? 1 : opacity
         }}
         onClick={() => !selected && clickHandler(children.props.id)}
@@ -178,8 +151,8 @@ class Item extends Component {
 Item.defaultProps = {
   clicked: false,
   opacity: 0.56,
-  span: 1,
-  activeSpan: 2,
+  colSpan: 1,
+  rowSpan: 1,
   clickHandler: d => d,
   selected: false
 };

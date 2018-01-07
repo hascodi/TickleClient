@@ -10,7 +10,7 @@ const ArthurDeGreefCard = {
   caption: 'A statue of Arthur de Greef',
   description:
     'Pianist Arthur De Greef born in Louvain. He was a pupil of Frank Liszt. I do not why there is statue is placed here. There is music school with the same name not far.',
-  location: { latitude: 50.828797, longitude: 4.352191 },
+  loc: { latitude: 50.828797, longitude: 4.352191 },
   place: 'Park next to my Home',
   creator: 'Jan',
   media: [
@@ -61,7 +61,7 @@ const ArthurDeGreefCard2 = {
   // TODO: remove in future to component
   description:
     'Pianist Arthur De Greef born in Louvain. He was a pupil of Frank Liszt. I do not why there is statue is placed here. There is music school with the same name not far.',
-  location: { latitude: 50.828797, longitude: 4.352191 },
+  loc: { latitude: 50.828797, longitude: 4.352191 },
   place: 'Park next to my Home',
   creator: 'Jan',
   media: [
@@ -112,7 +112,7 @@ const ArthurDeGreefCard3 = {
   // TODO: remove in future to component
   description:
     'Pianist Arthur De Greef born in Louvain. He was a pupil of Frank Liszt. I do not why there is statue is placed here. There is music school with the same name not far.',
-  location: { latitude: 50.828797, longitude: 4.352191 },
+  loc: { latitude: 50.828797, longitude: 4.352191 },
   place: 'Park next to my Home',
   creator: 'Jan',
   media: [
@@ -155,14 +155,14 @@ const ArthurDeGreefCard3 = {
 };
 
 const MapEvent = {
-  title: 'an event on a location on a map',
+  title: 'an event on a loc on a map',
   challenge: { type: 'gap text' },
   date: '27/04/2012 10:00',
   // tags: ['Art', 'Culture', 'Music'],
   // img: 'https://drive.google.com/uc?export=view&id=1N9Ed6a_CDa8SEMZeLaxULF4FtkHBQf4Feg',
   xpPoints: 100,
   // TODO: remove in future to component
-  location: { latitude: 50.828797, longitude: 4.352191 },
+  loc: { latitude: 50.828797, longitude: 4.352191 },
   place: 'Park next to my Home',
   tags: ['Art', 'Culture', 'classic', 'something', 'composer', 'classic'],
   // creator: 'Jan',
@@ -182,7 +182,7 @@ const FranzLisztCard = {
   // TODO: remove in future to component
   description:
     'The first pop star of classical music. He made girls cry with his virtuosic piano play. Much like Jimi hendrix he redefined the way to play his instrument',
-  location: { latitude: 50.843018, longitude: 4.35908 },
+  loc: { latitude: 50.843018, longitude: 4.35908 },
   place: 'Bayreuth, a city with a long history of classical music',
   creator: 'Jan',
   media: [
@@ -228,7 +228,7 @@ const jimiHendrixCard = {
   // TODO: remove in future to component
   description:
     'The first pop star of classical music. He made girls cry with his virtuosic piano play. Much like Jimi hendrix he redefined the way to play his instrument',
-  location: { latitude: 50.893793, longitude: 4.352083 },
+  loc: { latitude: 50.893793, longitude: 4.352083 },
   place: 'Amerikaans Theater',
   creator: 'Jan',
   media: [
@@ -284,7 +284,7 @@ const jimiHendrixCard2 = {
   // TODO: remove in future to component
   description:
     'The first pop star of classical music. He made girls cry with his virtuosic piano play. Much like Jimi hendrix he redefined the way to play his instrument',
-  location: { latitude: 50.893793, longitude: 4.352083 },
+  loc: { latitude: 50.893793, longitude: 4.352083 },
   place: 'Amerikaans Theater',
   creator: 'Jan',
   media: [
@@ -342,7 +342,7 @@ const notification = {
   // img: "https://www.w3schools.com/images/w3schools_green.jpg",
   xpPoints: 50,
   description: 'more descriptive text',
-  location: { latitude: 50.893793, longitude: 4.352083 },
+  loc: { latitude: 50.893793, longitude: 4.352083 },
   place: 'Amerikaans Theater',
   creator: 'Jan',
   media: [
@@ -405,7 +405,7 @@ const notification2 = {
   // img: "https://www.w3schools.com/images/w3schools_green.jpg",
   xpPoints: 50,
   description: 'more descriptive text',
-  location: { latitude: 50.893793, longitude: 4.352083 },
+  loc: { latitude: 50.893793, longitude: 4.352083 },
   place: 'Amerikaans Theater',
   creator: 'Jan',
   media: [
@@ -465,7 +465,7 @@ const VUBcard = {
   xpPoints: 50,
   description:
     "The Vrije Universiteit Brussel is the only Flemish university that has incorporated the principle of 'free inquiry' in its statutes. This principle is based on a text by the French mathematician and natural philosopher Henri Poincaré (1854-1912)",
-  location: { latitude: 50.821705, longitude: 4.395165 },
+  loc: { latitude: 50.821705, longitude: 4.395165 },
   place: 'Pleinlaan 2 - 1050 BRUSSEL',
   creator: 'Jan',
   media: [
@@ -514,7 +514,7 @@ const VubCard2 = {
   // TODO: remove in future to component
   description:
     "The Vrije Universiteit Brussel is the only Flemish university that has incorporated the principle of 'free inquiry' in its statutes. This principle is based on a text by the French mathematician and natural philosopher Henri Poincaré (1854-1912)",
-  location: { latitude: 50.821705, longitude: 4.395165 },
+  loc: { latitude: 50.821705, longitude: 4.395165 },
   place: 'Pleinlaan 2 - 1050 BRUSSEL',
   creator: 'Jan',
   media: [
@@ -563,7 +563,7 @@ const VUBSports = {
   // TODO: remove in future to component
   description:
     "At a university, you set your mind in movement. At VUB, you do the same for your body. And no less intense, for that matter. There is a swimming pool. A running field. A complete Fit-O-Run course. You can partake in no less than 17 different sporting disciplines, individually or under guidance. You can work out in a Basic Fit hall or sign up for a student’s sporting club and aim for victory in competitions. Starting is as simple as contacting our Sports & Movement service. It's the only thing that involves no sweat whatsoever.",
-  location: { latitude: 50.824228, longitude: 4.395328 },
+  loc: { latitude: 50.824228, longitude: 4.395328 },
   place: 'Pleinlaan 2 - 1050 BRUSSEL',
   creator: 'Jan',
   media: [
@@ -608,7 +608,7 @@ const VUBSports2 = {
   // TODO: remove in future to component
   description:
     "At a university, you set your mind in movement. At VUB, you do the same for your body. And no less intense, for that matter. There is a swimming pool. A running field. A complete Fit-O-Run course. You can partake in no less than 17 different sporting disciplines, individually or under guidance. You can work out in a Basic Fit hall or sign up for a student’s sporting club and aim for victory in competitions. Starting is as simple as contacting our Sports & Movement service. It's the only thing that involves no sweat whatsoever.",
-  location: { latitude: 50.824228, longitude: 4.395328 },
+  loc: { latitude: 50.824228, longitude: 4.395328 },
   place: 'Pleinlaan 2 - 1050 BRUSSEL',
   creator: 'Jan',
   media: [

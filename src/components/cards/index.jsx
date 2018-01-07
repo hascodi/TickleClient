@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import MapGL from 'react-map-gl';
 
+import 'w3-css';
+
 import Grid from './Grid';
-// import Modal from '../utils/Modal';
 import { challengeTypes, mediaTypes } from '../../dummyData';
 // TODO: replace
-import 'w3-css';
 
 import * as chromatic from 'd3-scale-chromatic';
 
 import cx from './Card.scss';
 import colorClasses from '../colorClasses';
 // import StarRating from './utils/StarRating';
-import exampleImg from './example_challenge.jpg';
+// import exampleImg from './example_challenge.jpg';
 import { Wrapper } from '../utils';
 
 const profileSrc = () => {
@@ -53,7 +53,7 @@ const defaultProps = {
   xpPoints: 100,
   // TODO: remove in future to component
   description:
-    'Pianist Arthur De Greef born in Louvain. He was a pupil of Frank Liszt. I do not why there is statue is placed here. There is music school with the same name not far.',
+    'This is an empty description. That means the card has been initialized without data',
   location: { latitude: 50.828797, longitude: 4.352191 },
   place: 'Park next to my Home',
   creator: 'Jan',
@@ -116,8 +116,20 @@ Media.propTypes = {
 
 Media.defaultProps = { data: defaultProps.media, extended: false };
 
-const CardFront = ({ description, children }) =>
+const CardFront = ({ tags, img, description, children }) =>
   <div className={cx.cardDetail} style={{ height: '100%' }}>
+    <Tags data={tags} />
+    <div className="mt-1 mb-1">
+      <img
+        style={{
+          display: 'block',
+          maxWidth: '100%',
+          height: 'auto'
+        }}
+        src={img}
+        alt="Card cap"
+      />
+    </div>
     <div className={cx.textClamp}>
       <fieldset className={cx.field}>
         <legend>description</legend>
@@ -221,7 +233,7 @@ const SmallCategories = ({ data }) =>
     )}
   </div>;
 
-const PreviewCard = ({ title, tags, img, closeHandler, challenge, onClick }) =>
+const PreviewCard = ({ title, tags, img, challenge, onClick }) =>
   <div
     className={`${cx.cardMini2} `}
     style={{
@@ -270,8 +282,7 @@ const CardFrame = ({
   challenge,
   children,
   flipHandler,
-  style,
-  onClick
+  style
   // id
 }) =>
   <div
@@ -281,7 +292,6 @@ const CardFrame = ({
       background: colorScale(challenge.type),
       ...style
     }}
-    onClick={onClick}
   >
     <div className={cx.cardHeader}>
       <h3 className="text-truncate">
@@ -297,18 +307,6 @@ const CardFrame = ({
       </div>
     </div>
     <div>
-      <Tags data={tags} />
-      <div className="mt-1 mb-1">
-        <img
-          style={{
-            display: 'block',
-            maxWidth: '100%',
-            height: 'auto'
-          }}
-          src={img}
-          alt="Card cap"
-        />
-      </div>
       {children}
     </div>
   </div>;
@@ -435,10 +433,8 @@ class CardBack extends Component {
       challenge,
       comments,
       media,
-      closeHandler,
       cardSets,
       linkedCards,
-      flipHandler,
       loc,
       author
     } = this.props;
@@ -464,14 +460,6 @@ class CardBack extends Component {
           height: '100%'
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'end' }}>
-          <button className="close mr-2" onClick={closeHandler}>
-            <i className="fa fa-window-close fa-lg" aria-hidden="true" />
-          </button>
-          <button className="close" onClick={flipHandler}>
-            <i className="fa fa-retweet fa-lg" aria-hidden="true" />
-          </button>
-        </div>
         <Grid cols={2} rows={3} gap={2}>
           <fieldset
             className={cx.field}
@@ -490,10 +478,10 @@ class CardBack extends Component {
             <Wrapper>
               {(width, height) =>
                 <MapGL
-                  width={width - 4}
+                  width={width}
                   height={height}
                   latitude={loc.latitude}
-                  longitude={loc.langitude}
+                  longitude={loc.longitude}
                   zoom={8}
                 />}
             </Wrapper>
@@ -546,26 +534,26 @@ CardBack.defaultProps = {
   author: Profile.defaultProps.data
 };
 
-CardBack.defaultProps = {
-  key: 'asa',
-  comments: [
-    {
-      user: 'Nils',
-      img:
-        'https://placeholdit.imgix.net/~text?txtsize=6&txt=50%C3%9750&w=50&h=50',
-      comment: 'I did not know that he was such a famous composer',
-      date: '22/04/2016'
-    },
-    {
-      user: 'Babba',
-      comment: 'What a nice park, strange, that they put a mask on his face!',
-      date: '22/04/2016'
-    }
-  ],
-  author: { name: 'jan', comment: 'welcome to my super hard challenge!' }
-};
+// CardBack.defaultProps = {
+//   key: 'asa',
+//   comments: [
+//     {
+//       user: 'Nils',
+//       img:
+//         'https://placeholdit.imgix.net/~text?txtsize=6&txt=50%C3%9750&w=50&h=50',
+//       comment: 'I did not know that he was such a famous composer',
+//       date: '22/04/2016'
+//     },
+//     {
+//       user: 'Babba',
+//       comment: 'What a nice park, strange, that they put a mask on his face!',
+//       date: '22/04/2016'
+//     }
+//   ],
+//   author: { name: 'jan', comment: 'welcome to my super hard challenge!' }
+// };
 
-const CollectButton = ({ collected, dataTarget, onClick }) =>
+const CollectButton = ({ collected, dataTarget, onClick, expPoints }) =>
   <div className="p-1 pt-3">
     <button
       className={`btn btn-secondary btn-lg btn-block}`}
@@ -574,23 +562,41 @@ const CollectButton = ({ collected, dataTarget, onClick }) =>
       data-target={dataTarget}
       onClick={onClick}
     >
-      <span>
+      <div
+        style={{
+          display: 'flex',
+          alignContent: 'center',
+          justifyContent: 'center'
+        }}
+      >
         {`${collected ? 'RePlay' : 'Collect'}!`}
-      </span>
-      {collected || <i className="fa fa-lock" aria-hidden="true" />}
+        <div
+          style={{
+            marginLeft: '4px',
+            paddingLeft: '4px',
+            paddingRight: '4px',
+            border: '1px black solid',
+            borderRadius: '5px'
+          }}
+        >
+          {`${expPoints}xp`}
+        </div>
+      </div>
     </button>
   </div>;
 
 CollectButton.propTypes = {
   dataTarget: PropTypes.string,
   collected: PropTypes.bool,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  expPoints: PropTypes.number
 };
 
 CollectButton.defaultProps = {
   dataTarget: '#exampleModal',
   collected: false,
-  toggleCardChallenge: d => d
+  toggleCardChallenge: d => d,
+  expPoints: 60
 };
 
 class Card extends React.Component {
@@ -629,7 +635,9 @@ class Card extends React.Component {
           </CardFront>
         </CardFrame>;
       } else {
-        <CardBack {...this.props} flipHandler={flipHandler} />;
+        <CardFrame {...this.props} flipHandler={flipHandler}>
+          <CardBack {...this.props} flipHandler={flipHandler} />
+        </CardFrame>;
       }
     };
 

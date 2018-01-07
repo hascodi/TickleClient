@@ -18,11 +18,11 @@ import Grid from './Grid';
 
 // import CardOverlay from '../utils/map-layers/CardOverlay';
 import {
-  DivOverlay,
+  // DivOverlay,
   UserOverlay,
   CardOverlay
 } from '../utils/map-layers/DivOverlay';
-import cardIconSrc from '../utils/map-layers/cardIcon.svg';
+// import cardIconSrc from '../utils/map-layers/cardIcon.svg';
 import { Modal } from '../utils';
 
 // import { dummyCards } from '../../dummyData';
@@ -62,7 +62,7 @@ class MapView extends React.Component {
 
     // this._onChangeViewport = this._onChangeViewport.bind(this);
     // this._userMove = this._userMove.bind(this);
-    this.gridSpan = this.gridSpan.bind(this);
+    // this.gridSpan = this.gridSpan.bind(this);
 
     window.addEventListener('resize', () => {
       screenResize({
@@ -165,22 +165,25 @@ class MapView extends React.Component {
           />
         </Modal>
         <div className={`${cx.cardGridCont}`}>
-          <Grid
-            {...this.gridSpan()}
-            clickHandler={d => selectCard({ selectedId: d })}
-            selected={selectedId}
-          >
+          <Grid columnWidth={27} span={4} activeSpan={8}>
             {cards.map(d => {
               if (selectedId === d.id) {
                 return (
                   <Card
+                    {...d}
+                    selected={selectedId === d.id}
                     collectHandler={() =>
                       toggleCardChallenge({ cardChallengeOpen: true })}
                     closeHandler={() => selectCard({ selectedId: null })}
                   />
                 );
               }
-              return <PreviewCard {...d} />;
+              return (
+                <PreviewCard
+                  {...d}
+                  onClick={() => selectCard({ selectedId: d.id })}
+                />
+              );
             })}
           </Grid>
         </div>
