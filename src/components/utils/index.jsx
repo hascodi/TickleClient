@@ -76,7 +76,7 @@ class Wrapper extends React.Component {
     const node = ReactDOM.findDOMNode(this);
     const width = node.offsetWidth;
     const height = node.offsetHeight;
-    this.setState ( { width, height } );
+    this.setState({ width, height });
   }
 
   render() {
@@ -90,4 +90,4 @@ class Wrapper extends React.Component {
   }
 }
 
-export { Modal, Wrapper, Grid};
+export { Modal, Wrapper, Grid };

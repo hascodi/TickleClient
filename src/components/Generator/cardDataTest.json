@@ -1,0 +1,500 @@
+{
+    "nodes": [
+      {
+        "ID": "001",
+        "fx": 100,
+        "fy": 400,
+        "group": 5,
+        "title": "How can I reach the university",
+        "location": {
+          "latitude": "30.828797",
+          "longitude": "7.352191"
+        },
+        "media": [
+          {
+            "type": "photo",
+            "name": "reach the university",
+            "src": ""
+          },
+          {
+            "type": "sound",
+            "name": "reach the university",
+            "src": ""
+          },
+          {
+            "type": "video",
+            "name": "reach the university",
+            "src": ""
+          },
+          {
+            "type": "hyperlink",
+            "name": "reach the university",
+            "src": ""
+          }
+        ],
+        "cardSets": [
+          "study_material",
+          "course",
+          "reading"
+        ],
+        "linkedCards": [
+          "",
+          ""
+        ],
+        "date": "30/09/2017 10:00",
+        "tags": [
+          "University",
+          "Library"
+        ]
+      },
+      {
+        "ID": "002",
+        "fx": 150,
+        "fy": 400,
+        "group": 5,
+        "title": "How to find the sports center",
+        "location": {
+          "latitude": "40.828797",
+          "longitude": "9.352191"
+        },
+        "media": [
+          {
+            "type": "photo",
+            "name": "find the sports center",
+            "src": ""
+          },
+          {
+            "type": "sound",
+            "name": "find the sports center",
+            "src": ""
+          },
+          {
+            "type": "video",
+            "name": "find the sports center",
+            "src": ""
+          },
+          {
+            "type": "hyperlink",
+            "name": "find the sports center",
+            "src": ""
+          }
+        ],
+        "cardSets": [
+          "sports"
+        ],
+        "linkedCards": [
+          "",
+          ""
+        ],
+        "date": "30/09/2017 10:00",
+        "tags": [
+          "Sports",
+          "Recreation"
+        ]
+      },
+      {
+        "ID": "003",
+        "fx": 200,
+        "fy": 450,
+        "group": 3,
+        "title": "Where is the Royal Palace located",
+        "location": {
+          "latitude": "11.828797",
+          "longitude": "5.352191"
+        },
+        "media": [
+          {
+            "type": "photo",
+            "name": "find the Royal Palace",
+            "src": ""
+          },
+          {
+            "type": "sound",
+            "name": "find the Royal Palace",
+            "src": ""
+          },
+          {
+            "type": "video",
+            "name": "find the Royal Palace",
+            "src": ""
+          },
+          {
+            "type": "hyperlink",
+            "name": "find the Royal Palace",
+            "src": ""
+          }
+        ],
+        "cardSets": [
+          "culture"
+        ],
+        "linkedCards": [
+          "",
+          ""
+        ],
+        "date": "30/09/2017 10:00",
+        "tags": [
+          "History",
+          "Art",
+          "Architecture"
+        ]
+      },
+      {
+        "ID": "004",
+        "fx": 200,
+        "fy": 350,
+        "group": 5,
+        "title": "What is the highest point of the city",
+        "location": {
+          "latitude": "40.828797",
+          "longitude": "20.352191"
+        },
+        "media": [
+          {
+            "type": "photo",
+            "name": "find the highest point of the city",
+            "src": ""
+          },
+          {
+            "type": "sound",
+            "name": "find the highest point of the city",
+            "src": ""
+          },
+          {
+            "type": "video",
+            "name": "find the highest point of the city",
+            "src": ""
+          },
+          {
+            "type": "hyperlink",
+            "name": "find the highest point of the city",
+            "src": ""
+          }
+        ],
+        "cardSets": [
+          "explore"
+        ],
+        "linkedCards": [
+          "",
+          ""
+        ],
+        "date": "30/09/2017 10:00",
+        "tags": [
+          "Recreation",
+          "Architecture"
+        ]
+      },
+      {
+        "ID": "005",
+        "fx": 250,
+        "fy": 450,
+        "group": 3,
+        "title": "What is the biggest park in the city",
+        "location": {
+          "latitude": "40.828797",
+          "longitude": "17.352191"
+        },
+        "media": [
+          {
+            "type": "photo",
+            "name": "find the biggest park in the city",
+            "src": ""
+          },
+          {
+            "type": "sound",
+            "name": "find the biggest park in the city",
+            "src": ""
+          },
+          {
+            "type": "video",
+            "name": "find the biggest park in the city",
+            "src": ""
+          },
+          {
+            "type": "hyperlink",
+            "name": "find the biggest park in the city",
+            "src": ""
+          }
+        ],
+        "cardSets": [
+          "sports"
+        ],
+        "linkedCards": [
+          "",
+          ""
+        ],
+        "date": "30/09/2017 10:00",
+        "tags": [
+          "Nature",
+          "Recreation"
+        ]
+      },
+      {
+        "ID": "006",
+        "fx": 250,
+        "fy": 350,
+        "group": 5,
+        "title": "Where can I study at the university",
+        "location": {
+          "latitude": "40.828797",
+          "longitude": "13.352191"
+        },
+        "media": [
+          {
+            "type": "photo",
+            "name": "where to study at the university",
+            "src": ""
+          },
+          {
+            "type": "sound",
+            "name": "where to study at the university",
+            "src": ""
+          },
+          {
+            "type": "video",
+            "name": "where to study at the university",
+            "src": ""
+          },
+          {
+            "type": "hyperlink",
+            "name": "where to study at the university",
+            "src": ""
+          }
+        ],
+        "cardSets": [
+          "course",
+          "exams"
+        ],
+        "linkedCards": [
+          "",
+          ""
+        ],
+        "date": "30/09/2017 10:00",
+        "tags": [
+          "University"
+        ]
+      },
+      {
+        "ID": "007",
+        "fx": 300,
+        "fy": 450,
+        "group": 3,
+        "title": "Where is the Art Museum located",
+        "location": {
+          "latitude": "22.828797",
+          "longitude": "4.352191"
+        },
+        "media": [
+          {
+            "type": "photo",
+            "name": "find the art museaum",
+            "src": ""
+          },
+          {
+            "type": "sound",
+            "name": "find the art museum",
+            "src": ""
+          },
+          {
+            "type": "video",
+            "name": "find the art museum",
+            "src": ""
+          },
+          {
+            "type": "hyperlink",
+            "name": "find the art museum",
+            "src": ""
+          }
+        ],
+        "cardSets": [
+          "culture",
+          "entertainment"
+        ],
+        "linkedCards": [
+          "",
+          ""
+        ],
+        "date": "30/09/2017 10:00",
+        "tags": [
+          "Art"
+        ]
+      },
+      {
+        "ID": "008",
+        "fx": 300,
+        "fy": 350,
+        "group": 5,
+        "title": "What is the oldest monument in the city",
+        "location": {
+          "latitude": "11.828797",
+          "longitude": "17.352191"
+        },
+        "media": [
+          {
+            "type": "photo",
+            "name": "find the oldest monument",
+            "src": ""
+          },
+          {
+            "type": "sound",
+            "name": "find the oldest monument",
+            "src": ""
+          },
+          {
+            "type": "video",
+            "name": "find the oldest monument",
+            "src": ""
+          },
+          {
+            "type": "hyperlink",
+            "name": "find the oldest monument",
+            "src": ""
+          }
+        ],
+        "cardSets": [
+          "culture"
+        ],
+        "linkedCards": [
+          "",
+          ""
+        ],
+        "date": "30/09/2017 10:00",
+        "tags": [
+          "Art",
+          "Architecture"
+        ]
+      },
+      {
+        "ID": "009",
+        "fx": 350,
+        "fy": 400,
+        "group": 5,
+        "title": "What is the most popular touristic place",
+        "location": {
+          "latitude": "43.828797",
+          "longitude": "15.352191"
+        },
+        "media": [
+          {
+            "type": "photo",
+            "name": "find the most popular touristic place",
+            "src": ""
+          },
+          {
+            "type": "sound",
+            "name": "find the most popular touristic place",
+            "src": ""
+          },
+          {
+            "type": "video",
+            "name": "find the most popular touristic place",
+            "src": ""
+          },
+          {
+            "type": "hyperlink",
+            "name": "find the most popular touristic place",
+            "src": ""
+          }
+        ],
+        "cardSets": [
+          "entertainment"
+        ],
+        "linkedCards": [
+          "",
+          ""
+        ],
+        "date": "30/09/2017 10:00",
+        "tags": [
+          "Art",
+          "Tourism",
+          "Culture"
+        ]
+      },
+      {
+        "ID": "010",
+        "fx": 400,
+        "fy": 400,
+        "group": 5,
+        "title": "What is the most colorful garden in the city",
+        "location": {
+          "latitude": "14.828797",
+          "longitude": "18.352191"
+        },
+        "media": [
+          {
+            "type": "photo",
+            "name": "find the most colorful garden in the city",
+            "src": ""
+          },
+          {
+            "type": "sound",
+            "name": "find the most colorful garden in the city",
+            "src": ""
+          },
+          {
+            "type": "video",
+            "name": "find the most colorful garden in the city",
+            "src": ""
+          },
+          {
+            "type": "hyperlink",
+            "name": "find the most colorful garden in the city",
+            "src": ""
+          }
+        ],
+        "cardSets": [
+          "culture"
+        ],
+        "linkedCards": [
+          "",
+          ""
+        ],
+        "date": "30/09/2017 10:00",
+        "tags": [
+          "Tourism",
+          "Nature"
+        ]
+      }
+    ],
+    "links": [
+      {
+        "source": "001",
+        "target": "002"
+      },
+      {
+        "source": "002",
+        "target": "003"
+      },
+      {
+        "source": "002",
+        "target": "004"
+      },
+      {
+        "source": "003",
+        "target": "005"
+      },
+      {
+        "source": "004",
+        "target": "006"
+      },
+      {
+        "source": "005",
+        "target": "007"
+      },
+      {
+        "source": "006",
+        "target": "008"
+      },
+      {
+        "source": "007",
+        "target": "009"
+      },
+      {
+        "source": "008",
+        "target": "009"
+      },
+      {
+        "source": "009",
+        "target": "010"
+      }
+    ]
+  }

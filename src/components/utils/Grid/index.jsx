@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 import VisibilitySensor from 'react-visibility-sensor';
 import PropTypes from 'prop-types';

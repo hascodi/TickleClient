@@ -5,7 +5,7 @@ import MapGL from 'react-map-gl';
 
 import 'w3-css';
 
-import Grid from './Grid';
+import Grid from '../utils/Grid';
 import { challengeTypes, mediaTypes } from '../../dummyData';
 // TODO: replace
 
@@ -82,12 +82,6 @@ const defaultProps = {
     {
       user: 'Babba',
       comment: 'What a nice park, strange, that they put a mask on his face!'
-    }
-  ],
-  rating: [
-    {
-      user: 'Nils',
-      value: 4
     }
   ],
   cardSets: ['european_composers'],

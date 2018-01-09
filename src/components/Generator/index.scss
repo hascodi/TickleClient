@@ -1,8 +1,65 @@
 .base {
-  border: lightblue 2px solid;
+  border: lightblue 4px solid;
 }
 
 .link {
-  stroke: black;
-  stroke-width: 3;
+  stroke: rgb(113, 40, 128);
+  stroke-width: 2;
+}
+
+/*.node {
+  //stroke: yellow;
+  stroke-width: 3px;
+}*/
+
+.node:hover {
+  stroke: green;
+  stroke-width: 5px;
+}
+
+.simulatorInput,
+select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.simulatorSubmit[type="submit"] {
+  width: 100%;
+  background-color: #4caf50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.simulatorSubmit:hover {
+  background-color: #45a049;
+}
+
+.simulatorInput:focus {
+  border: 3px solid #555;
+}
+
+.simulatorDiv {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.simulatorRightSpace {
+  margin-right: 15px;
+}
+
+.cardTitle h1 {
+  text-align: center;
+  color: rgb(61, 59, 59);
+  font-family: "Courier New", Georgia, Serif;
+  font-weight: bold;
 }
