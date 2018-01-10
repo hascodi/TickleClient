@@ -54,7 +54,7 @@ const defaultProps = {
   // TODO: remove in future to component
   description:
     'This is an empty description. That means the card has been initialized without data',
-  location: { latitude: 50.828797, longitude: 4.352191 },
+  loc: { latitude: 50.828797, longitude: 4.352191 },
   place: 'Park next to my Home',
   creator: 'Jan',
   media: [
@@ -227,12 +227,13 @@ const SmallCategories = ({ data }) =>
     )}
   </div>;
 
-const PreviewCard = ({ title, tags, img, challenge, onClick }) =>
+const PreviewCard = ({ title, tags, img, challenge, style, onClick }) =>
   <div
     className={`${cx.cardMini2} `}
     style={{
       zIndex: 2,
-      background: colorScale(challenge.type)
+      background: colorScale(challenge.type),
+      ...style
     }}
     onClick={onClick}
   >
@@ -263,10 +264,11 @@ PreviewCard.propTypes = {
   img: PropTypes.string,
   closeHandler: PropTypes.func.isRequired,
   challenge: PropTypes.func.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  style: PropTypes.object
 };
 
-PreviewCard.defaultProps = defaultProps;
+PreviewCard.defaultProps = { ...defaultProps, style: {} };
 
 const CardFrame = ({
   title,
@@ -596,11 +598,13 @@ CollectButton.defaultProps = {
 class Card extends React.Component {
   static propTypes = {
     closeHandler: PropTypes.oneOf([null, PropTypes.func]),
-    collectHandler: PropTypes.oneOf([null, PropTypes.func])
+    collectHandler: PropTypes.oneOf([null, PropTypes.func]),
+    style: PropTypes.object
   };
   static defaultProps = {
     closeHandler: d => d,
-    collectHandler: null
+    collectHandler: null,
+    style: {}
   };
 
   constructor(props) {
@@ -611,6 +615,7 @@ class Card extends React.Component {
   }
 
   render() {
+    const { style } = this.props;
     const { frontView } = this.state;
     // const { closeHandler } = this.props;
     const sideToggler = frontView ? cx.flipAnim : null;
@@ -636,7 +641,10 @@ class Card extends React.Component {
     };
 
     return (
-      <div className={`${cx.flipContainer} ${sideToggler}`}>
+      <div
+        className={`${cx.flipContainer} ${sideToggler}`}
+        style={{ ...style }}
+      >
         <div className={`${cx.flipper} ${sideToggler}`}>
           {ToggleCard}
         </div>

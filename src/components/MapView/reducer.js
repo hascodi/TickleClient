@@ -73,7 +73,7 @@ function reducer(state = {}, action) {
       const selectedCard = state.cards.find(d => d.id === selectedId);
       const newMapViewState = {
         centerLocation: selectedId
-          ? selectedCard.location
+          ? selectedCard.loc
           : { ...state.userLocation },
         mapZoom: selectedId ? 15 : state.mapZoom,
         selectedId,

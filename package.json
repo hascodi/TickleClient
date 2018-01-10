@@ -40,6 +40,7 @@
     "lodash": "^4.17.4",
     "mapbox-gl": "^0.40.1",
     "materialize-css": "^0.100.2",
+    "mygrid": "git+https://github.com/DinoJay/MyGrid.git",
     "ngeohash": "^0.6.0",
     "node-sass": "^4.5.0",
     "popper.js": "^1.12.5",

@@ -5,7 +5,9 @@ import VisibilitySensor from 'react-visibility-sensor';
 import PropTypes from 'prop-types';
 
 import { ScrollView, ScrollElement } from '../../utils/ScrollView';
-import cx from './index.scss';
+
+// import Grid from 'mygrid/dist';
+// import cx from './index.scss';
 
 // function getCol(n) {
 //   // return  (3 + (-1) ** n - 2 * n)/ 4 * 3;
@@ -81,41 +83,33 @@ class Grid extends Component {
       gridTemplateRows = `repeat(${children.length}, ${colWidth})`;
     else gridTemplateRows = null;
 
-    console.log(
-      'gridTemplateColumns',
-      gridTemplateColumns,
-      'gridTemplateRows',
-      gridTemplateColumns
-    );
     return (
       <ScrollView ref={scroller => (this._scroller = scroller)}>
         <div
-          className={cx.wrapper}
-          style={{ ...style, gridTemplateRows, gridTemplateColumns, gridGap: `${gap}%` }}
+          style={{
+            ...style,
+            display: 'grid',
+            height: '100%',
+            gridAutoFlow: 'column dense',
+            gridTemplateRows,
+            gridTemplateColumns,
+            gridGap: `${gap}%`
+          }}
         >
           {React.Children.map(children, (comp, i) => {
             const col = getCol(i, children.length, colSpan); // Math.floor(i / 2) + 1;
             const selectedComp = comp.props.selected;
             return (
-              <VisibilitySensor
-                offset={{
-                  bottom: 0,
-                  top: 0
-                }}
-              >
-                {({ isVisible }) =>
-                  <ScrollElement name={i}>
-                    <Item
-                      colSpan={selectedComp ? selectedColSpan : colSpan}
-                      rowSpan={selectedComp ? 2 : 1}
-                      col={selectedComp ? col : null}
-                      visible={isVisible}
-                      index={i}
-                    >
-                      {comp}
-                    </Item>
-                  </ScrollElement>}
-              </VisibilitySensor>
+              <ScrollElement name={i}>
+                <Item
+                  colSpan={selectedComp ? selectedColSpan : colSpan}
+                  rowSpan={selectedComp ? 2 : 1}
+                  col={selectedComp ? col : null}
+                  index={i}
+                >
+                  {comp}
+                </Item>
+              </ScrollElement>
             );
           })}
         </div>
@@ -137,7 +131,7 @@ Grid.defaultProps = {
   cols: null,
   rows: null,
   gap: 0,
-  style:{}
+  style: {}
 };
 
 class Item extends Component {
@@ -159,8 +153,6 @@ class Item extends Component {
   render() {
     const {
       children,
-      visible,
-      opacity,
       colSpan,
       rowSpan,
       col,
@@ -170,13 +162,12 @@ class Item extends Component {
 
     return (
       <div
-        className={cx.item}
         style={{
+          overflow: 'hidden',
           gridColumn: col ? `${col} / span ${colSpan}` : `span ${colSpan}`,
-          gridRowEnd: `span ${rowSpan}`,
-          opacity: visible || selected ? 1 : opacity
+          gridRowEnd: `span ${rowSpan}`
         }}
-        onClick={() => !selected && clickHandler(children.props.id)}
+        onClick={() => clickHandler(children.props.id)}
       >
         {children}
       </div>

@@ -12,7 +12,11 @@ import MapGL from 'react-map-gl';
 // import ngeohash from 'ngeohash';,
 import cx from './MapView.scss';
 import { Card, PreviewCard } from '../cards';
+// import Grid from 'mygrid/dist';
+import VisibilitySensor from 'react-visibility-sensor';
 import { Grid } from '../utils';
+
+// console.log('grid', Grid);
 
 // import Modal from './components/utils/Modal';
 
@@ -173,7 +177,7 @@ class MapView extends React.Component {
             selectedColSpan={4}
             selectedRowSpan={2}
             gap={0.5}
-            style={{ width: '200%' }}
+            style={{ width: '300%' }}
           >
             {cards.map(d => {
               if (selectedId === d.id) {
@@ -188,10 +192,18 @@ class MapView extends React.Component {
                 );
               }
               return (
-                <PreviewCard
-                  {...d}
-                  onClick={() => selectCard({ selectedId: d.id })}
-                />
+                <VisibilitySensor
+                  offset={{
+                    bottom: 0,
+                    top: 0
+                  }}
+                >
+                  {({ isVisible }) =>
+                    <PreviewCard
+                      {...d}
+                      onClick={() => selectCard({ selectedId: d.id })}
+                    />}
+                </VisibilitySensor>
               );
             })}
           </Grid>
