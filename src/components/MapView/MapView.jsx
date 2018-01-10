@@ -13,10 +13,9 @@ import MapGL from 'react-map-gl';
 import cx from './MapView.scss';
 import { Card, PreviewCard } from '../cards';
 // import Grid from 'mygrid/dist';
-import VisibilitySensor from 'react-visibility-sensor';
-import { Grid } from '../utils';
 
-// console.log('grid', Grid);
+console.log('grid', Grid);
+import { Grid } from '../utils';
 
 // import Modal from './components/utils/Modal';
 
@@ -192,18 +191,10 @@ class MapView extends React.Component {
                 );
               }
               return (
-                <VisibilitySensor
-                  offset={{
-                    bottom: 0,
-                    top: 0
-                  }}
-                >
-                  {({ isVisible }) =>
-                    <PreviewCard
-                      {...d}
-                      onClick={() => selectCard({ selectedId: d.id })}
-                    />}
-                </VisibilitySensor>
+                <PreviewCard
+                  {...d}
+                  onClick={() => selectCard({ selectedId: d.id })}
+                />
               );
             })}
           </Grid>

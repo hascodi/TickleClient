@@ -103,7 +103,7 @@ class Grid extends Component {
               <ScrollElement name={i}>
                 <Item
                   colSpan={selectedComp ? selectedColSpan : colSpan}
-                  rowSpan={selectedComp ? 2 : 1}
+                  rowSpan={selectedComp ? selectedRowSpan : rowSpan}
                   col={selectedComp ? col : null}
                   index={i}
                 >
