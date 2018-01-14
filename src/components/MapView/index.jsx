@@ -8,7 +8,8 @@ import {
   changeMapViewport,
   screenResize,
   playCardChallenge,
-  toggleCardChallenge
+  toggleCardChallenge,
+  extendSelectedCard
 } from './actions';
 
 import MapView from './MapView';
@@ -29,29 +30,33 @@ const mapDispatchToProps = dispatch => ({
     console.log('before dispatch resizeCardWindow');
     dispatch(resizeCardWindow(options));
   },
-  userMove: pos => {
+  userMoveAction: pos => {
     console.log('before dispatch usermove');
     dispatch(userMove(pos));
   },
-  changeMapViewport: viewport => {
+  changeMapViewportAction: viewport => {
     console.log('dispatch vp', viewport);
     dispatch(changeMapViewport(viewport));
   },
-  selectCard: options => {
+  selectCardAction: options => {
     // console.log('dispatch', viewport);
     console.log('before dispatch selectCard');
     dispatch(selectCard(options));
   },
-  screenResize: options => {
+  screenResizeAction: options => {
     console.log('before dispatch screenResize');
     dispatch(screenResize(options));
   },
-  playCardChallenge: options => {
+  playCardChallengeAction: options => {
     dispatch(playCardChallenge(options));
   },
-  toggleCardChallenge: options => {
+  toggleCardChallengeAction: options => {
     console.log('dispatch options', options);
     dispatch(toggleCardChallenge(options));
+  },
+  extCardAction: options => {
+    console.log('dispatch options', options);
+    dispatch(extendSelectedCard(options));
   }
 });
 

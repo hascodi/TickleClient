@@ -8,7 +8,7 @@ const Modal = ({ visible, children, closeHandler }) =>
   <div
     className="modal"
     tabIndex="-1"
-    style={{ display: visible ? 'block' : 'none' }}
+    style={{ display: visible ? 'block' : 'none', zIndex: '4000' }}
   >
     <div className="modal-dialog" role="document">
       <div className="modal-content">
@@ -90,4 +90,5 @@ class Wrapper extends React.Component {
   }
 }
 
-export { Modal, Wrapper, Grid };
+
+export { Modal, Wrapper, Grid};

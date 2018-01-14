@@ -7,6 +7,7 @@ import 'bootstrap';
 
 import './bootstrap.scss';
 import './index.scss';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import { AppContainer } from 'react-hot-loader';
 
 import Routes from './Routes';

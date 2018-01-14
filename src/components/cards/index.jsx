@@ -111,28 +111,28 @@ Media.propTypes = {
 Media.defaultProps = { data: defaultProps.media, extended: false };
 
 const CardFront = ({ tags, img, description, children }) =>
-  <div className={cx.cardDetail} style={{ height: '100%' }}>
+  <div className={cx.cardDetail} style={{ height: '100%', width: '100%' }}>
     <Tags data={tags} />
     <div className="mt-1 mb-1">
       <img
         style={{
-          display: 'block',
           maxWidth: '100%',
+          maxHeight: '30%',
           height: 'auto'
         }}
         src={img}
         alt="Card cap"
       />
     </div>
-    <div className={cx.textClamp}>
+    <div className={cx.textClamp} style={{ maxHeight: '20%' }}>
       <fieldset className={cx.field}>
         <legend>description</legend>
-        <div style={{ minHeight: '50px' }}>
+        <div>
           {description}
         </div>
       </fieldset>
     </div>
-    {children}
+    <div>{children}</div>
   </div>;
 
 CardFront.propTypes = {
@@ -229,9 +229,8 @@ const SmallCategories = ({ data }) =>
 
 const PreviewCard = ({ title, tags, img, challenge, style, onClick }) =>
   <div
-    className={`${cx.cardMini2} `}
+    className={cx.cardMini2}
     style={{
-      zIndex: 2,
       background: colorScale(challenge.type),
       ...style
     }}
@@ -262,7 +261,6 @@ PreviewCard.propTypes = {
   title: PropTypes.string.isRequired,
   tags: PropTypes.array.isRequired,
   img: PropTypes.string,
-  closeHandler: PropTypes.func.isRequired,
   challenge: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   style: PropTypes.object
@@ -274,7 +272,7 @@ const CardFrame = ({
   title,
   tags,
   img,
-  closeHandler,
+  onClose,
   challenge,
   children,
   flipHandler,
@@ -284,8 +282,8 @@ const CardFrame = ({
   <div
     className={`${cx.cardMini2} `}
     style={{
-      zIndex: 2,
       background: colorScale(challenge.type),
+      overflow: 'hidden',
       ...style
     }}
   >
@@ -294,7 +292,7 @@ const CardFrame = ({
         {title}
       </h3>
       <div className="btn-group">
-        <button className="close mr-2" onClick={closeHandler}>
+        <button className="close mr-2" onClick={onClose}>
           <i className="fa fa-window-close fa-lg" aria-hidden="true" />
         </button>
         <button className="close" onClick={flipHandler}>
@@ -302,7 +300,7 @@ const CardFrame = ({
         </button>
       </div>
     </div>
-    <div>
+    <div style={{ width: '100%', height: '100%' }}>
       {children}
     </div>
   </div>;
@@ -441,7 +439,11 @@ class CardBack extends Component {
       }));
     const setStyle = field => {
       if (field === extended)
-        return { gridColumn: `span ${2}`, gridRow: `span ${3}` };
+        return {
+          height: '100%',
+          gridColumn: `span ${2}`,
+          gridRow: `span ${3}`
+        };
       return {
         display: extended !== null ? 'none' : null
       };
@@ -451,12 +453,12 @@ class CardBack extends Component {
       <div
         className={`container ${cx.cardMini2} `}
         style={{
-          zIndex: 2,
           background: colorScale(challenge.type),
-          height: '100%'
+          height: '100%',
+          zIndex: -10
         }}
       >
-        <Grid cols={2} rows={3} gap={2}>
+        <Grid cols={2} rows={3} gap={1}>
           <fieldset
             className={cx.field}
             style={{ ...setStyle('author') }}
@@ -565,7 +567,7 @@ const CollectButton = ({ collected, dataTarget, onClick, expPoints }) =>
           justifyContent: 'center'
         }}
       >
-        {`${collected ? 'RePlay' : 'Collect'}!`}
+        {'Collect'}
         <div
           style={{
             marginLeft: '4px',
@@ -597,12 +599,12 @@ CollectButton.defaultProps = {
 
 class Card extends React.Component {
   static propTypes = {
-    closeHandler: PropTypes.oneOf([null, PropTypes.func]),
+    onClose: PropTypes.oneOf([null, PropTypes.func]),
     collectHandler: PropTypes.oneOf([null, PropTypes.func]),
     style: PropTypes.object
   };
   static defaultProps = {
-    closeHandler: d => d,
+    onClose: d => d,
     collectHandler: null,
     style: {}
   };
@@ -617,7 +619,7 @@ class Card extends React.Component {
   render() {
     const { style } = this.props;
     const { frontView } = this.state;
-    // const { closeHandler } = this.props;
+    // const { onClose } = this.props;
     const sideToggler = frontView ? cx.flipAnim : null;
     const { collectHandler } = this.props;
     const flipHandler = () => {

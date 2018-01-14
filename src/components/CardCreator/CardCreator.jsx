@@ -21,51 +21,9 @@ import CardDragPreview from './DragLayer/CardDragPreview';
 import { DragSourceCont, DropTargetCont } from './DragLayer/SourceTargetCont';
 import DragLayer from './DragLayer/DragLayer';
 import Analytics from './Analytics';
+import { Marker } from '../utils';
 
 // const container = ({}) =>
-
-const Marker = ({
-  key,
-  width,
-  height,
-  selected,
-  delay,
-  x,
-  y,
-  children,
-  onClick,
-  zIndex
-}) =>
-  <div
-    key={key}
-    onClick={onClick}
-    style={{
-      position: 'absolute',
-      left: selected ? `${0}px` : `${x - width / 2}px`,
-      top: selected ? `${0}px` : `${y - height / 2}px`,
-      width: `${width}px`,
-      height: `${height}px`,
-      cursor: 'pointer',
-      transition: `left ${delay}s, top ${delay}s`,
-      zIndex: selected ? 5000 : zIndex
-    }}
-  >
-    {children}
-  </div>;
-
-Marker.PropTypes = {
-  delay: PropTypes.number,
-  key: PropTypes.string,
-  width: PropTypes.string,
-  height: PropTypes.string,
-  selected: PropTypes.bool,
-  x: PropTypes.number,
-  y: PropTypes.number,
-  children: PropTypes.element
-};
-Marker.defaultProps = {
-  delay: 0.5
-};
 
 class CardCreator extends Component {
   static propTypes = {

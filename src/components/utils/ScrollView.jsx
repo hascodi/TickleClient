@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import scrollIntoView from 'scroll-into-view';
 
 class ScrollView extends Component {
+  static propTypes = {
+    children: PropTypes.node
+  };
   static childContextTypes = {
     scroll: PropTypes.object
   };
-  elements = {};
   register = (name, ref) => {
     this.elements[name] = ref;
   };
@@ -22,6 +24,7 @@ class ScrollView extends Component {
       }
     };
   }
+  elements = {};
   scrollTo = name => {
     const node = ReactDOM.findDOMNode(this.elements[name]);
     scrollIntoView(node, {
@@ -40,17 +43,21 @@ class ScrollElement extends Component {
   static contextTypes = {
     scroll: PropTypes.object
   };
+
+  static propTypes = {
+    children: PropTypes.element,
+    name: PropTypes.string
+  };
+
   componentDidMount() {
-    this.context.scroll.register(this.props.name, this._element);
+    this.context.scroll.register(this.props.name, this);
   }
   componentWillUnmount() {
     this.context.scroll.unregister(this.props.name);
   }
 
   render() {
-    return React.cloneElement(this.props.children, {
-      ref: ref => (this._element = ref)
-    });
+    return this.props.children;
   }
 }
 

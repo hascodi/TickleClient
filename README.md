@@ -6,6 +6,9 @@ TICKLE playground for our Project
 * CardCreator everything
 * Server side
 * Card components
+* fix mapgl css
+* weird map click event handlers (works right now by filtering the events in reducer)
+
 
 * Fork and clone the project:
 

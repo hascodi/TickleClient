@@ -9,6 +9,7 @@ export const CHANGE_MAP_VIEWPORT = 'CHANGE_MAP_VIEWPORT';
 export const SCREEN_RESIZE = 'SCREEN_RESIZE';
 export const PLAY_CARD_CHALLENGE = 'PLAY_CARD_CHALLENGE ';
 export const TOGGLE_CARD_CHALLENGE = 'TOGGLE_CARD_CHALLENGE';
+export const EXTEND_SELECTED_CARD = 'EXTEND_SELECTED_CARD';
 // export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER'
 
 /*
@@ -25,6 +26,9 @@ export const TOGGLE_CARD_CHALLENGE = 'TOGGLE_CARD_CHALLENGE';
  * action creators
  */
 
+export function extendSelectedCard(options) {
+  return { type: EXTEND_SELECTED_CARD, options };
+}
 export function selectCard(options) {
   return { type: SELECT_CARD, options };
 }

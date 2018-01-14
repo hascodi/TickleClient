@@ -2,8 +2,6 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
-import actions from './actions';
-
 import {
   // Router,
   Route,
@@ -15,6 +13,7 @@ import {
 } from 'react-router-dom';
 // import debug from 'debug';
 
+import actions from './actions';
 import reducers from './reducers';
 
 import MapView from './components/MapView';
@@ -43,7 +42,7 @@ const defaultState = {
     mapZoom: 20,
     centerLocation: defaultLocation,
     userLocation: defaultLocation,
-    selectedId: null,
+    selectedCardId: null,
     height: 100,
     width: 100,
     defaultHeight: 100,
@@ -52,7 +51,8 @@ const defaultState = {
     minHeight: 100,
     mapHeight: 100,
     gridHeight: 100,
-    cardChallengeOpen: false
+    cardChallengeOpen: false,
+    extCardId: false
   },
   CardCreator: {
     headerPad: 60, // TODO: remove

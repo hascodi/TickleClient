@@ -3,7 +3,9 @@ import { Motion, spring } from 'react-motion';
 import PropTypes from 'prop-types';
 // import styles from './CardOverlay.scss';
 // const window = require('global/window');
-import DIVOverlay from './div.react';
+import HTMLOverlay from './div.react';
+// import { HTMLOverlay } from 'react-map-gl';
+
 import cardIconSrc from './cardIcon.svg';
 
 function round(x, n) {
@@ -21,8 +23,11 @@ class DivOverlay extends React.Component {
     children: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
     itemWidth: PropTypes.number,
     itemHeight: PropTypes.number,
-    location: PropTypes.func
+    location: PropTypes.func,
+    style: PropTypes.object
   };
+
+  static defaultProps = { style: {} };
 
   constructor(props) {
     super(props);
@@ -49,7 +54,7 @@ class DivOverlay extends React.Component {
   redraw(opt) {
     const { data, children } = this.props;
     return data.map(c => {
-      //TODO
+      // TODO
       const loc = [c.loc.longitude, c.loc.latitude];
       const pixel = opt.project(loc);
       const [x, y] = [round(pixel[0], 1), round(pixel[1], 1)];
@@ -69,7 +74,7 @@ class DivOverlay extends React.Component {
             top: `${cy}px`,
             width: `${w}px`,
             height: `${h}px`,
-            cursor: 'pointer',
+            // cursor: 'pointer',
             transition: 'left 1s, top 1s'
             // zIndex: 1000
             // border: '2px black solid'
@@ -83,7 +88,7 @@ class DivOverlay extends React.Component {
   }
 
   render() {
-    return <DIVOverlay {...this.props} redraw={this.redraw} />;
+    return <HTMLOverlay {...this.props} redraw={this.redraw} />;
   }
 }
 
@@ -110,16 +115,16 @@ const UserOverlay = props => {
       />
     );
   }
-  return <DIVOverlay {...props} redraw={redraw} />;
+  return <HTMLOverlay {...props} redraw={redraw} />;
 };
 
 UserOverlay.propTypes = {
   location: React.PropTypes.object.isRequired
 };
 
-const CardOverlay = ({ mapViewport, cards }) =>
+const CardOverlay = ({ ...mapViewport, cards, onClick }) =>
   <DivOverlay {...mapViewport} data={cards}>
-    <img src={cardIconSrc} alt="icon" width={30} height={40} />
+    <CardMarker width={30} height={40} onClick={onClick} />
   </DivOverlay>;
 
 CardOverlay.propTypes = {
@@ -127,4 +132,78 @@ CardOverlay.propTypes = {
   cards: PropTypes.array.isRequired
 };
 
-export { DivOverlay, UserOverlay, CardOverlay };
+const CardMarker = ({ width, height }) =>
+  <img src={cardIconSrc} alt="icon" width={width} height={height} />;
+
+CardMarker.propTypes = { width: PropTypes.number, height: PropTypes.number };
+CardMarker.defaultProps = { width: 30, height: 40 };
+
+const AnimMarker = ({
+  key,
+  width,
+  height,
+  selected,
+  delay,
+  x,
+  y,
+  children,
+  onClick,
+  preview
+}) =>
+  <div
+    key={key}
+    onClick={onClick}
+    style={{
+      position: 'absolute',
+      left: selected ? `${0}px` : `${x - width / 2}px`,
+      top: selected ? `${0}px` : `${y - height / 2}px`,
+      width: `${width}px`,
+      height: `${height}px`,
+      transition: `left ${delay}s, top ${delay}s, width ${delay}s, height ${delay}s, opacity ${delay}s`,
+      zIndex: selected ? 5000 : null
+    }}
+  >
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <div
+        style={{
+          position: 'absolute',
+          opacity: selected ? 0 : 1,
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        {preview}
+      </div>
+      <div
+        className={ selected ? 'selectedCard' : null}
+        style={{
+          position: 'absolute',
+          opacity: selected ? 1 : 0,
+          transition: `left ${delay}s, top ${delay}s, width ${delay}s, height ${delay}s, opacity ${delay}s`,
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  </div>;
+
+AnimMarker.PropTypes = {
+  delay: PropTypes.number,
+  key: PropTypes.string,
+  width: PropTypes.string,
+  height: PropTypes.string,
+  selected: PropTypes.bool,
+  x: PropTypes.number,
+  y: PropTypes.number,
+  children: PropTypes.element,
+  preview: PropTypes.children
+};
+
+AnimMarker.defaultProps = {
+  delay: 0.5,
+  preview: <CardMarker />
+};
+
+export { DivOverlay, UserOverlay, CardOverlay, CardMarker, AnimMarker };
