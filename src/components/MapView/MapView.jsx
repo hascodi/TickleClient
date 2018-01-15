@@ -205,12 +205,20 @@ class MapView extends React.Component {
 
     return (
       <div style={{ position: 'relative' }}>
-        <div style={{ position: 'absolute', left: 0, right: 0 }}>
+        <div
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            // pointerEvents: extCardId !== null ? 'none' : null
+          }}
+        >
           <MapGL
             {...mapViewport}
             onViewportChange={changeMapViewportAction}
             isdragging={false}
             startdraglnglat={null}
+            onClick={userMoveAction}
           >
             <DivOverlay {...mapViewport} data={cards}>
               {(c, [x, y]) =>

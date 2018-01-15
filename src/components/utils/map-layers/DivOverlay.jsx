@@ -175,7 +175,7 @@ const AnimMarker = ({
         {preview}
       </div>
       <div
-        className={ selected ? 'selectedCard' : null}
+        className={selected ? 'selectedCard' : null}
         style={{
           position: 'absolute',
           opacity: selected ? 1 : 0,

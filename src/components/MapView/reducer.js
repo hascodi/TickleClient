@@ -26,7 +26,7 @@ function reducer(state = {}, action) {
       return { ...state, ...action };
     }
     case CHANGE_MAP_VIEWPORT: {
-      // if (state.extCardId !== null) return state;
+      if (state.extCardId !== null) return state;
       const viewport = action.options;
       const mapHeight = viewport.height;
       const width = viewport.width;

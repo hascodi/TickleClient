@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import MapGL from 'react-map-gl';
+import Truncate from 'react-truncate';
 
 import 'w3-css';
 
@@ -88,20 +89,22 @@ const defaultProps = {
   linkedCards: ['Frank Liszt', 'Music school Arthur de Greef']
 };
 
-const Media = ({ data, extended }) =>
-  <div style={{ display: 'flex', justifyContent: 'center' }}>
+const Media = ({ data }) =>
+  <Grid col={2} row={data.length / 2}>
     {data.map(m =>
-      <div className="row no-gutters" key={m.src}>
-        <div className="col mr-1">
-          <i className={`fa ${mediaScale(m.type)} fa-2x`} aria-hidden="true" />
-        </div>
-        {extended &&
-          <div className="col mr-1">
+      <div key={m.src}>
+        <div className="mr-1 row">
+          <i
+            className={`fa ${mediaScale(m.type)} fa-2x col-1`}
+            aria-hidden="true"
+          />
+          <div className="ml-1 col">
             <a href={m.src}>name</a>
-          </div>}
+          </div>
+        </div>
       </div>
     )}
-  </div>;
+  </Grid>;
 
 Media.propTypes = {
   data: PropTypes.array.isRequired,
@@ -110,21 +113,20 @@ Media.propTypes = {
 
 Media.defaultProps = { data: defaultProps.media, extended: false };
 
-const CardFront = ({ tags, img, description, children }) =>
+const CardFront = ({ tags, img, description, media, children }) =>
   <div className={cx.cardDetail} style={{ height: '100%', width: '100%' }}>
     <Tags data={tags} />
     <div className="mt-1 mb-1">
       <img
         style={{
           maxWidth: '100%',
-          maxHeight: '30%',
-          height: 'auto'
+          height: '20%'
         }}
         src={img}
         alt="Card cap"
       />
     </div>
-    <div className={cx.textClamp} style={{ maxHeight: '20%' }}>
+    <div className={cx.textClamp} style={{ height: '20%' }}>
       <fieldset className={cx.field}>
         <legend>description</legend>
         <div>
@@ -132,7 +134,15 @@ const CardFront = ({ tags, img, description, children }) =>
         </div>
       </fieldset>
     </div>
-    <div>{children}</div>
+    <div style={{ height: '10%' }}>
+      <fieldset className={cx.field}>
+        <legend>Media:</legend>
+        <Media data={media} />
+      </fieldset>
+    </div>
+    <div style={{ height: '17%', display: 'flex' }}>
+      {children}
+    </div>
   </div>;
 
 CardFront.propTypes = {
@@ -142,65 +152,6 @@ CardFront.propTypes = {
 };
 
 CardFront.defaultProps = defaultProps;
-
-const MediaGrid = ({ data }) =>
-  <div className="row">
-    {data.map((m, i) =>
-      <div className="col-3">
-        <i className={`fa ${mediaScale(m.type)} fa-2x`} aria-hidden="true" />
-      </div>
-    )}
-  </div>;
-
-const CardFrontPreview = ({
-  key,
-  title,
-  tags,
-  xpPoints,
-  img,
-  media,
-  height,
-  children
-}) =>
-  <div key={key}>
-    <section className="m-1 container">
-      <h4>
-        {title}
-      </h4>
-      <div className="row">
-        <div className="col-4">
-          <span className="w3-badge w3-round w3-large w3-green">
-            Exp {xpPoints}
-          </span>
-        </div>
-        <div className="col-8">
-          {tags.map(t =>
-            <span
-              key={t}
-              className={`w3-tag w3-large ${colorClass()}`}
-              style={{ float: 'right' }}
-            >
-              {t}
-            </span>
-          )}
-        </div>
-      </div>
-      <div className="mt-3 mb-1">
-        <div className="col-12">
-          <img
-            className="mx-auto d-block img-fluid rounded mb-2"
-            style={{ width: '100%' }}
-            src={img}
-            alt="Card cap"
-          />
-        </div>
-      </div>
-      <MediaGrid data={media} />
-      {children || null}
-    </section>
-  </div>;
-
-CardFrontPreview.defaultProps = defaultProps;
 
 const Tags = ({ data }) =>
   <div
@@ -437,6 +388,7 @@ class CardBack extends Component {
       this.setState(prevstate => ({
         extended: prevstate.extended !== field ? field : null
       }));
+
     const setStyle = field => {
       if (field === extended)
         return {
@@ -501,20 +453,13 @@ class CardBack extends Component {
             <Tags data={linkedCards} />
           </fieldset>
           <fieldset
+            colSpan={2}
             className={cx.field}
-            style={setStyle('comments')}
+            style={{ ...setStyle('comments') }}
             onClick={selectField('comments')}
           >
             <legend>Comments:</legend>
             <Comments data={comments} />
-          </fieldset>
-          <fieldset
-            className={cx.field}
-            style={setStyle('media')}
-            onClick={selectField('media')}
-          >
-            <legend>Media:</legend>
-            <Media data={media} />
           </fieldset>
         </Grid>
       </div>
@@ -552,7 +497,7 @@ CardBack.defaultProps = {
 // };
 
 const CollectButton = ({ collected, dataTarget, onClick, expPoints }) =>
-  <div className="p-1 pt-3">
+  <div className="p-1 pt-3" style={{ alignSelf: 'end', width: '100%' }}>
     <button
       className={`btn btn-secondary btn-lg btn-block}`}
       style={{ width: '100%' }}
@@ -560,14 +505,10 @@ const CollectButton = ({ collected, dataTarget, onClick, expPoints }) =>
       data-target={dataTarget}
       onClick={onClick}
     >
-      <div
-        style={{
-          display: 'flex',
-          alignContent: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        {'Collect'}
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <span>
+          {'Collect'}
+        </span>
         <div
           style={{
             marginLeft: '4px',
@@ -637,7 +578,7 @@ class Card extends React.Component {
         </CardFrame>;
       } else {
         <CardFrame {...this.props} flipHandler={flipHandler}>
-          <CardBack {...this.props} flipHandler={flipHandler} />
+          <CardBack {...this.props} />
         </CardFrame>;
       }
     };

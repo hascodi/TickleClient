@@ -143,8 +143,6 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-
-  // border: 1px solid #000000;
 }
 
 .cardMini2 {
@@ -234,11 +232,13 @@
   min-height: 40px;
   height: 100%;
   width: 100%;
+  // overflow: hidden;
+    // text-overflow: ellipsis;
 
   // padding-bottom: 4px;
 
   legend {
-    font-size: 80%;
+    font-size: 14px;
     margin-bottom: 0;
     font-style: italic;
   }
