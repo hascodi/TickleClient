@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import MapGL from 'react-map-gl';
-import Truncate from 'react-truncate';
+import ClampLines from 'react-clamp-lines';
 
 import 'w3-css';
 
-import Grid from '../utils/Grid';
+import Grid from 'mygrid/dist';
 import { challengeTypes, mediaTypes } from '../../dummyData';
 // TODO: replace
 
@@ -90,7 +90,7 @@ const defaultProps = {
 };
 
 const Media = ({ data }) =>
-  <Grid col={2} row={data.length / 2}>
+  <Grid cols={2} rows={1}>
     {data.map(m =>
       <div key={m.src}>
         <div className="mr-1 row">
@@ -115,21 +115,14 @@ Media.defaultProps = { data: defaultProps.media, extended: false };
 
 const CardFront = ({ tags, img, description, media, children }) =>
   <div className={cx.cardDetail} style={{ height: '100%', width: '100%' }}>
-    <Tags data={tags} />
-    <div className="mt-1 mb-1">
-      <img
-        style={{
-          maxWidth: '100%',
-          height: '20%'
-        }}
-        src={img}
-        alt="Card cap"
-      />
+    <PreviewTags data={tags} />
+    <div className="mt-1 mb-1" style={{ height: '40%', width: '100%' }}>
+      <img src={img} alt="Card cap" style={{ width: '100%', height: '100%' }} />
     </div>
-    <div className={cx.textClamp} style={{ height: '20%' }}>
+    <div style={{ height: '27%' }}>
       <fieldset className={cx.field}>
         <legend>description</legend>
-        <div>
+        <div className={cx.textClamp}>
           {description}
         </div>
       </fieldset>
@@ -140,7 +133,7 @@ const CardFront = ({ tags, img, description, media, children }) =>
         <Media data={media} />
       </fieldset>
     </div>
-    <div style={{ height: '17%', display: 'flex' }}>
+    <div style={{ display: 'flex', position: 'relative' }}>
       {children}
     </div>
   </div>;
@@ -157,8 +150,27 @@ const Tags = ({ data }) =>
   <div
     style={{
       display: 'flex',
-      flexWrap: 'wrap',
-      alignItems: 'center'
+      flexWrap: 'wrap'
+      // alignItems: 'flex-start',
+      // alignContent: 'center'
+    }}
+    className={`${cx.textTrunc} ${cx.tags}`}
+  >
+    {data.map(t =>
+      <div key={t} className={`${cx.tag} ${colorClass()}`}>
+        <small>
+          {t}
+        </small>
+      </div>
+    )}
+  </div>;
+
+const PreviewTags = ({ data }) =>
+  <div
+    style={{
+      display: 'flex'
+      // flexWrap: 'no-wrap'
+      // alignItems: 'center'
     }}
     className={`${cx.textTrunc} ${cx.tags}`}
   >
@@ -421,8 +433,7 @@ class CardBack extends Component {
           </fieldset>
           <fieldset
             className={cx.field}
-            style={setStyle('map')}
-            onClick={selectField('map')}
+            style={{ height: '100%', width: '100%' }}
           >
             <legend>Map:</legend>
             <Wrapper>
