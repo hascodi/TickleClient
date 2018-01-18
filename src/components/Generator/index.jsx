@@ -31,7 +31,11 @@ class Generator extends Component {
       .nodes(graph.nodes)
       .force(
         'link',
-        d3.forceLink().links(graph.links).id(d => d.ID).distance(100)
+        d3
+          .forceLink()
+          .links(graph.links)
+          .id(d => d.ID)
+          .distance(100)
       )
       .force('charge', d3.forceManyBody())
       // .force('link', d3.forceLink(graph.links))
@@ -48,8 +52,6 @@ class Generator extends Component {
         this.setState({ nodes, links });
       })
       .stop();
-
-    // added
 
     d3.range(0, 200).forEach(() => simulation.tick());
     const nodes = simulation.nodes();
@@ -80,7 +82,6 @@ class Generator extends Component {
     );
   }
 }
-
 // const Card = ({ hovered }) =>
 //   <div
 //     style={{
@@ -122,7 +123,7 @@ class Generator extends Component {
 //     {JSON.stringify(hovered.tags)}
 //   </div>;
 
-const Graph = ({ width, height, links, nodes, color, hoverhandler }) =>
+const Graph = ({ width, height, links, nodes, color, hoverhandler }) => (
   <svg width={width} height={height}>
     <g>
       <marker
@@ -135,7 +136,7 @@ const Graph = ({ width, height, links, nodes, color, hoverhandler }) =>
       >
         <path d="M2, 2 L2,11 L10,6 L2, 2" />
       </marker>
-      {links.map(d =>
+      {links.map(d => (
         <line
           className={styles.link}
           x1={d.source.x}
@@ -144,10 +145,10 @@ const Graph = ({ width, height, links, nodes, color, hoverhandler }) =>
           y2={d.target.y}
           markerEnd="url(#arrowhead)"
         />
-      )}
+      ))}
     </g>
     <g>
-      {nodes.map(d =>
+      {nodes.map(d => (
         <g
           className={styles.node}
           transform={`translate(${d.x}, ${d.y})`}
@@ -156,9 +157,10 @@ const Graph = ({ width, height, links, nodes, color, hoverhandler }) =>
         >
           <circle r={10} fill={color(d.group)} />
         </g>
-      )}
+      ))}
     </g>
-  </svg>;
+  </svg>
+);
 
 /* to do:
 create 5 more cards --> OK
@@ -171,6 +173,18 @@ After that, create a non-functional
 UI for entering paramaters --> OK
 */
 
+/* const CardGenerator = function(props) {
+  return <p>The logged in user is: {props.Graph.links}</p>;
+}; */
+
+const options = [
+  'Select an Option',
+  'Brussel-Centrum',
+  'Elsene',
+  'Etterbeek',
+  'Evere'
+];
+
 class Form extends Component {
   static propTypes = {
     children: PropTypes.node,
@@ -179,127 +193,163 @@ class Form extends Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      numberOfNodes: '',
+      newCardset: '',
+      europeancomposers: false,
+      testseries: false,
+      pirateset: false,
+      culture: false,
+      art: false,
+      music: false,
+      value: 'Select an Option'
+    };
+    this.handleSubmit = this.handleSubmit.bind(this); // event for the submission of the form
+    this.onChange = this.onChange.bind(this); // binding onchange manually in the constructor
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+  
+  // onchange event of the selectbox of location
+  onChange(event) {
+    this.setState({
+      value: event.target.value
+    });
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  // handlesubmit event of the submit button of the form
+  handleSubmit(event) {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    alert(`Data: ${this.state.value}`);    
+
+    fetch('/api/form-submit-url', {
+      method: 'POST',
+      body: data
+    });
   }
 
   render() {
     return (
       <div className={styles.base}>
-        <form>
-          <label>
-            <strong>Number of cards:</strong>
-          </label>
-          <input
-            className={styles.simulatorInput}
-            type="text"
-            name="nodes"
-            title="nodes"
-          />
-          <br />
-          <label>
-            <strong>Number of cardsets:</strong>
-          </label>
-          <input
-            className={styles.simulatorInput}
-            type="text"
-            name="links"
-            title="links"
-          />
-          <br />
-          <label>
-            <strong>Select from cardsets:</strong>
-          </label>
-          <br />
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="university" value="" /> Culture
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="culture" value="" /> Entertainment
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="university" value="" /> Course
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="culture" value="" /> Exams
-          </label>
-          <label className={styles.sim0ulatorRightSpace}>
-            <input type="checkbox" name="university" value="" /> Sports
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="culture" value="" /> Explore
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="culture" value="" /> Reading
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="culture" value="" /> Study Material
-          </label>
-          <br />
-          <br />
-          <label>
-            <strong>Select from tags:</strong>
-          </label>
-          <br />
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="university" value="" /> University
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="culture" value="" /> Sports
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="university" value="" /> Culture
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="culture" value="" /> Library
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="university" value="" /> History
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="culture" value="" /> Recreation
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="university" value="" /> Nature
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="culture" value="" /> Art
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="university" value="" /> Architecture
-          </label>
-          <label className={styles.simulatorRightSpace}>
-            <input type="checkbox" name="culture" value="" /> Tourism
-          </label>
-          <br />
-          <br />
-          <label>
-            <strong>New tag(s). Seperate multiple tags with ";":</strong>
-          </label>
-          <input
-            className={styles.simulatorInput}
-            type="text"
-            name="tags"
-            title="tags"
-          />
-          <br />
-          <label>
-            <strong>Select location</strong>
-          </label>
-          <select>
-            <option value="Evere">Evere</option>
-            <option value="Elsene">Elsene</option>
-            <option value="Brussel-Centrum">Brussel-Centrum</option>
-            <option value="Etterbeek">Etterbeek</option>
-          </select>
-          <label>
-            <strong>Distribution of the links:</strong>
-          </label>
-          <br />
-          <form action="">
-            <input type="radio" name="linkDistribution" value="Rabdom" /> Random<br />
-            <input type="radio" name="linkDistribution" value="Manual" /> Manual
-          </form>
-
-          <br />
+        <form onSubmit={this.handleSubmit}>
+          <div>
+            <label htmlFor="inputcards">Number of Cards</label>
+            <input
+              className={styles.simulatorInput}
+              type="text"
+              name="numberOfNodes"
+              title="nodes"
+              id="inputcards"
+              value={this.state.numberOfNodes}
+              onChange={this.handleInputChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="inputnewcardset">New Cardset</label>
+            <input
+              className={styles.simulatorInput}
+              type="text"
+              name="newCardset"
+              title="newCardset"
+              id="inputnewcardset"
+              value={this.state.newCardset}
+              onChange={this.handleInputChange}
+            />
+          </div>
+          Select cardsets:
+          <div>
+            <input
+              type="checkbox"
+              name="europeancomposers"
+              id="europeancomposers"
+              checked={this.state.europeancomposers}
+              onChange={this.handleInputChange}
+            />
+            <label
+              htmlFor="europeancomposers"
+              className={styles.simulatorRightSpace}
+            >
+              european composers
+            </label>
+            <input
+              type="checkbox"
+              name="testseries"
+              id="testseries"
+              checked={this.state.testseries}
+              onChange={this.handleInputChange}
+            />
+            <label htmlFor="testseries" className={styles.simulatorRightSpace}>
+              testseries
+            </label>
+            <input
+              type="checkbox"
+              name="pirateset"
+              id="pirateset"
+              checked={this.state.pirateset}
+              onChange={this.handleInputChange}
+            />
+            <label htmlFor="pirateset" className={styles.simulatorRightSpace}>
+              pirateset
+            </label>
+          </div>
+          Select tags:
+          <div>
+            <input
+              type="checkbox"
+              name="culture"
+              id="culture"
+              checked={this.state.culture}
+              onChange={this.handleInputChange}
+            />
+            <label htmlFor="culture" className={styles.simulatorRightSpace}>
+              Culture
+            </label>
+            <input
+              type="checkbox"
+              name="art"
+              id="art"
+              checked={this.state.art}
+              onChange={this.handleInputChange}
+            />
+            <label htmlFor="art" className={styles.simulatorRightSpace}>
+              Art
+            </label>
+            <input
+              type="checkbox"
+              name="music"
+              id="music"
+              checked={this.state.music}
+              onChange={this.handleInputChange}
+            />
+            <label htmlFor="music" className={styles.simulatorRightSpace}>
+              Music
+            </label>
+          </div>
+          <div className="form-group">
+            <select
+              value={this.state.value}
+              // onChange={this.handleInputChange}
+              onChange={this.onChange}
+              className="form-control"
+            >
+              {options.map(option => (
+                <option value={option} name={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
           <input
             className={styles.simulatorSubmit}
             type="submit"
@@ -312,3 +362,4 @@ class Form extends Component {
 }
 
 export default Generator;
+
