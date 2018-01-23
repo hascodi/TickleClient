@@ -1,3 +1,5 @@
+/* eslint no-use-before-define: ["error", { "classes": false }] */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
@@ -6,7 +8,10 @@ import styles from './index.scss';
 import { Card } from '../cards';
 
 import graph from './cardDataTest.json';
+import titles from './cardTitles.json';
 import { forceSimulation } from 'd3-force';
+
+let random = 0;
 
 class Generator extends Component {
   static propTypes = {
@@ -53,10 +58,27 @@ class Generator extends Component {
       })
       .stop();
 
+    // added
+    this.handler = this.handler.bind(this);
+
     d3.range(0, 200).forEach(() => simulation.tick());
     const nodes = simulation.nodes();
     const links = graph.links;
-    this.state = { nodes, links, width, height, hovered: null };
+    this.state = {
+      nodes,
+      links,
+      width,
+      height,
+      hovered: null,
+      tagCheckboxes: []
+    };
+  }
+
+  // added
+  handler() {
+    this.setState({
+      tagCheckboxes: ['testhandler']
+    });
   }
 
   render() {
@@ -67,9 +89,10 @@ class Generator extends Component {
         <div style={{ position: 'relative' }} />
         <Form />
         <div style={{ width: '400px', height: '600px' }}>
-          {hovered && <Card title={'Hassans card'} />}
+          {hovered && (
+            <Card title={titles[random]} tags={this.state.tagCheckboxes} />
+          )}
         </div>
-
         <Graph
           width={width}
           height={height}
@@ -82,46 +105,6 @@ class Generator extends Component {
     );
   }
 }
-// const Card = ({ hovered }) =>
-//   <div
-//     style={{
-//       position: 'absolute',
-//       // bottom: '240',
-//       width: '450px',
-//       border: '7px solid #73AD21',
-//       right: '0',
-//       // left: graph.x,
-//       // top: graph.y,
-//       background: 'green',
-//       paddingBottom: '10px',
-//       paddingLeft: '10px'
-//     }}
-//   >
-//     <div className={styles.cardTitle}>
-//       <h1>Tickle Card</h1>
-//     </div>
-//     <strong> EXP: </strong>
-//     <br />
-//     <strong> ID: </strong>
-//     {hovered.ID}
-//     <br />
-//     <strong> Title: </strong>
-//     {hovered.title}
-//     <br />
-//     <strong> Location: </strong>
-//     {JSON.stringify(hovered.location)}
-//     <br />
-//     <strong> Media: </strong>
-//     {JSON.stringify(hovered.media)}
-//     <br />
-//     <strong> Next Card: </strong>
-//     <br />
-//     <strong> Date: </strong>
-//     {hovered.date}
-//     <br />
-//     <strong> Tags: </strong>
-//     {JSON.stringify(hovered.tags)}
-//   </div>;
 
 const Graph = ({ width, height, links, nodes, color, hoverhandler }) => (
   <svg width={width} height={height}>
@@ -173,17 +156,19 @@ After that, create a non-functional
 UI for entering paramaters --> OK
 */
 
-/* const CardGenerator = function(props) {
-  return <p>The logged in user is: {props.Graph.links}</p>;
-}; */
-
 const options = [
-  'Select an Option',
+  'Select a Location',
   'Brussel-Centrum',
   'Elsene',
   'Etterbeek',
   'Evere'
 ];
+
+/* const CardGenerator = function(props) {
+  return <p>The logged in user is: {props.Graph.links}</p>;
+  
+
+}; */
 
 class Form extends Component {
   static propTypes = {
@@ -193,23 +178,29 @@ class Form extends Component {
 
   constructor(props) {
     super(props);
-
+    this.handleSubmit = this.handleSubmit.bind(this); // event for the submission of the form
     this.state = {
       numberOfNodes: '',
       newCardset: '',
-      europeancomposers: false,
+      europeancomposers: true,
       testseries: false,
       pirateset: false,
       culture: false,
-      art: false,
+      art: true,
       music: false,
-      value: 'Select an Option'
+      value: '',
+      random: 0
+      /* tagCheckboxes: [
+        this.state.europeancomposers,
+        this.state.testseries,
+        this.state.pirateset
+      ], */
     };
-    this.handleSubmit = this.handleSubmit.bind(this); // event for the submission of the form
+
     this.onChange = this.onChange.bind(this); // binding onchange manually in the constructor
     this.handleInputChange = this.handleInputChange.bind(this);
   }
-  
+
   // onchange event of the selectbox of location
   onChange(event) {
     this.setState({
@@ -227,19 +218,45 @@ class Form extends Component {
     });
   }
 
-  // handlesubmit event of the submit button of the form
+  // handlesubmit event of the submit button of the form (Enter)
   handleSubmit(event) {
+    // const taglist = 'testtag';
     event.preventDefault();
-    const data = new FormData(event.target);
-    alert(`Data: ${this.state.value}`);    
+    random = Math.floor(Math.random() * 10 + 1);
+    // tagCheckboxes = this.state.tagCheckboxes.slice();
+    // this.setState({ tagCheckboxes });
+    /* for (let i = 0; i < this.state.tagCheckboxes.length; i++) {
+      {
+        taglist[i] = tagCheckboxes[i] ? [tagCheckboxes[i].name] : 'false';
+      }
+    } */
 
+    /* state.givenArt is not updated */
+
+    const data = new FormData(event.target);
+    alert(`Data: ${this.state.pirateset}`);
     fetch('/api/form-submit-url', {
       method: 'POST',
       body: data
     });
+
+    this.setState(
+      { numberOfNodes: this.state.numberOfNodes },
+      { newCardset: this.state.newCardset },
+      { europeancomposers: this.state.europeancomposers },
+      { testseries: this.state.testseries },
+      { pirateset: this.state.pirateset },
+      { culture: this.state.culture },
+      { art: this.state.art },
+      { music: this.state.music },
+      { value: this.state.value },
+      { random: this.state.random } // dit nog in een for loop steken
+    );
   }
 
   render() {
+    // definieer een variabele die door de Generator component zal worden gebruikt
+    // const taglist = ['testtaglist'];
     return (
       <div className={styles.base}>
         <form onSubmit={this.handleSubmit}>
@@ -362,4 +379,3 @@ class Form extends Component {
 }
 
 export default Generator;
-

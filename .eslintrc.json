@@ -21,11 +21,6 @@
       "singleQuote": true,
       "jsxBracketSameLine": false
     }],
-    "linebreak-style": [
-      "error",
-      "unix",
-      "windows"
-    ],
     "indent": ["error", 2, {
       "SwitchCase": 1
     }],

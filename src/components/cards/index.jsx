@@ -89,9 +89,9 @@ const defaultProps = {
   linkedCards: ['Frank Liszt', 'Music school Arthur de Greef']
 };
 
-const Media = ({ data }) =>
+const Media = ({ data }) => (
   <Grid cols={2} rows={1}>
-    {data.map(m =>
+    {data.map(m => (
       <div key={m.src}>
         <div className="mr-1 row">
           <i
@@ -103,8 +103,9 @@ const Media = ({ data }) =>
           </div>
         </div>
       </div>
-    )}
-  </Grid>;
+    ))}
+  </Grid>
+);
 
 Media.propTypes = {
   data: PropTypes.array.isRequired,
@@ -113,7 +114,7 @@ Media.propTypes = {
 
 Media.defaultProps = { data: defaultProps.media, extended: false };
 
-const CardFront = ({ tags, img, description, media, children }) =>
+const CardFront = ({ tags, img, description, media, children }) => (
   <div className={cx.cardDetail} style={{ height: '100%', width: '100%' }}>
     <PreviewTags data={tags} />
     <div className="mt-1 mb-1" style={{ height: '40%', width: '100%' }}>
@@ -136,7 +137,8 @@ const CardFront = ({ tags, img, description, media, children }) =>
     <div style={{ display: 'flex', position: 'relative' }}>
       {children}
     </div>
-  </div>;
+  </div>
+);
 
 CardFront.propTypes = {
   description: PropTypes.string.isRequired,
@@ -146,7 +148,7 @@ CardFront.propTypes = {
 
 CardFront.defaultProps = defaultProps;
 
-const Tags = ({ data }) =>
+const Tags = ({ data }) => (
   <div
     style={{
       display: 'flex',
@@ -156,16 +158,17 @@ const Tags = ({ data }) =>
     }}
     className={`${cx.textTrunc} ${cx.tags}`}
   >
-    {data.map(t =>
+    {data.map(t => (
       <div key={t} className={`${cx.tag} ${colorClass()}`}>
         <small>
           {t}
         </small>
       </div>
-    )}
-  </div>;
+    ))}
+  </div>
+);
 
-const PreviewTags = ({ data }) =>
+const PreviewTags = ({ data }) => (
   <div
     style={{
       display: 'flex'
@@ -174,23 +177,25 @@ const PreviewTags = ({ data }) =>
     }}
     className={`${cx.textTrunc} ${cx.tags}`}
   >
-    {data.map(t =>
+    {data.map(t => (
       <small key={t} className={`${cx.tag} ${colorClass()}`}>
         {t}
       </small>
-    )}
-  </div>;
+    ))}
+  </div>
+);
 
-const SmallCategories = ({ data }) =>
+const SmallCategories = ({ data }) => (
   <div className={`${cx.textTrunc} ${cx.tags}`}>
-    {data.map(t =>
+    {data.map(t => (
       <small key={t} className={`${cx.tag} ${colorClass()}`}>
         {t}
       </small>
-    )}
-  </div>;
+    ))}
+  </div>
+);
 
-const PreviewCard = ({ title, tags, img, challenge, style, onClick }) =>
+const PreviewCard = ({ title, tags, img, challenge, style, onClick }) => (
   <div
     className={cx.cardMini2}
     style={{
@@ -218,7 +223,8 @@ const PreviewCard = ({ title, tags, img, challenge, style, onClick }) =>
         />
       </div>
     </div>
-  </div>;
+  </div>
+);
 
 PreviewCard.propTypes = {
   title: PropTypes.string.isRequired,
@@ -241,7 +247,7 @@ const CardFrame = ({
   flipHandler,
   style
   // id
-}) =>
+}) => (
   <div
     className={`${cx.cardMini2} `}
     style={{
@@ -266,7 +272,8 @@ const CardFrame = ({
     <div style={{ width: '100%', height: '100%' }}>
       {children}
     </div>
-  </div>;
+  </div>
+);
 
 CardFrame.propTypes = {
   title: PropTypes.string,
@@ -279,9 +286,9 @@ CardFrame.propTypes = {
 
 CardFrame.defaultProps = defaultProps;
 
-const Comments = ({ data, extended }) =>
+const Comments = ({ data, extended }) => (
   <div style={{ display: 'flex', justifyContent: 'center' }}>
-    {data.map(({ comment, user, date }) =>
+    {data.map(({ comment, user, date }) => (
       <div>
         <img
           className={`${cx.avatar}`}
@@ -290,7 +297,7 @@ const Comments = ({ data, extended }) =>
           src={profileSrc()}
           alt="alt"
         />
-        {extended &&
+        {extended && (
           <div className="media-body">
             <div className={cx.textClamp}>
               <small>
@@ -302,10 +309,12 @@ const Comments = ({ data, extended }) =>
                 - {user}, {date}
               </small>
             </div>
-          </div>}
+          </div>
+        )}
       </div>
-    )}
-  </div>;
+    ))}
+  </div>
+);
 
 Comments.PropTypes = {
   data: PropTypes.array.isRequired,
@@ -317,7 +326,7 @@ Comments.defaultProps = {
   extended: false
 };
 
-const Author = ({ profile, extended }) =>
+const Author = ({ profile, extended }) => (
   <div
     className="media"
     style={{
@@ -333,9 +342,10 @@ const Author = ({ profile, extended }) =>
       src={profileSrc()}
       alt="alt"
     />
-  </div>;
+  </div>
+);
 
-const Profile = ({ data }) =>
+const Profile = ({ data }) => (
   <div className="media mt-3">
     <img
       className={`d-flex mr-3 ${cx.avatar}`}
@@ -354,7 +364,8 @@ const Profile = ({ data }) =>
         </small>
       </div>
     </div>
-  </div>;
+  </div>
+);
 
 Profile.PropTypes = {
   data: PropTypes.object.isRequired
@@ -437,14 +448,15 @@ class CardBack extends Component {
           >
             <legend>Map:</legend>
             <Wrapper>
-              {(width, height) =>
+              {(width, height) => (
                 <MapGL
                   width={width}
                   height={height}
                   latitude={loc.latitude}
                   longitude={loc.longitude}
                   zoom={8}
-                />}
+                />
+              )}
             </Wrapper>
           </fieldset>
           <fieldset
@@ -507,7 +519,7 @@ CardBack.defaultProps = {
 //   author: { name: 'jan', comment: 'welcome to my super hard challenge!' }
 // };
 
-const CollectButton = ({ collected, dataTarget, onClick, expPoints }) =>
+const CollectButton = ({ collected, dataTarget, onClick, expPoints }) => (
   <div className="p-1 pt-3" style={{ alignSelf: 'end', width: '100%' }}>
     <button
       className={`btn btn-secondary btn-lg btn-block}`}
@@ -533,7 +545,8 @@ const CollectButton = ({ collected, dataTarget, onClick, expPoints }) =>
         </div>
       </div>
     </button>
-  </div>;
+  </div>
+);
 
 CollectButton.propTypes = {
   dataTarget: PropTypes.string,
