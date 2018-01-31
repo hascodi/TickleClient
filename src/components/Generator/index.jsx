@@ -12,6 +12,8 @@ import titles from './cardTitles.json';
 import { forceSimulation } from 'd3-force';
 
 let random = 0;
+const tagCheckboxes = [];
+// let myFormData;
 
 class Generator extends Component {
   static propTypes = {
@@ -58,8 +60,7 @@ class Generator extends Component {
       })
       .stop();
 
-    // added
-    this.handler = this.handler.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
 
     d3.range(0, 200).forEach(() => simulation.tick());
     const nodes = simulation.nodes();
@@ -70,27 +71,32 @@ class Generator extends Component {
       width,
       height,
       hovered: null,
-      tagCheckboxes: []
+      myFormData: '',
+      numberOfNodes: '' // added this
     };
   }
 
-  // added
-  handler() {
-    this.setState({
-      tagCheckboxes: ['testhandler']
-    });
+  // added this
+  onSubmit(formData) {
+    this.setState({ numberOfNodes: formData }); // {}
+    // alert(`Formdata: ${JSON.stringify(formData)}`);
   }
 
+  /* onSubmit = formData => {
+    this.setState({
+      numberOfNodes: formData
+    });
+  }; */
   render() {
     const { nodes, links, width, height, hovered } = this.state;
     const color = d3.scaleOrdinal(d3.schemeCategory10);
     return (
       <div className={styles.simulatorDiv}>
         <div style={{ position: 'relative' }} />
-        <Form />
+        <Form onSubmit={this.onSubmit} />
         <div style={{ width: '400px', height: '600px' }}>
           {hovered && (
-            <Card title={titles[random]} tags={this.state.tagCheckboxes} />
+            <Card title={titles[random]} tags={this.state.numberOfNodes} /> // added this
           )}
         </div>
         <Graph
@@ -156,13 +162,7 @@ After that, create a non-functional
 UI for entering paramaters --> OK
 */
 
-const options = [
-  'Select a Location',
-  'Brussel-Centrum',
-  'Elsene',
-  'Etterbeek',
-  'Evere'
-];
+const options = ['Brussel-Centrum', 'Elsene', 'Etterbeek', 'Evere'];
 
 /* const CardGenerator = function(props) {
   return <p>The logged in user is: {props.Graph.links}</p>;
@@ -178,18 +178,19 @@ class Form extends Component {
 
   constructor(props) {
     super(props);
-    this.handleSubmit = this.handleSubmit.bind(this); // event for the submission of the form
+
     this.state = {
       numberOfNodes: '',
       newCardset: '',
-      europeancomposers: true,
-      testseries: false,
-      pirateset: false,
+      explore: true,
+      entertainment: true,
+      reading: true,
       culture: false,
       art: true,
       music: false,
-      value: '',
-      random: 0
+      value: 'Select a Location',
+      random: '',
+      myFormData: '' // added this
       /* tagCheckboxes: [
         this.state.europeancomposers,
         this.state.testseries,
@@ -197,18 +198,12 @@ class Form extends Component {
       ], */
     };
 
-    this.onChange = this.onChange.bind(this); // binding onchange manually in the constructor
     this.handleInputChange = this.handleInputChange.bind(this);
-  }
-
-  // onchange event of the selectbox of location
-  onChange(event) {
-    this.setState({
-      value: event.target.value
-    });
+    this.handleSubmit = this.handleSubmit.bind(this); // event for the submission of the form
   }
 
   handleInputChange(event) {
+    this.props.onSubmit(this.state); // added this
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
@@ -220,38 +215,14 @@ class Form extends Component {
 
   // handlesubmit event of the submit button of the form (Enter)
   handleSubmit(event) {
-    // const taglist = 'testtag';
-    event.preventDefault();
     random = Math.floor(Math.random() * 10 + 1);
-    // tagCheckboxes = this.state.tagCheckboxes.slice();
-    // this.setState({ tagCheckboxes });
     /* for (let i = 0; i < this.state.tagCheckboxes.length; i++) {
       {
         taglist[i] = tagCheckboxes[i] ? [tagCheckboxes[i].name] : 'false';
       }
     } */
-
-    /* state.givenArt is not updated */
-
-    const data = new FormData(event.target);
-    alert(`Data: ${this.state.pirateset}`);
-    fetch('/api/form-submit-url', {
-      method: 'POST',
-      body: data
-    });
-
-    this.setState(
-      { numberOfNodes: this.state.numberOfNodes },
-      { newCardset: this.state.newCardset },
-      { europeancomposers: this.state.europeancomposers },
-      { testseries: this.state.testseries },
-      { pirateset: this.state.pirateset },
-      { culture: this.state.culture },
-      { art: this.state.art },
-      { music: this.state.music },
-      { value: this.state.value },
-      { random: this.state.random } // dit nog in een for loop steken
-    );
+    alert(`Data: ${JSON.stringify(this.state)}`);
+    event.preventDefault();
   }
 
   render() {
@@ -284,43 +255,43 @@ class Form extends Component {
               onChange={this.handleInputChange}
             />
           </div>
-          Select cardsets:
+          Cardsets:
           <div>
             <input
               type="checkbox"
-              name="europeancomposers"
-              id="europeancomposers"
-              checked={this.state.europeancomposers}
+              name="explore"
+              id="explore"
+              checked={this.state.explore}
+              onChange={this.handleInputChange}
+            />
+            <label htmlFor="explore" className={styles.simulatorRightSpace}>
+              Explore
+            </label>
+            <input
+              type="checkbox"
+              name="entertainment"
+              id="entertainment"
+              checked={this.state.entertainment}
               onChange={this.handleInputChange}
             />
             <label
-              htmlFor="europeancomposers"
+              htmlFor="entertainment"
               className={styles.simulatorRightSpace}
             >
-              european composers
+              Entertainment
             </label>
             <input
               type="checkbox"
-              name="testseries"
-              id="testseries"
-              checked={this.state.testseries}
+              name="reading"
+              id="reading"
+              checked={this.state.reading}
               onChange={this.handleInputChange}
             />
-            <label htmlFor="testseries" className={styles.simulatorRightSpace}>
-              testseries
-            </label>
-            <input
-              type="checkbox"
-              name="pirateset"
-              id="pirateset"
-              checked={this.state.pirateset}
-              onChange={this.handleInputChange}
-            />
-            <label htmlFor="pirateset" className={styles.simulatorRightSpace}>
-              pirateset
+            <label htmlFor="reading" className={styles.simulatorRightSpace}>
+              Reading
             </label>
           </div>
-          Select tags:
+          Tags:
           <div>
             <input
               type="checkbox"
@@ -354,18 +325,22 @@ class Form extends Component {
             </label>
           </div>
           <div className="form-group">
-            <select
-              value={this.state.value}
-              // onChange={this.handleInputChange}
-              onChange={this.onChange}
-              className="form-control"
-            >
-              {options.map(option => (
-                <option value={option} name={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+            <label htmlFor="location">
+              Select a Location
+              <select
+                id="location"
+                name="value"
+                value={this.state.value}
+                onChange={this.handleInputChange}
+                className="form-control"
+              >
+                {options.map(option => (
+                  <option value={option} name={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
           <input
             className={styles.simulatorSubmit}
