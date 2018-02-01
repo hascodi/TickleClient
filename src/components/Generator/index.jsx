@@ -9,6 +9,8 @@ import { Card } from '../cards';
 
 import graph from './cardDataTest.json';
 import titles from './cardTitles.json';
+import descriptions from './cardDescriptions.json';
+import images from './cardImages.json';
 import { forceSimulation } from 'd3-force';
 
 let random = 0;
@@ -72,14 +74,22 @@ class Generator extends Component {
       height,
       hovered: null,
       myFormData: '',
-      numberOfNodes: '' // added this
+      explore: ['leeg'] // added this
     };
   }
 
   // added this
   onSubmit(formData) {
-    this.setState({ numberOfNodes: formData }); // {}
-    // alert(`Formdata: ${JSON.stringify(formData)}`);
+    const newArr = this.state.explore.slice();
+    if (JSON.stringify(this.state.explore) === 'true') {
+      newArr.push('explore');
+      // button = <LogoutButton onClick={this.handleLogoutClick} />;
+    } else {
+      alert(`else alert`);
+    }
+
+    this.setState({ explore: newArr }); // {}
+    alert(`Formdata Above: ${JSON.stringify(this.state.explore)}`);
   }
 
   /* onSubmit = formData => {
@@ -96,7 +106,12 @@ class Generator extends Component {
         <Form onSubmit={this.onSubmit} />
         <div style={{ width: '400px', height: '600px' }}>
           {hovered && (
-            <Card title={titles[random]} tags={this.state.numberOfNodes} /> // added this
+            <Card
+              title={titles[random]}
+              tags={this.state.explore}
+              description={descriptions[random]}
+              img={images[random]}
+            /> // added this
           )}
         </div>
         <Graph
@@ -203,7 +218,7 @@ class Form extends Component {
   }
 
   handleInputChange(event) {
-    this.props.onSubmit(this.state); // added this
+    this.props.onSubmit(this.state.explore); // added this
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
