@@ -1,7 +1,7 @@
 /* eslint no-use-before-define: ["error", { "classes": false }] */
 
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { bool } from 'prop-types';
 import * as d3 from 'd3';
 import styles from './index.scss';
 // import cardIconSrc from '../utils/map-layers/cardIcon.svg';
@@ -10,12 +10,14 @@ import { Card } from '../cards';
 import graph from './cardDataTest.json';
 import titles from './cardTitles.json';
 import descriptions from './cardDescriptions.json';
+import tagmappings from './cardMappingTags.json';
 import images from './cardImages.json';
+import linkedCards from './cardLinks.json';
 import { forceSimulation } from 'd3-force';
 
 let random = 0;
 const tagCheckboxes = [];
-// let myFormData;
+let tagArrayLen = 0;
 
 class Generator extends Component {
   static propTypes = {
@@ -73,30 +75,44 @@ class Generator extends Component {
       width,
       height,
       hovered: null,
-      myFormData: '',
-      explore: ['leeg'] // added this
+      myCardSetsFormData: [],
+      myTagsFormData: [],
+      explore: [],
+      // newArr: [],
+      exists: true,
+      newArr2: [],
+      tagVar: 0
     };
   }
 
-  // added this
-  onSubmit(formData) {
-    const newArr = this.state.explore.slice();
-    if (JSON.stringify(this.state.explore) === 'true') {
-      newArr.push('explore');
-      // button = <LogoutButton onClick={this.handleLogoutClick} />;
-    } else {
-      alert(`else alert`);
+  onSubmit(cardSetsData, tagsData) {
+    // const newArr = this.state.explore.slice();
+    // const stringexp = JSON.stringify(cardSetsData);
+    // newArr.push(cardSetsData);
+    // this.setState({ explore: newArr }); // {}
+    this.setState({ myCardSetsFormData: cardSetsData });
+    this.setState({ myTagsFormData: tagsData });
+    // this.setState({ newArr2: newArr });
+
+    const newArr = [];
+
+    for (let i = 0; i < tagmappings.tagged.length; i++) {
+      let counter = 0;
+      if (tagmappings.tagged[i].length === tagsData.length) {
+        for (let j = 0; j < tagsData.length; j++) {
+          if (tagsData[j] === tagmappings.tagged[i][j]) {
+            counter++;
+          }
+        }
+        if (counter === tagsData.length) {
+          newArr.push(i);
+        }
+      }
     }
-
-    this.setState({ explore: newArr }); // {}
-    alert(`Formdata Above: ${JSON.stringify(this.state.explore)}`);
+    tagArrayLen = newArr.length;
+    this.setState({ tagVar: newArr[random] });
+    // alert(`Formdata Above: ${JSON.stringify(tagArrayLen)}`); // this.state.myTagsFormData
   }
-
-  /* onSubmit = formData => {
-    this.setState({
-      numberOfNodes: formData
-    });
-  }; */
   render() {
     const { nodes, links, width, height, hovered } = this.state;
     const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -107,11 +123,13 @@ class Generator extends Component {
         <div style={{ width: '400px', height: '600px' }}>
           {hovered && (
             <Card
-              title={titles[random]}
-              tags={this.state.explore}
-              description={descriptions[random]}
-              img={images[random]}
-            /> // added this
+              title={titles[this.state.tagVar]}
+              tags={tagmappings.tagged[this.state.tagVar]}
+              cardSets={this.state.myCardSetsFormData}
+              description={descriptions[this.state.tagVar]}
+              img={images[this.state.tagVar]}
+              linkedCards={linkedCards.links[this.state.tagVar]}
+            />
           )}
         </div>
         <Graph
@@ -166,23 +184,10 @@ const Graph = ({ width, height, links, nodes, color, hoverhandler }) => (
   </svg>
 );
 
-/* to do:
-create 5 more cards --> OK
-then create a graph of 10 nodes --> OK
-map each card to a node --> OK
-display onmouseover --> OK
-use tooltips --> OK
-
-After that, create a non-functional
-UI for entering paramaters --> OK
-*/
-
-const options = ['Brussel-Centrum', 'Elsene', 'Etterbeek', 'Evere'];
+// const options = ['Brussel-Centrum', 'Elsene', 'Etterbeek', 'Evere'];
 
 /* const CardGenerator = function(props) {
   return <p>The logged in user is: {props.Graph.links}</p>;
-  
-
 }; */
 
 class Form extends Component {
@@ -195,30 +200,60 @@ class Form extends Component {
     super(props);
 
     this.state = {
-      numberOfNodes: '',
-      newCardset: '',
-      explore: true,
-      entertainment: true,
-      reading: true,
+      explore: false,
+      entertainment: false,
+      reading: false,
       culture: false,
-      art: true,
-      music: false,
-      value: 'Select a Location',
+      art: false,
+      education: false,
+      // hideTags: true,
+      // value: 'Select a Location',
       random: '',
-      myFormData: '' // added this
-      /* tagCheckboxes: [
-        this.state.europeancomposers,
-        this.state.testseries,
-        this.state.pirateset
-      ], */
+      myCardSetsFormData: '',
+      sendThisCardSetsArray: [],
+      sendThisTagsArray: [],
+      testArray: []
     };
-
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this); // event for the submission of the form
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleInputChange(event) {
-    this.props.onSubmit(this.state.explore); // added this
+    this.setState({ sendThisCardSetsArray: [] }); // empty the array after early submission
+    this.setState({ sendThisTagsArray: [] }); // idem for this array
+    const newCardSetsArray = [];
+    if (this.state.explore) {
+      newCardSetsArray.push('explore');
+    }
+    if (this.state.entertainment) {
+      newCardSetsArray.push('entertainment');
+    }
+    if (this.state.reading) {
+      newCardSetsArray.push('reading');
+    }
+    this.setState({ sendThisCardSetsArray: newCardSetsArray });
+
+    const newTagsArray = [];
+    if (this.state.art && !this.state.entertainment && !this.state.reading) {
+      newTagsArray.push('art');
+    }
+    if (this.state.culture && !this.state.reading) {
+      newTagsArray.push('culture');
+    }
+    if (
+      this.state.education &&
+      !this.state.explore &&
+      !this.state.entertainment
+    ) {
+      newTagsArray.push('education');
+    }
+    this.setState({ sendThisTagsArray: newTagsArray });
+
+    this.props.onSubmit(
+      this.state.sendThisCardSetsArray,
+      this.state.sendThisTagsArray
+    );
+
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
@@ -228,48 +263,17 @@ class Form extends Component {
     });
   }
 
-  // handlesubmit event of the submit button of the form (Enter)
   handleSubmit(event) {
-    random = Math.floor(Math.random() * 10 + 1);
-    /* for (let i = 0; i < this.state.tagCheckboxes.length; i++) {
-      {
-        taglist[i] = tagCheckboxes[i] ? [tagCheckboxes[i].name] : 'false';
-      }
-    } */
-    alert(`Data: ${JSON.stringify(this.state)}`);
+    random = Math.floor(Math.random() * tagArrayLen);
+    // alert(`Data: ${JSON.stringify(this.state)}`);
     event.preventDefault();
   }
 
   render() {
-    // definieer een variabele die door de Generator component zal worden gebruikt
-    // const taglist = ['testtaglist'];
     return (
       <div className={styles.base}>
         <form onSubmit={this.handleSubmit}>
-          <div>
-            <label htmlFor="inputcards">Number of Cards</label>
-            <input
-              className={styles.simulatorInput}
-              type="text"
-              name="numberOfNodes"
-              title="nodes"
-              id="inputcards"
-              value={this.state.numberOfNodes}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="inputnewcardset">New Cardset</label>
-            <input
-              className={styles.simulatorInput}
-              type="text"
-              name="newCardset"
-              title="newCardset"
-              id="inputnewcardset"
-              value={this.state.newCardset}
-              onChange={this.handleInputChange}
-            />
-          </div>
+          <div> Card Generator for the Tickle Game </div>
           Cardsets:
           <div>
             <input
@@ -314,8 +318,19 @@ class Form extends Component {
               id="culture"
               checked={this.state.culture}
               onChange={this.handleInputChange}
+              hidden={
+                (!this.state.explore || !this.state.entertainment) &&
+                this.state.reading
+              }
             />
-            <label htmlFor="culture" className={styles.simulatorRightSpace}>
+            <label
+              htmlFor="culture"
+              hidden={
+                (!this.state.explore || !this.state.entertainment) &&
+                this.state.reading
+              }
+              className={styles.simulatorRightSpace}
+            >
               Culture
             </label>
             <input
@@ -324,39 +339,44 @@ class Form extends Component {
               id="art"
               checked={this.state.art}
               onChange={this.handleInputChange}
+              hidden={
+                !this.state.explore &&
+                (this.state.entertainment || this.state.reading)
+              }
             />
-            <label htmlFor="art" className={styles.simulatorRightSpace}>
+            <label
+              htmlFor="art"
+              hidden={
+                !this.state.explore &&
+                (this.state.entertainment || this.state.reading)
+              }
+              className={styles.simulatorRightSpace}
+            >
               Art
             </label>
             <input
               type="checkbox"
-              name="music"
-              id="music"
-              checked={this.state.music}
+              name="education"
+              id="education"
+              checked={this.state.education}
               onChange={this.handleInputChange}
+              hidden={
+                !this.state.reading &&
+                (this.state.entertainment || this.state.explore)
+              }
             />
-            <label htmlFor="music" className={styles.simulatorRightSpace}>
-              Music
+            <label
+              htmlFor="education"
+              hidden={
+                !this.state.reading &&
+                (this.state.entertainment || this.state.explore)
+              }
+              className={styles.simulatorRightSpace}
+            >
+              Education
             </label>
           </div>
-          <div className="form-group">
-            <label htmlFor="location">
-              Select a Location
-              <select
-                id="location"
-                name="value"
-                value={this.state.value}
-                onChange={this.handleInputChange}
-                className="form-control"
-              >
-                {options.map(option => (
-                  <option value={option} name={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
+          <div className="form-group" />
           <input
             className={styles.simulatorSubmit}
             type="submit"

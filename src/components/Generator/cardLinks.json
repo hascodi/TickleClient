@@ -1,0 +1,28 @@
+{
+    "links":
+    [   
+        ["Sister sniversity", "Study at uni"],
+        ["University", "Brussels soccer team"],
+        ["Art museum", "Brussels municipalities"],
+        ["Touristic place", "Oldest monument", "Brussels municipalities"],
+        ["Colorful garden", "Touristic place"],
+        ["University", "Sister university"],
+        ["Chocolat museum", "Instruments museum"],
+        ["Highest point"],
+        ["Highest point", "European Parliament", "European Commission"],
+        ["Biggest park"],
+        ["Touristic place", "European Commission"],
+        ["Royal Palace", "Highest point", "River", "Biggest municipality"],
+        ["Brussels Municipalities", "Highest point"],
+        ["Brussels municipalities"],
+        ["Brussels municipalities"],
+        ["Sports center"],
+        ["Touristic place", "European Parliament"],
+        ["University", "Study at uni"],
+        ["Art museum", "Instruments museum"],
+        ["Art museum", "Chocolat Museum"],
+        ["education"],
+        ["art"],
+        ["art", "culture"]
+    ]
+}

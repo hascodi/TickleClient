@@ -1,0 +1,25 @@
+{
+    "tagged":
+    [   
+        ["education", "culture"],
+        ["education", "culture"],
+        ["art", "culture", "education"],
+        ["art", "culture"],
+        ["art"],
+        ["education"],
+        ["art", "education"],
+        ["art"],
+        ["culture"],
+        ["art"],
+        ["culture"],
+        ["culture"],
+        ["education", "culture"],
+        ["education", "culture"],
+        ["culture"],
+        ["culture"],
+        ["education", "culture"],
+        ["education"],
+        ["art"],
+        ["art", "culture"]
+    ]
+}
